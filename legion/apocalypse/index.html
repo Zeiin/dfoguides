@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apocalypse — Legion Dungeon Guide</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:root {
+  --bg: #15171B;
+  --panel: #1D2026;
+  --ink: #E7E9ED;
+  --muted: #93989F;
+  --line: #34373E;
+  --hover: #24272E;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  font-size: 15.5px;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+  margin: 0 0 0.4em 0;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 760px);
+  gap: 48px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 24px 100px 24px;
+  align-items: start;
+}
+
+.sidenav {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+}
+
+.sidenav-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1.3em;
+  margin-bottom: 14px;
+  color: var(--ink);
+}
+
+.sidenav ul { list-style: none; margin: 0; padding: 0; }
+.sidenav > ul.nav-top > li { margin-bottom: 2px; }
+.sidenav a {
+  display: block;
+  padding: 7px 10px;
+  border-radius: 4px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.92em;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+  transition: color .15s, background .15s, border-color .15s;
+}
+.sidenav a:hover { background: var(--hover); color: var(--ink); }
+.sidenav a.active {
+  color: var(--ink);
+  background: var(--hover);
+  border-left-color: var(--active-accent, #E7E9ED);
+  font-weight: 600;
+}
+.nav-sub {
+  margin: 2px 0 6px 0;
+}
+.nav-sub-link {
+  padding: 4px 10px 4px 22px !important;
+  font-size: 0.85em !important;
+  font-weight: 400 !important;
+}
+.nav-sub-link.active { font-weight: 600 !important; }
+
+.content > h1 {
+  font-size: 2.6em;
+  margin-top: 0;
+}
+.content > p:first-of-type {
+  color: var(--muted);
+  font-size: 1.05em;
+  font-style: normal;
+  margin-top: -4px;
+}
+
+.content-section { margin-top: 2.6em; padding-top: 0.4em; }
+.content-section:first-of-type { margin-top: 1.2em; }
+
+.content-section h2 {
+  font-size: 1.6em;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--line);
+}
+.boss-section h2 {
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+}
+.boss-section h3 { color: var(--ink); }
+.boss-section h3, .boss-section h4 {
+  border-left: 4px solid var(--accent);
+  padding-left: 10px;
+}
+.boss-section h3 { font-size: 1.2em; margin-top: 1.8em; }
+.boss-section h4 { font-size: 1.02em; margin-top: 1.5em; color: var(--muted); }
+
+p.tldr {
+  background: color-mix(in srgb, var(--accent, #93989F) 16%, var(--panel));
+  border-left: 4px solid var(--accent, #93989F);
+  padding: 10px 14px;
+  border-radius: 0 4px 4px 0;
+  font-style: normal;
+  color: var(--ink);
+  font-size: 0.96em;
+  margin: 0.8em 0 1.2em 0;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0 1.4em 0;
+  font-size: 0.94em;
+}
+table:not(.stat-block) th, table:not(.stat-block) td {
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  text-align: left;
+}
+table:not(.stat-block) th { background: var(--hover); font-family: 'Rajdhani', sans-serif; font-weight: 600; }
+
+table.stat-block {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+}
+table.stat-block th, table.stat-block td {
+  border: none;
+  border-bottom: 1px solid var(--line);
+  padding: 8px 14px;
+}
+table.stat-block tr:last-child th, table.stat-block tr:last-child td { border-bottom: none; }
+table.stat-block th {
+  background: transparent;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 0.9em;
+}
+table.stat-block td {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.92em;
+  color: var(--ink);
+}
+table.stat-block td:first-child {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+ul { padding-left: 1.3em; margin: 0.6em 0; }
+li { margin-bottom: 5px; }
+li > ul { margin-top: 5px; }
+
+strong { color: var(--ink); }
+.boss-section strong { color: color-mix(in srgb, var(--accent) 65%, white); }
+
+img, video {
+  max-width: 360px;
+  width: auto;
+  height: auto;
+  max-height: 480px;
+  display: block;
+  margin: 8px 0 4px 0;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+/* portrait/cutscene stills: these are native white-background pixel art.
+   Attempts to strip the background programmatically produced worse artifacts
+   than the plain white background itself, so instead they get a clean white
+   card frame that reads intentionally against the dark page. */
+img[src*="portrait"], img[src*="cutscene"] {
+  max-width: 220px;
+  max-height: 460px;
+  padding: 10px;
+  background: #FFFFFF;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+/* hero banner: full-width title image, no card framing */
+img[src*="banner"] {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  margin: 4px 0 20px 0;
+}
+
+.pending-note {
+  display: inline-block;
+  max-width: 360px;
+  width: 100%;
+  color: var(--muted);
+  font-size: 0.86em;
+  border: 1.5px dashed var(--line);
+  background: var(--panel);
+  padding: 18px 14px;
+  border-radius: 4px;
+  margin: 6px 0 14px 0;
+  text-align: center;
+}
+
+a { color: #6C9BFF; }
+sup a { text-decoration: none; font-size: 0.85em; }
+li[id^="src-"]:target { background: var(--hover); border-radius: 4px; }
+
+/* Sources section, quieter */
+section:last-of-type ul { font-size: 0.92em; }
+section:last-of-type h2 { color: var(--muted); border-bottom-color: var(--line); }
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: 1fr;
+    padding: 0 0 60px 0;
+  }
+  .sidenav {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .sidenav-title { display: none; }
+  .sidenav ul.nav-top { display: flex; gap: 4px; }
+  .sidenav a { border-left: none; border-bottom: 3px solid transparent; white-space: nowrap; }
+  .sidenav a.active { border-left-color: transparent; border-bottom-color: var(--active-accent, #E7E9ED); }
+  .nav-sub { display: none; }
+  .content { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+<div class="layout"><nav class="sidenav"><div class="sidenav-title">Apocalypse</div><ul class="nav-top"><li><a class="nav-top-link" href="#content-overview">Content Overview</a></li><li><a class="nav-top-link" href="#1-ica">1. Ica</a><ul class="nav-sub"><li><a class="nav-sub-link" href="#phase-1">Phase 1</a></li><li><a class="nav-sub-link" href="#phase-2">Phase 2</a></li><li><a class="nav-sub-link" href="#c3">C3</a></li></ul></li><li><a class="nav-top-link" href="#2-fictum">2. Fictum</a></li><li><a class="nav-top-link" href="#3-bliss">3. Bliss</a></li><li><a class="nav-top-link" href="#4-socors">4. Socors</a><ul class="nav-sub"><li><a class="nav-sub-link" href="#phase-1-2">Phase 1</a></li><li><a class="nav-sub-link" href="#phase-2-2">Phase 2</a></li></ul></li><li><a class="nav-top-link" href="#5-lopez">5. Lopez</a><ul class="nav-sub"><li><a class="nav-sub-link" href="#c2">C2</a></li><li><a class="nav-sub-link" href="#c3-2">C3</a></li></ul></li><li><a class="nav-top-link" href="#sources">Sources</a></li></ul></nav><main class="content"><h1 id="apocalypse">Apocalypse</h1>
+<p><em>Legion Dungeon Guide</em></p>
+<p><em>Author: Zein (reach out to Zein on Discord for feedback)</em></p>
+<p><img alt="Apocalypse banner" src="images/apocalypse-banner.png"/></p>
+<p><strong>AI Disclosure:</strong></p>
+<p>I used AI to help me write this guide. Specific use cases were translating Korean guide videos using YouTube's AI Auto-dub feature, translating Namu pages, translating Korean forum pages, format/style this guide, and extract clips from videos I credited to help display mechanics or patterns. I understand some people have reservations against AI usage in content, so I wanted to be transparent.</p>
+<section class="content-section"><h2 id="content-overview">Content Overview</h2>
+<ul>
+<li><strong>Entry:</strong> Level 115. 73,993 Fame. Rewards are shared with Venus, so only one Legion counts per week.</li>
+<li><strong>Difficulty Notes:</strong> Matching and C1 stop after Bliss. C3 "Desperate Suppression" (a future patch) alters Ica and Lopez.</li>
+<li><strong>Legion Mechanic:</strong> You get the option to pick between Skirmisher (a counter ability that is indicated by a mark) or Guardian (a shield for you and nearby allies) at the start. Solo locks you to Skirmisher.</li>
+<li><strong>Multipliers:</strong> Base Damage multiplier starts at 75% on your first entry outside Matching, then climbs as you land pattern breaks and counters, resetting each phase change (100% for most bosses, 75% for Socors). Killing Fictum or Bliss adds +10% damage in C2 (+5% in C3). Killing Socors adds +5% in C3.</li>
+<li><strong>Timers:</strong> Ica/Fictum/Bliss: 5 min. Socors/Lopez: 10 min. Can't kill Ica in time? You likely can't clear what comes after her either.</li>
+<li>No operator voice guide this time: read patterns visually.</li>
+<li><strong>Skip route:</strong> Beat Ica within 1 minute to skip straight to Socors (skipping Fictum and Bliss); within 2 minutes to skip to Bliss (skipping just Fictum). This route never skips Socors himself. In C3, killing Ica within 1 minute opens a separate route straight to Lopez instead.</li>
+<li><strong>Seasonal Gimmick:</strong> Overpower is a gimmick that will be the gate for some groggies in this Legion alongside prior Advanced Dungeons. If a diamond shape appears on the boss with a number in it, you and your party must cast that many skills tagged with Overpower (they will glow red on your hotbar) to beat the gimmick.</li>
+</ul>
+</section><section class="content-section boss-section" style="--accent: #2F7DE1;"><h2 id="1-ica">1. Ica</h2>
+<p class="tldr">tl;dr: Jump over to red lines and place the bombs away from safe zones. P2 is gauge management: cross heat lines or freeze.</p>
+<table class="stat-block">
+<thead>
+<tr>
+<th>Tier</th>
+<th>Solo</th>
+<th>Party</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C2</td>
+<td>~572M</td>
+<td>201B</td>
+</tr>
+<tr>
+<td>C3</td>
+<td>1.15B</td>
+<td>~435B</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Neutralization Gauge:</strong> 66% of HP (Matching/C1) → 100% of HP (C2+)</p>
+<p><img alt="Ica phase 1 cutscene" src="images/ica-p1-cutscene.png"/></p>
+<h3 id="phase-1">Phase 1</h3>
+<ul>
+<li>
+<p><strong>Entry Grenade:</strong> On entry, a bomb appears; use Skirmish to knock it toward Ica.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/ice-grenade.mp4" title="Entry Grenade"></video>
+</p>
+</li>
+<li>
+<p><strong>Tripwires:</strong> Blue lines turn red; walking through deals major damage and a wide splash damage. Jump over red lines to avoid this.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/ica-ice-mine.mp4" title="Ice Lines"></video>
+</p>
+</li>
+<li>
+<p><strong>Cold Bullet</strong>: Map-wide attack where the safe spot is a small circle directly at Ica's location.</p>
+</li>
+</ul>
+<video autoplay="" loop="" muted="" playsinline="" src="images/cold-bullet.mp4" title="Cold Bullet"></video>
+<ul>
+<li>
+<p><strong>Time Bomb:</strong> This pattern starts with a few bombs that track the player. These bombs explode into a blue frozen ground that will also eventually explode. The initial location of the bomb is the safe zone. Avoid these explosions, any red aoes, red tripwires, and Cold Bullet during this pattern. Finishes with a set of glowing orbs: basic-attack the one flashing red to successfully complete the pattern.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/ica-time-bomb.mp4" title="Time Bomb"></video>
+</p>
+</li>
+<li>
+<p><strong>Condensed Bomb</strong>: Watch her footprints to figure out where Ica walked, face the direction she walked and use Skirmish on the grenade to knock it towards Ica.
+  <img alt="Condensed Bomb" src="images/ica-condensed-bomb.gif"/></p>
+</li>
+</ul>
+<h3 id="phase-2">Phase 2</h3>
+<p><img alt="Ica phase 2 cutscene" src="images/ica-p2-cutscene.png"/></p>
+<ul>
+<li><strong>Ice Gauge:</strong> Everyone has a personal gauge that fills from getting hit by the blue zone or its attacks. Cross the line through the map's center to lower your gauge.</li>
+<li>
+<p><strong>Cold Release:</strong> When this cast comes up, use Skirmish toward the boss to counter it.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/cold-release.mp4" title="Cold Release"></video>
+</p>
+</li>
+<li>
+<p><strong>Small Bullets:</strong> Ice launches small bullets towards the opposite side of the map. Stay on the same side of Ica to avoid the damage from these, they will explode on contact with the heat line and do damage in the direction they were moving.
+    <video autoplay="" loop="" muted="" playsinline="" src="images/small-bullets.mp4" title="Small Bullets"></video></p>
+</li>
+<li>
+<p><strong>Absolute Zero (groggy):</strong> Watch the direction of the falling orb and move to the alternating opposite side (getting hit by one fills half the gauge). Lure the resulting red floor zone to the map edge and sprint to the opposite side, repeat twice, then dodge the center attack and close in for the groggy. Gauge fills fast during this cast. Cross the line quickly and repeatedly while doing this pattern.
+    <video autoplay="" loop="" muted="" playsinline="" src="images/neutralize-break.mp4" title="Neutralize Break"></video></p>
+</li>
+<li>
+<p><strong>Blizzard:</strong> After the orbs end, a cold storm wanders the map. It deals no damage but raises the Ice Gauge on contact, cross the line proactively rather than waiting for the gauge to fill. The storm converges on the center and force-freezes everyone: basic attack when the cast bar hits the green zone, then move next to Ica to dodge her finisher. Ica is groggied upon success.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/cold-storm-qte.mp4" title="Cold Storm QTE"></video>
+</p>
+</li>
+<li>
+<p>If your party has a Glacial Master, they skip the freeze-break timing entirely and can trigger the groggy immediately.</p>
+</li>
+</ul>
+<h3 id="c3">C3</h3>
+<ul>
+<li><strong>End of the Party:</strong> On entry, C3 opens with this sequence: Entry grenade you need to use Skirmish on to throw toward Ica. A yellow orb appears with a zone, stay inside it, the gauge only fills while you're outside it, and if it fills completely you're expelled from the dungeon. Dodge her attacks while staying in the zone the best you can, but you will have to step outside briefly to dodge some patterns. Finally, dodge the center attack, then pass the Skirmish check to raise a barrier around the yellow orb and step inside it.
+    <video autoplay="" loop="" muted="" playsinline="" src="images/ica-end-of-party.mp4" title="End of the Party"></video></li>
+</ul>
+</section><section class="content-section"><h2 id="2-fictum">2. Fictum</h2>
+<p class="tldr">tl;dr: Jump on things, Skirmish when you can.</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Solo</th>
+<th>Party</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C1</td>
+<td>180M</td>
+<td>69.4B</td>
+</tr>
+<tr>
+<td>C2</td>
+<td>452M</td>
+<td>158.1B</td>
+</tr>
+<tr>
+<td>C3</td>
+<td>592M</td>
+<td>224B</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Neutralization Gauge:</strong> 66% of HP</p>
+<p><img alt="Fictum portrait" src="images/pictum-portrait.png"/></p>
+<ul>
+<li>
+<p><strong>Dive:</strong> A jump-marker floor zone appears on entry (and recurs through the fight); jump inside it then Skirmish when the marker appears afterwards. His name tag position may reveal the location of Dive early.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/fictum-dive.mp4" title="Fictum dive"></video>
+</p>
+</li>
+<li>
+<p><strong>Deception:</strong> A girl approaches from one side, a red aoe following her, bump into her to stop her movement and maintain your safe zone.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/fictum-deception.mp4" title="Fictum deception"></video>
+</p>
+</li>
+<li>
+<p><strong>Chasing Shadows (groggy):</strong> A small safe zone spawns and closes in. The girl will eventually appear, jump to the girl to open a new safe zone, then jump back to Fictum, repeating the cycle. A yellow orb eventually appears: grab it and bump it into Fictum. Repeat until the gimmick counter reaches 0. 
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/fictum-chasing-shadows.mp4" title="Fictum chasing shadows"></video>
+</p>
+</li>
+<li>
+<p><strong>Shards of the Shadows (groggy):</strong> Spikes will rain around the arena, with one glowing green. A red droppable aoe will spawn under you, drop it over the glowing spike. Afterwards the spike will launch again and charge a screen-wide aoe. The spike itself will have a safe zone directly on where it landed. Run to it. Use Skirmish on Fictum. He will repeat this exact sequence once. After two successful skirmishes, Fictum will then spawn 4 more spikes and punch them up. One by one, they will fall and repeat the screen-wide aoe with small safe zone pattern. After the final skirmish check, you will have an overpower check before finally reaching groggy. 
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/fictum-shards-of-the-shadows.mp4" title="Fictum shards of the shadows"></video>
+</p>
+</li>
+</ul>
+</section><section class="content-section boss-section" style="--accent: #E0A82E;"><h2 id="3-bliss">3. Bliss</h2>
+<p class="tldr">tl;dr: Dodge into a shadow for Backstage, lure the light onto the unlit clones for Spotlight, then Skirmish.</p>
+<table class="stat-block">
+<thead>
+<tr>
+<th>Tier</th>
+<th>Solo</th>
+<th>Party</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C1</td>
+<td>198M</td>
+<td>66.7B</td>
+</tr>
+<tr>
+<td>C2</td>
+<td>497M</td>
+<td>174B</td>
+</tr>
+<tr>
+<td>C3</td>
+<td>652M</td>
+<td>246B</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Neutralization Gauge:</strong> 66% of HP</p>
+<p><img alt="Bliss portrait" src="images/bliss-portrait.png"/></p>
+<ul>
+<li>
+<p><strong>Spotlight:</strong> Beams sweep the arena and land on Bliss's clones. Find the one clone with no spotlight on it and lure the beam onto her, then Skirmish. You will need to do this for her core patterns.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/bliss-spotlight.mp4" title="Bliss spotlight"></video>
+</p>
+</li>
+<li>
+<p><strong>Backstage:</strong> Clones spawn a shadow safe zone behind them that blocks the attack. Stay in the shadow to avoid it.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/bliss-backstage.mp4" title="Bliss backstage"></video>
+</p>
+</li>
+<li>
+<p><strong>Dance of Death (groggy):</strong> She opens with a large red aoe and a small safe zone at center. Afterwards, she spawns a white safe zone. Stay inside this zone while dodging red aoes and her spinning clones. Partway through, she jumps to the center of the white safezone, you must jump to avoid the damage from this attack. She then casts Backstage and Spotlight together. Stay in the backstage safe zone, then drag Spotlight onto the unlit clone. Finally, this will trigger a Skirmish opportunity for the groggy.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/dance-of-death.mp4" title="Dance of Death"></video>
+</p>
+</li>
+<li>
+<p><strong>Quiet Play (groggy):</strong> She opens with a screen wide red aoe. Stand in the glowing safe bubble (which is also a green aoe) to avoid it. Then an escalating 3-wave Backstage+Spotlight sequence: wave 1 is a single spotlight followed by backstage, wave 2 doubles to two simultaneous spotlights followed by backstage, and wave 3 starts with a single spotlight into backstage, before finishing with three simultaneous spotlights and a final backstage after the last spotlight. Each wave ends with an opportunity to Skirmish.
+<br/>
+<div><video autoplay="" loop="" muted="" playsinline="" src="images/quiet-play-wave2.mp4" title="Quiet Play wave 2"></video><video autoplay="" loop="" muted="" playsinline="" src="images/quiet-play-wave3.mp4" title="Quiet Play wave 3"></video></div>
+</p>
+</li>
+<li>
+<p><strong>1 or more successes out of 3 →</strong> finale’s Overpower requirement drops by success count (solo: 3/2/1, party: 12/8/4) and the red AoE shrinks.</p>
+</li>
+<li><strong>0/3 successes →</strong> Overpower requirement locks at 99 (unbreakable), death attack covers the whole map. Pop invuln or die.</li>
+</ul>
+</section><section class="content-section boss-section" style="--accent: #1F9E7A;"><h2 id="4-socors">4. Socors</h2>
+<p class="tldr">tl;dr: Grab Constellation → Bump creature.</p>
+<table class="stat-block">
+<thead>
+<tr>
+<th>Tier</th>
+<th>Solo</th>
+<th>Party</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C2</td>
+<td>~634M</td>
+<td>222B</td>
+</tr>
+<tr>
+<td>C3</td>
+<td>582M</td>
+<td>~275B</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Neutralization Gauge:</strong> 118% of HP</p>
+<p><img alt="Socors phase 1 cutscene" src="images/socors-p1-cutscene.png"/></p>
+<h3 id="phase-1-2">Phase 1</h3>
+<ul>
+<li>
+<p><strong>Normal Attack:</strong> Socors creates a ring of creatures around himself. Use Skirmish on the first one to create a black constellation on the floor you need to pick up. After picking it up, bump into the next creature in the ring. Repeat until the pattern completes. Each successful bump also drops a yellow orb. Grab it and basic attack him to fire it, chipping his Neutralization gauge.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/socors-normal.mp4" title="Socors normal attack"></video>
+</p>
+</li>
+<li>
+<p><strong>Wave of Reversal:</strong> Socors targets a player with an attack. Lure the attack to a nearby creature and hide completely behind it to avoid the attack. Afterwards a constellation will spawn, pick it up, and bump the black sphere somewhere on the screen to reduce the gimmick counter. Also, bumping will drop a yellow orb. Pick up the orb and bump Socors if you want to reduce his Neutralization gauge.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/wave-of-reversal.mp4" title="Wave of Reversal"></video>
+</p>
+</li>
+<li>
+<p><strong>Record of the End:</strong> Eat the sigil, then bump into Socors to reduce the pattern counter shown on screen; repeat until it hits 0 for the groggy.
+  <img alt="Record of the End" src="images/socors-record-of-the-end.gif"/></p>
+</li>
+</ul>
+<h3 id="phase-2-2">Phase 2</h3>
+<p><img alt="Socors phase 2 cutscene" src="images/socors-p2-cutscene.png"/></p>
+<ul>
+<li>
+<p><strong>Start of Phase 2:</strong> Socors opens with a shield. Grab a constellation, bump a nearby creature for a yellow orb, then walk up and basic-attack him to remove the shield.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/socors-p2-shield.mp4" title="Start of Phase 2"></video>
+</p>
+</li>
+<li>
+<p><strong>Fading Harmony:</strong> The usual, grab a constellation and then bump a creature, except this time the creatures need two bumps. When you do this twice to the same creature, you reduce the gimmick counter by 1 and the creature drops a yellow orb.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/fading-harmony.mp4" title="Fading Harmony"></video>
+</p>
+</li>
+<li>
+<p><strong>Sea of the End:</strong> A rotating black floor hazard is up throughout this pattern. You can jump over it. Same loop though, grab a constellation, bump a creature, but this time you have to pick up the creature's orb and basic attack Socors with it to reduce the gimmick counter.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/sea-of-the-end.mp4" title="Sea of the End"></video>
+</p>
+</li>
+</ul>
+</section><section class="content-section boss-section" style="--accent: #D64550;"><h2 id="5-lopez">5. Lopez</h2>
+<p class="tldr">tl;dr: P1 Jumping and basic-attacking over a white tile spawns a shield. P2-P3 replaces that shield with an attack interruption. Avoid lasers. Avoid rings. C3 is replaying the entire fight.</p>
+<h3 id="c2">C2</h3>
+<table class="stat-block">
+<thead>
+<tr>
+<th>Tier</th>
+<th>Phase</th>
+<th>Solo</th>
+<th>Party</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C2</td>
+<td>P1</td>
+<td>314M</td>
+<td>110.0B</td>
+</tr>
+<tr>
+<td>C2</td>
+<td>P2/3 (shared pool)</td>
+<td>1.04B</td>
+<td>362.9B</td>
+</tr>
+<tr>
+<td>C3</td>
+<td>P1</td>
+<td>?</td>
+<td>?</td>
+</tr>
+<tr>
+<td>C3</td>
+<td>P2/3</td>
+<td>?</td>
+<td>?</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Neutralization Gauge:</strong> 160% of HP</p>
+<p><img alt="Lopez phase 1 cutscene" src="images/lopez-portrait.png"/></p>
+<p><strong>White tile: jump + basic attack on a white tile = shield that blocks Lopez’s next hit. If a white tile appears, that attack is otherwise undodgeable.</strong></p>
+<video autoplay="" loop="" muted="" playsinline="" src="images/white-tile.mp4" title="White tile"></video>
+<h4>Phase 1 (both patterns must be broken once, groggy needs both)</h4>
+<ul>
+<li>
+<p><strong>Destruction:</strong> A ring appears: Red means the ring will attack everything outside it, so to avoid it you must step inside it. Green means the ring will attack everything inside it step outside. Can have multiple rings or full-map versions. You can use a white tile shield to avoid a full map ring .
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/destruction-c2.mp4" title="Destruction"></video>
+</p>
+</li>
+<li>
+<p><strong>End Pillar:</strong> A laser chases a player continuously. The further you are, the faster it will chase you. While you dodge a combination of Destruction casts and red tiles. A white tile appears during this, but do NOT use it early. The laser can destroy the shield. The laser stops moving briefly before the cast bar finishes, create the white tile barrier after it stops moving.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/end-pillar.mp4" title="End Pillar"></video>
+</p>
+</li>
+<li>
+<p><strong>End Domain:</strong> Follow the lit flame tile. When it goes out, move to the next one. Repeat this until you can create a white tile barrier. After the first white tile barrier he throws some red tile patterns at you. Dodge these until a white tile appears again. Activating that white tile finishes the pattern.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/end-domain.mp4" title="End Domain"></video>
+</p>
+</li>
+</ul>
+<h4>Phase 2</h4>
+<ul>
+<li><strong>Annihilation Strike:</strong> In P2, the white tile no longer raises a shield, instead jump + basic attack on it cancels the Annihilation Strike attack. Time it to when Lopez is actually on screen. He has a habit of disappearing during some attacks. If you use the white tile while he is gone you will fail to interrupt the attack and get punished.</li>
+<li>
+<p><strong>Marker color matters</strong>: Pay attention to Skirmish markers during this phase. If they are yellow, Skirmish as usual. If they are red, it is a bait. Skirmishing on a red marker leads to death (but a cool animation at least).
+<br/>
+<div><video autoplay="" loop="" muted="" playsinline="" src="images/yellow-marker.mp4" title="Yellow marker"></video><video autoplay="" loop="" muted="" playsinline="" src="images/red-marker.mp4" title="Red marker"></video><video autoplay="" loop="" muted="" playsinline="" src="images/red-marker-failure.mp4" title="Red marker failure"></video></div>
+</p>
+</li>
+<li>
+<p><strong>The Coming End:</strong> Lopez introduces lasers with expanding red aoes for this pattern. It boils down to dodging red AoEs, red tiles, and expanding lasers throughout, using Skirmish, and canceling Annihilation Strike with the white tile whenever it comes up. The sequence is fixed after the opening, so you can memorize this over time. 
+<br/>
+<div><video autoplay="" loop="" muted="" playsinline="" src="images/attack-type1.mp4" title="Attack Type 1"></video><video autoplay="" loop="" muted="" playsinline="" src="images/attack-type2.mp4" title="Attack Type 2"></video><video autoplay="" loop="" muted="" playsinline="" src="images/ce-variants.mp4" title="Coming End variants"></video><video autoplay="" loop="" muted="" playsinline="" src="images/impending-doom.mp4" title="Impending Doom repositioning"></video><video autoplay="" loop="" muted="" playsinline="" src="images/coming-end.mp4" title="The Coming End"></video></div>
+</p>
+</li>
+<li>
+<p>After the marker rounds, a green warning-sign attack appears; the tiles it covers turn green and stay bad, so lure it as far to the map edge as possible to minimize how much of the arena you lose.
+    <video autoplay="" loop="" muted="" playsinline="" src="images/green-tile.mp4" title="Green tiles"></video></p>
+</li>
+</ul>
+<h4>Phase 3 (enrage: triggers off Coming End ending, or Neutralization fully drained)</h4>
+<p>Turns red, damage taken locked at 225%, Neutralization locked. Same P2 patterns from earlier.</p>
+<ul>
+<li><strong>Doom gauge:</strong> Fills under his HP bar over a fixed 100 seconds; if it fills, he casts "The End" at +325% damage taken and ejects the party from the dungeon whenever he completes "The End".
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/doom-gauge.mp4" title="Doom gauge"></video>
+</li>
+</ul>
+<h3 id="c3-2">C3</h3>
+<p>Revive windows are party-only (solo gets none, and any wipe restarts from P1).</p>
+<h4>Phase 1 (base 75%)</h4>
+<ul>
+<li><strong>End Pillar:</strong> Upon entry, you will need to immediately interact with a white tile to spawn a barrier. Afterwards, it's the same laser concept from C2, avoid it while juggling other patterns. The End Domain pattern will overlap here, surrounded by red tiles. When the laser stops moving, interact with the white tile. Afterwards 4 lasers close in while rotating counter-clockwise. Dodge the lasers and two slash attacks Lopez casts towards the center of the screen. Finally, activate the white tile and use Skirmish for the groggy. After Groggy or upon reaching 0% HP, you move to P2-1.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/p1-groggy.mp4" title="End Pillar C3 groggy"></video>
+</li>
+</ul>
+<h4>Phase 2-1 (base 75%, up to 175% via Overwhelm)</h4>
+<ul>
+<li>
+<p>This phase is really just dodging based off what you've learned to get here.</p>
+</li>
+<li>
+<p>Overwhelm: Permanent damage-taken buff based on how much HP you chip off each phase, carries over and stacks as you progress</p>
+</li>
+<li><strong>Scarring:</strong> Expelled from the fight after 3 hits. Using Skirmish successfully during a pattern clears your stacks.</li>
+<li>
+<p><strong>Flame of Ruin:</strong> Tracking laser + tiles turning green sequentially in a counter-clockwise direction, starting at 12 o’clock. The final safe tile will be the center one. If the laser is too close, you can jump over the green tiles safely (without landing) and skirmish from that position. It is suggested that you move the laser to the right as much as you can to make returning to the center easy.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/flame-of-ruin.mp4" title="Flame of Ruin"></video>
+</p>
+</li>
+<li>
+<p><strong>Destruction and the End:</strong> Fixed sequence.</p>
+</li>
+<li>Tiles turn red around Lopez, you must move towards regular tiles to avoid being hit. Repeat until there is 1 left. He then shoots a red aoe alongside two screen slashes. Avoid all of them from the safe tile you're standing on. He then slams the ground, dodge that too. He will turn the floor red again while jumping onto a tile that will become a safe zone. He jumps away and casts a large red aoe. Stay in your tile until the tile he is standing on becomes a new safe zone and jump to it to avoid the aoe. This pattern continues with a variety of differences, but the concept is the same as the prior two explanations. 
+    <video autoplay="" loop="" muted="" playsinline="" src="images/lopez-destruction-sequence-1.mp4" title="Destruction and the End: sequence 1"></video><video autoplay="" loop="" muted="" playsinline="" src="images/lopez-destruction-sequence-2.mp4" title="Destruction and the End: sequence 2"></video><video autoplay="" loop="" muted="" playsinline="" src="images/lopez-destruction-finale-collapse.mp4" title="Destruction and the End: finale collapse"></video></li>
+</ul>
+<h4>Phase 2-2 (descent: 4 fixed segments, reskins of the mid-bosses)</h4>
+<ul>
+<li>
+<p><strong>Archive segment (Socors’ floor):</strong> A yellow orb will spawn near Lopez during Annihilation. Grab it for a shield. Floor tilts, dodge the debris that slides. One piece of rubble will fall with jump prompt. It will create a safe zone on one side. Stand in the safe zone to avoid his attacks and finally repeat the yellow orb shield to block Annihilation.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/archive.mp4" title="Archive segment"></video>
+</p>
+</li>
+<li>
+<p><strong>Selection segment (Bliss’ floor):</strong> Dodge the reds, place the spotlight on Lopez’s real body to cancel his attack. 3 rocks eventually appear and they each provide a safe zone: use them to block his next three attacks. On the 3rd, you must also jump, since it overlaps a ground slam. Finally, place the spotlight on Lopez from there.
+<br/>
+<div><video autoplay="" loop="" muted="" playsinline="" src="images/selection-spotlight.mp4" title="Selection spotlight"></video><video autoplay="" loop="" muted="" playsinline="" src="images/selection.mp4" title="Selection segment"></video></div>
+</p>
+</li>
+<li>
+<p><strong>Coordination segment (Fictum's floor):</strong> Dark-red jump pad: jump right as it finishes filling, then jump onto Lopez himself to cancel his attack. Eventually you'll have to chain 4x jump pads in a row.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/coordination.mp4" title="Coordination segment"></video>
+</p>
+</li>
+<li>
+<p><strong>Mist segment (Ica’s floor):</strong> The Doom gauge here works like Ica’s heat gauge: cross the line to lower it. As usual, dodge everything. At some point Lopez will forcibly knock you down. Hold Quick Rebound's iframe to survive the 4 expanding lasers that will fill the screen. Beat the overpower skill check afterwards for groggy.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/quick-rebound.mp4" title="Mist laser"></video>
+</p>
+</li>
+</ul>
+<h4>Phase 3 (no base multiplier: runs entirely on Overwhelm, cap 200%)</h4>
+<ul>
+<li>
+<p><strong>Arena:</strong> You can fall off of the arena in this phase. Take care running around as it gets smaller. Note you may jump over the edge of the arena and return if you need extra space to dodge.</p>
+</li>
+<li>
+<p><strong>Gaze into the Abyss:</strong> Orb telegraphed in front of him; move behind him and face him with your shield up, it turns white when you're in the right spot.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/gaze-into-abyss.mp4" title="Gaze into the Abyss"></video>
+</p>
+</li>
+<li>
+<p>Standing too far near the edge can knock you out of the arena, and even a successful cancel knocks you back, so don't sit right on the boundary.
+    <video autoplay="" loop="" muted="" playsinline="" src="images/arena-knockback.mp4" title="Arena knockback risk"></video></p>
+</li>
+<li>
+<p>His other common patterns here mostly reuse what you've already learned from the earlier phases, tied together with the Gaze into the Abyss shield, so there's no real need to break each one down individually.</p>
+</li>
+<li><strong>The Advent of the End:</strong> Eventually Lopez goes invulnerable and appears behind the Arena. He throws a meteor towards the center of the arena without hit indicators (no red aoes). Meteors then fly in repeatedly. You must manage avoiding the regular attacks and the meteors as they're being thrown at you. Eventually, Lopez returns to the arena and begins to drop meteors on top of it. He shrinks the arena as this happens. You must pick up the beads that appear around the red aoe of the meteor to expand it back out enough to find a safe zone. Repeat until a crack appears in the Arena. Step into the cracked floor that appears for the groggy.
+<br/>
+<video autoplay="" loop="" muted="" playsinline="" src="images/advent-full.mp4" title="Advent of the End full sequence"></video>
+</li>
+</ul>
+</section><section class="content-section"><h2 id="sources">Sources</h2>
+<ul>
+<li id="src-1"><a href="https://namu.wiki/w/%EC%95%84%ED%8F%AC%EC%B9%BC%EB%A6%BD%EC%8A%A4%20:%20%EC%95%88%ED%8B%B0%EC%97%94%EB%B0%94%EC%9D%B4">Namu Wiki: Apocalypse overview</a></li>
+<li id="src-2"><a href="https://namu.wiki/w/%EC%95%84%ED%8F%AC%EC%B9%BC%EB%A6%BD%EC%8A%A4%20:%20%EC%95%88%ED%8B%B0%EC%97%94%EB%B0%94%EC%9D%B4/%EB%AA%AC%EC%8A%A4%ED%84%B0">Namu Wiki: Apocalypse monster page</a></li>
+<li id="src-3"><a href="https://df.nexon.com/community/dnfboard/article/2980891">DF Nexon community pattern breakdown</a></li>
+<li id="src-4"><a href="https://df.nexon.com/community/dnfboard/article/2983764">DF Nexon C3 pattern thread</a></li>
+<li id="src-5"><a href="https://m.dcinside.com/board/dfip/5125054">DCInside DFIP: C3 change notes</a></li>
+<li id="src-6"><a href="https://www.youtube.com/watch?v=pXLezAjEkZU">YouTube guide</a></li>
+<li id="src-7"><a href="https://www.youtube.com/watch?v=APHchLSAH2o">YouTube guide (C3 focus)</a></li>
+<li id="src-8"><a href="https://www.youtube.com/watch?v=fiojBTDTvxQ">YouTube guide (comprehensive)</a></li>
+<li id="src-9"><a href="https://m.dcinside.com/board/dfip/5096970">DCInside DFIP forum: C3 pattern tips</a></li>
+</ul></section></main></div>
+<script>
+(function() {
+  var allLinks = Array.from(document.querySelectorAll('.sidenav a'));
+  var entries = allLinks.map(function(l) {
+    return {
+      link: l,
+      section: document.getElementById(l.getAttribute('href').slice(1)),
+      isSub: l.classList.contains('nav-sub-link'),
+      parentLi: l.closest('li')
+    };
+  }).filter(function(e) { return e.section; });
+
+  var accents = {};
+  document.querySelectorAll('.boss-section').forEach(function(s) {
+    accents[s.id] = s.style.getPropertyValue('--accent');
+  });
+
+  function topLevelAccentFor(entry) {
+    // walk up to find the enclosing boss-section's accent, for sub-items too
+    var el = entry.section;
+    while (el && !el.classList.contains('boss-section')) el = el.parentElement;
+    return el ? el.style.getPropertyValue('--accent') : '#20242B';
+  }
+
+  function onScroll() {
+    var pos = window.scrollY + 120;
+    var activeIdx = 0;
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].section.offsetTop <= pos) activeIdx = i;
+    }
+    var activeTopLi = null;
+    entries.forEach(function(e, i) {
+      var isActive = (i === activeIdx);
+      e.link.classList.toggle('active', isActive);
+      if (isActive) {
+        var accent = topLevelAccentFor(e);
+        e.link.style.setProperty('--active-accent', accent);
+        if (e.isSub) {
+          // also mark the parent top-level link active for context
+          var topLi = e.link.closest('ul.nav-sub').closest('li');
+          activeTopLi = topLi;
+        } else {
+          activeTopLi = e.parentLi;
+        }
+      }
+    });
+    // ensure exactly the correct top-level link gets the active style when a sub-item is active
+    document.querySelectorAll('.nav-top-link').forEach(function(topLink) {
+      var li = topLink.closest('li');
+      if (li === activeTopLi && !topLink.classList.contains('active')) {
+        topLink.classList.add('active');
+        var sectionId = topLink.getAttribute('href').slice(1);
+        topLink.style.setProperty('--active-accent', accents[sectionId] || '#20242B');
+      }
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

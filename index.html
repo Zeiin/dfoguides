@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DFO Guides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #ECE9E2;
+    --muted: #A79E8C;
+    --gold: #C9A15A;
+    --gold-dim: #8A7442;
+    --scrim: rgba(8, 9, 11, 0.72);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #0E1013;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+  }
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background-image:
+      linear-gradient(180deg, rgba(10,11,13,0.55) 0%, rgba(10,11,13,0.35) 30%, rgba(10,11,13,0.88) 78%, #0a0b0d 100%),
+      url('images/landing-banner.jpg');
+    background-size: cover;
+    background-position: center 30%;
+  }
+  .hero-content {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px 96px;
+    text-align: center;
+  }
+  .kicker {
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    color: var(--gold);
+    margin-bottom: 18px;
+    font-weight: 500;
+  }
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    line-height: 1.08;
+    margin: 0 0 22px;
+    color: var(--ink);
+    text-shadow: 0 2px 24px rgba(0,0,0,0.5);
+  }
+  .lede {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--muted);
+    margin: 0 auto 40px;
+    max-width: 540px;
+  }
+  .guide-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 30px;
+    border: 1px solid var(--gold-dim);
+    background: rgba(201, 161, 90, 0.08);
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.98rem;
+    font-weight: 500;
+    border-radius: 3px;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .guide-link:hover {
+    border-color: var(--gold);
+    background: rgba(201, 161, 90, 0.16);
+  }
+  .guide-link .tag {
+    font-size: 0.72rem;
+    color: var(--gold);
+    border: 1px solid var(--gold-dim);
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.04em;
+  }
+  footer {
+    background: #0a0b0d;
+    padding: 22px 24px 28px;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #5c574c;
+  }
+  @media (max-width: 520px) {
+    .hero-content { padding-bottom: 64px; }
+  }
+</style>
+</head>
+<body>
+  <div class="hero">
+    <div class="hero-content">
+      <div class="kicker">Work in progress</div>
+      <h1>A community-written<br>DFO guidebook</h1>
+      <p class="lede">Boss patterns, mechanics, and clips written up by players, for players. Starting small, adding more as guides get finished.</p>
+      <a class="guide-link" href="legion/apocalypse/">
+        <span>Apocalypse: Anti-Enbi</span>
+        <span class="tag">Legion dungeon</span>
+      </a>
+    </div>
+  </div>
+  <footer>dfoguides.com &middot; not affiliated with Neople or Nexon</footer>
+</body>
+</html>
