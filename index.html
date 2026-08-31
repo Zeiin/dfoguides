@@ -32,7 +32,7 @@
     justify-content: flex-end;
     background-image:
       linear-gradient(180deg, rgba(10,11,13,0.55) 0%, rgba(10,11,13,0.35) 30%, rgba(10,11,13,0.88) 78%, #0a0b0d 100%),
-      url('images/landing-banner.jpg');
+      var(--bg-photo);
     background-size: cover;
     background-position: center 30%;
   }
@@ -107,14 +107,26 @@
   <div class="hero">
     <div class="hero-content">
       <div class="kicker">Work in progress</div>
-      <h1>A community-written<br>DFO guidebook</h1>
-      <p class="lede">Boss patterns, mechanics, and clips written up by players, for players. Starting small, adding more as guides get finished.</p>
+      <h1>Community Written<br>Guides for DFO</h1>
       <a class="guide-link" href="legion/apocalypse/">
-        <span>Apocalypse: Anti-Enbi</span>
+        <span>Apocalypse</span>
         <span class="tag">Legion dungeon</span>
       </a>
     </div>
   </div>
   <footer>dfoguides.com &middot; not affiliated with Neople or Nexon</footer>
+  <script>
+    // Add new filenames here any time to grow the rotation, no other changes needed.
+    const backgrounds = [
+      'images/landing-banner.jpg',
+      'images/landing-banner-2.jpg',
+      'images/landing-banner-3.jpg',
+      'images/landing-banner-4.jpg',
+      'images/landing-banner-5.jpg',
+      'images/landing-banner-6.jpg'
+    ];
+    const pick = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+    document.documentElement.style.setProperty('--bg-photo', `url('${pick}')`);
+  </script>
 </body>
 </html>
