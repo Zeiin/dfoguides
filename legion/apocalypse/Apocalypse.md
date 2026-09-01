@@ -43,7 +43,7 @@ tl;dr: Jump over to red lines and place the bombs away from safe zones. P2 is ga
   <video src="images/ica-ice-mine.mp4" autoplay loop muted playsinline title="Ice Lines"></video>
 
 - **Cold Bullet**: Map-wide attack where the safe spot is a small circle directly at Ica's location.
-<video src="images/cold-bullet.mp4" autoplay loop muted playsinline title="Cold Bullet"></video>
+  <video src="images/cold-bullet.mp4" autoplay loop muted playsinline title="Cold Bullet"></video>
 
 - **Time Bomb:** This pattern starts with a few bombs that track the player. These bombs explode into a blue frozen ground that will also eventually explode. The initial location of the bomb is the safe zone. Avoid these explosions, any red aoes, red tripwires, and Cold Bullet during this pattern. Finishes with a set of glowing orbs: basic-attack the one flashing red to successfully complete the pattern.
   <video src="images/ica-time-bomb.mp4" autoplay loop muted playsinline title="Time Bomb"></video>
@@ -60,7 +60,7 @@ tl;dr: Jump over to red lines and place the bombs away from safe zones. P2 is ga
   <video src="images/cold-release.mp4" autoplay loop muted playsinline title="Cold Release"></video>
 
 - **Small Bullets:** Ice launches small bullets towards the opposite side of the map. Stay on the same side of Ica to avoid the damage from these, they will explode on contact with the heat line and do damage in the direction they were moving.
-	<video src="images/small-bullets.mp4" autoplay loop muted playsinline title="Small Bullets"></video>
+  <video src="images/small-bullets.mp4" autoplay loop muted playsinline title="Small Bullets"></video>
 	
 - **Absolute Zero (groggy):** Watch the direction of the falling orb and move to the alternating opposite side (getting hit by one fills half the gauge). Lure the resulting red floor zone to the map edge and sprint to the opposite side, repeat twice, then dodge the center attack and close in for the groggy. Gauge fills fast during this cast. Cross the line quickly and repeatedly while doing this pattern.
     <video src="images/neutralize-break.mp4" autoplay loop muted playsinline title="Neutralize Break"></video>
