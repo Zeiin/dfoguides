@@ -45,7 +45,7 @@ tl;dr: Jump over to red lines and place the bombs away from safe zones. P2 is ga
 - **Cold Bullet**: Map-wide attack where the safe spot is a small circle directly at Ica's location.
   <video src="images/cold-bullet.mp4" autoplay loop muted playsinline title="Cold Bullet"></video>
 
-- **Time Bomb:** This pattern starts with a few bombs that track the player. These bombs explode into a blue frozen ground that will also eventually explode. The initial location of the bomb is the safe zone. Avoid these explosions, any red aoes, red tripwires, and Cold Bullet during this pattern. Finishes with a set of glowing orbs: basic-attack the one flashing red to successfully complete the pattern.
+- **Time Bomb:** This pattern starts with a few bombs that track the player. These bombs explode into a blue frozen ground that will also eventually explode. The initial location of the bomb is the safe zone. Avoid these explosions, any red AoEs, red tripwires, and Cold Bullet during this pattern. Finishes with a set of glowing orbs: basic-attack the one flashing red to successfully complete the pattern.
   <video src="images/ica-time-bomb.mp4" autoplay loop muted playsinline title="Time Bomb"></video>
 
 - **Condensed Bomb**: Watch her footprints to figure out where Ica walked, face the direction she walked and use Skirmish on the grenade to knock it towards Ica.
@@ -55,24 +55,28 @@ tl;dr: Jump over to red lines and place the bombs away from safe zones. P2 is ga
 
 <img src="images/ica-p2-cutscene.png" alt="Ica phase 2 cutscene">
 
-- **Ice Gauge:** Everyone has a personal gauge that fills from getting hit by the blue zone or its attacks. Cross the line through the map's center to lower your gauge.
+- **Ice Gauge:** Everyone has a personal ice gauge that fills from getting hit by the blue zone or its attacks. Cross the line through the map's center to lower your gauge.
 - **Cold Release:** When this cast comes up, use Skirmish toward the boss to counter it.
   <video src="images/cold-release.mp4" autoplay loop muted playsinline title="Cold Release"></video>
 
 - **Small Bullets:** Ica launches small bullets towards the opposite side of the map. Stay on the same side of Ica to avoid the damage from these, they will explode on contact with the heat line and do damage in the direction they were moving.
   <video src="images/small-bullets.mp4" autoplay loop muted playsinline title="Small Bullets"></video>
-	
-- **Absolute Zero (groggy):** Watch the direction of the falling orb and move to the alternating opposite side (getting hit by one fills half the gauge). Lure the resulting red floor zone to the map edge and sprint to the opposite side, repeat twice, then dodge the center attack and close in for the groggy. Gauge fills fast during this cast. Cross the line quickly and repeatedly while doing this pattern.
+
+- **Absolute Zero:** Watch the direction of the falling orb and move to the alternating opposite side (getting hit by one fills half the gauge). Lure the resulting red floor zone to the map edge and sprint to the opposite side, repeat twice, then dodge the center attack and close in for groggy. Gauge fills fast during this cast. Cross the line quickly and repeatedly while doing this pattern.
     <video src="images/neutralize-break.mp4" autoplay loop muted playsinline title="Neutralize Break"></video>
 
-- **Blizzard:** After the orbs end, a cold storm wanders the map. It deals no damage but raises the Ice Gauge on contact, cross the line proactively rather than waiting for the gauge to fill. The storm converges on the center and force-freezes everyone: basic attack when the cast bar hits the green zone, then move next to Ica to dodge her finisher. Ica is groggied upon success.
+- **Blizzard:** After the orbs end, a cold storm wanders the map. It deals no damage but raises Gauge on contact, cross the line proactively rather than waiting for the gauge to fill. The storm converges on the center and force-freezes everyone: basic attack when the cast bar hits the green zone, then move next to Ica to dodge her finisher. Ica is groggied upon success.
   <video src="images/cold-storm-qte.mp4" autoplay loop muted playsinline title="Cold Storm QTE"></video>
 
-- If your party has a Glacial Master, they skip the freeze-break timing entirely and can trigger the groggy immediately.
+    - If your party has a Glacial Master, they skip the freeze-break timing entirely and can trigger groggy immediately.
 
 ### C3
 
-- **End of the Party:** On entry, C3 opens with this sequence: Entry grenade you need to use Skirmish on to throw toward Ica. A yellow orb appears with a zone, stay inside it, the gauge only fills while you're outside it, and if it fills completely you're expelled from the dungeon. Dodge her attacks while staying in the zone the best you can, but you will have to step outside briefly to dodge some patterns. Finally, dodge the center attack, then pass the Skirmish check to raise a barrier around the yellow orb and step inside it.
+- **End of the Party:** On entry, C3 opens with this fixed sequence.
+    - An entry grenade appears, use Skirmish to throw it toward Ica.
+    - A yellow orb appears with a zone: stay inside it. The gauge only fills while you're outside it, and if it fills completely you're expelled from the dungeon.
+    - Dodge her attacks while staying in the zone as best you can, you will have to step outside briefly for some patterns.
+    - Finally, dodge the center attack, then pass the Skirmish check to raise a barrier around the yellow orb and step inside it.
     <video src="images/ica-end-of-party.mp4" autoplay loop muted playsinline title="End of the Party"></video>
 
 ## 2. Fictum
@@ -92,14 +96,19 @@ tl;dr: Jump on things, Skirmish when you can.
 - **Dive:** A jump-marker floor zone appears on entry (and recurs through the fight); jump inside it then Skirmish when the marker appears afterwards. His name tag position may reveal the location of Dive early.
   <video src="images/fictum-dive.mp4" autoplay loop muted playsinline title="Fictum dive"></video>
 
-- **Deception:** A girl approaches from one side, a red aoe following her, bump into her to stop her movement and maintain your safe zone.
+- **Deception:** A girl approaches from one side, a red AoE following her, bump into her to stop her movement and maintain your safe zone.
   <video src="images/fictum-deception.mp4" autoplay loop muted playsinline title="Fictum deception"></video>
 
-- **Chasing Shadows (groggy):** A small safe zone spawns and closes in. The girl will eventually appear, jump to the girl to open a new safe zone, then jump back to Fictum, repeating the cycle. A yellow orb eventually appears: grab it and bump it into Fictum. Repeat until the gimmick counter reaches 0. 
+- **Chasing Shadows:** A small safe zone spawns and closes in. The girl will eventually appear, jump to the girl to open a new safe zone, then jump back to Fictum, repeating the cycle. A yellow orb eventually appears: grab it and bump it into Fictum. Repeat until the gimmick counter reaches 0. 
   <video src="images/fictum-chasing-shadows.mp4" autoplay loop muted playsinline title="Fictum chasing shadows"></video>
 
-- **Shards of the Shadows (groggy):** Spikes will rain around the arena, with one glowing green. A red droppable aoe will spawn under you, drop it over the glowing spike. Afterwards the spike will launch again and charge a screen-wide aoe. The spike itself will have a safe zone directly on where it landed. Run to it. Use Skirmish on Fictum. He will repeat this exact sequence once. After two successful skirmishes, Fictum will then spawn 4 more spikes and punch them up. One by one, they will fall and repeat the screen-wide aoe with small safe zone pattern. After the final skirmish check, you will have an overpower check before finally reaching groggy. 
-  <video src="images/fictum-shards-of-the-shadows.mp4" autoplay loop muted playsinline title="Fictum shards of the shadows"></video>
+- **Shards of the Shadows:**
+    - Spikes rain around the arena, one will glow green. A red AoE spawns under you, drop it over the glowing spike.
+    - The spike launches and falls somewhere on the map. It then charges a screen-wide AoE and spawns a safe zone where it landed. Run to this zone, then use Skirmish on Fictum.
+    - He repeats this exact sequence once more.
+    - After two successful Skirmishes, he spawns 4 more spikes and punches them up. One by one they fall, repeating the screen-wide AoE + small safe zone pattern.
+    - After the final Skirmish check, beat an Overpower check for groggy.
+    <video src="images/fictum-shards-of-the-shadows.mp4" autoplay loop muted playsinline title="Fictum shards of the shadows"></video>
 
 ## 3. Bliss
 
@@ -121,14 +130,25 @@ tl;dr: Dodge into a shadow for Backstage, lure the light onto the unlit clones f
 - **Backstage:** Clones spawn a shadow safe zone behind them that blocks the attack. Stay in the shadow to avoid it.
   <video src="images/bliss-backstage.mp4" autoplay loop muted playsinline title="Bliss backstage"></video>
 
-- **Dance of Death (groggy):** She opens with a large red aoe and a small safe zone at center. Afterwards, she spawns a white safe zone. Stay inside this zone while dodging red aoes and her spinning clones. Partway through, she jumps to the center of the white safezone, you must jump to avoid the damage from this attack. She then casts Backstage and Spotlight together. Stay in the backstage safe zone, then drag Spotlight onto the unlit clone. Finally, this will trigger a Skirmish opportunity for the groggy.
-  <video src="images/dance-of-death.mp4" autoplay loop muted playsinline title="Dance of Death"></video>
+- **Dance of Death:**
+    - She opens with a large red AoE and a small safe zone in the center.
+    - Afterwards, she spawns a white safe zone. Stay inside it while dodging red AoEs and her spinning clones.
+    - Partway through, she jumps to the center of the white safe zone. Jump to avoid the damage from this attack. There will be a cast bar to indicate when you have to jump this.
+    - She then casts Backstage and Spotlight together. Stay in the backstage safe zone first to avoid her attack, then drag Spotlight onto the unlit clone.
+    - This triggers a Skirmish opportunity for groggy.
+    <video src="images/dance-of-death.mp4" autoplay loop muted playsinline title="Dance of Death"></video>
 
-- **Quiet Play (groggy):** She opens with a screen wide red aoe. Stand in the glowing safe bubble (which is also a green aoe) to avoid it. Then an escalating 3-wave Backstage+Spotlight sequence: wave 1 is a single spotlight followed by backstage, wave 2 doubles to two simultaneous spotlights followed by backstage, and wave 3 starts with a single spotlight into backstage, before finishing with three simultaneous spotlights and a final backstage after the last spotlight. Each wave ends with an opportunity to Skirmish.
-  <div><video src="images/quiet-play-wave2.mp4" autoplay loop muted playsinline title="Quiet Play wave 2"></video><video src="images/quiet-play-wave3.mp4" autoplay loop muted playsinline title="Quiet Play wave 3"></video></div>
+- **Quiet Play:**
+    - She opens with a screen-wide red AoE. Stand in the glowing safe bubble (also a green AoE) to avoid it.
+    - Now starts a 3-wave Backstage+Spotlight sequence:
+        - Wave 1: a single Spotlight, followed by Backstage.
+        - Wave 2: doubles to two simultaneous Spotlights, followed by Backstage.
+        - Wave 3: starts with a single Spotlight into Backstage, then finishes with three simultaneous Spotlights and a final Backstage.
+    - Each wave ends with an opportunity to Skirmish.
+    <div><video src="images/quiet-play-wave2.mp4" autoplay loop muted playsinline title="Quiet Play wave 2"></video><video src="images/quiet-play-wave3.mp4" autoplay loop muted playsinline title="Quiet Play wave 3"></video></div>
 
-  - **1 or more successes out of 3 →** finale’s Overpower requirement drops by success count (solo: 3/2/1, party: 12/8/4) and the red AoE shrinks.
-  - **0/3 successes →** Overpower requirement locks at 99 (unbreakable), death attack covers the whole map. Pop invuln or die.
+    - **1 or more successes out of 3 →** finale’s Overpower requirement drops by success count (solo: 3/2/1, party: 12/8/4) and the red AoE shrinks.
+    - **0/3 successes →** Overpower requirement locks at 99 (unbreakable), death attack covers the whole map.
 
 ## 4. Socors
 
@@ -148,10 +168,10 @@ tl;dr: Grab Constellation → Bump creature.
 - **Normal Attack:** Socors creates a ring of creatures around himself. Use Skirmish on the first one to create a black constellation on the floor you need to pick up. After picking it up, bump into the next creature in the ring. Repeat until the pattern completes. Each successful bump also drops a yellow orb. Grab it and basic attack him to fire it, chipping his Neutralization gauge.
   <video src="images/socors-normal.mp4" autoplay loop muted playsinline title="Socors normal attack"></video>
 
-- **Wave of Reversal:** Socors targets a player with an attack. Lure the attack to a nearby creature and hide completely behind it to avoid the attack. Afterwards a constellation will spawn, pick it up, and bump the black sphere somewhere on the screen to reduce the gimmick counter. Also, bumping will drop a yellow orb. Pick up the orb and bump Socors if you want to reduce his Neutralization gauge.
+- **Wave of Reversal:** Socors targets a player with an attack. Lure the attack to a nearby creature and hide completely behind it to avoid the attack. Afterwards a constellation will spawn, pick it up, and bump the black sphere somewhere on the screen to reduce the gimmick counter and drop a yellow orb. Pick up the orb and bump Socors if you want to reduce his Neutralization gauge.
   <video src="images/wave-of-reversal.mp4" autoplay loop muted playsinline title="Wave of Reversal"></video>
 
-- **Record of the End:** Eat the sigil, then bump into Socors to reduce the pattern counter shown on screen; repeat until it hits 0 for the groggy.
+- **Record of the End:** Eat the sigil, then bump into Socors to reduce the pattern counter shown on screen; repeat until it hits 0 for groggy.
   <img src="images/socors-record-of-the-end.gif" alt="Record of the End">
 
 ### Phase 2
@@ -184,16 +204,19 @@ tl;dr: P1 Jumping and basic-attacking over a white tile spawns a shield. P2-P3 r
 
 <img src="images/lopez-portrait.png" alt="Lopez phase 1 cutscene">
 
-**White tile: jump + basic attack on a white tile = shield that blocks Lopez’s next hit. If a white tile appears, that attack is otherwise undodgeable.**
+**White tile:** jump + basic attack on a white tile = shield that blocks Lopez’s next hit. If a white tile appears, that attack is otherwise undodgeable.
 
 <video src="images/white-tile.mp4" autoplay loop muted playsinline title="White tile"></video>
 
 #### Phase 1 (both patterns must be broken once, groggy needs both)
 
-- **Destruction:** A ring appears: Red means the ring will attack everything outside it, so to avoid it you must step inside it. Green means the ring will attack everything inside it step outside. Can have multiple rings or full-map versions. You can use a white tile shield to avoid a full map ring .
+- **Destruction:** Rings appear:
+    - Red means the ring will attack everything outside it, so to avoid it you must step inside it.
+    - Green means the ring will attack everything inside it, so to avoid it you must step outside it.
+    - Lopez can spawn multiple rings or full-map versions of either ring. You can use a white tile shield to avoid a full map ring.
   <video src="images/destruction-c2.mp4" autoplay loop muted playsinline title="Destruction"></video>
 
-- **End Pillar:** A laser chases a player continuously. The further you are, the faster it will chase you. While you dodge a combination of Destruction casts and red tiles. A white tile appears during this, but do NOT use it early. The laser can destroy the shield. The laser stops moving briefly before the cast bar finishes, create the white tile barrier after it stops moving.
+- **End Pillar:** Lopez spawns a laser to chase a player continuously, while also casting a combination of Destruction and red tile attacks. The laser speeds up the further the player is from it. A white tile appears during this pattern, but do not interact with it early, because the laser can destroy the shield. The laser stops moving briefly before the cast bar finishes, so create the white tile barrier after it stops moving.
   <video src="images/end-pillar.mp4" autoplay loop muted playsinline title="End Pillar"></video>
 
 - **End Domain:** Follow the lit flame tile. When it goes out, move to the next one. Repeat this until you can create a white tile barrier. After the first white tile barrier he throws some red tile patterns at you. Dodge these until a white tile appears again. Activating that white tile finishes the pattern.
@@ -201,14 +224,15 @@ tl;dr: P1 Jumping and basic-attacking over a white tile spawns a shield. P2-P3 r
 
 #### Phase 2
 
-- **Annihilation Strike:** In P2, the white tile no longer raises a shield, instead jump + basic attack on it cancels the Annihilation Strike attack. Time it to when Lopez is actually on screen. He has a habit of disappearing during some attacks. If you use the white tile while he is gone you will fail to interrupt the attack and get punished.
-- **Marker color matters**: Pay attention to Skirmish markers during this phase. If they are yellow, Skirmish as usual. If they are red, it is a bait. Skirmishing on a red marker leads to death (but a cool animation at least).
+Fake Skirmish Markers: Pay attention to Skirmish markers during this phase. If they are yellow, Skirmish as usual. If they are red, it is a bait. Skirmishing on a red marker leads to death (but a cool animation at least).
   <div><video src="images/yellow-marker.mp4" autoplay loop muted playsinline title="Yellow marker"></video><video src="images/red-marker.mp4" autoplay loop muted playsinline title="Red marker"></video><video src="images/red-marker-failure.mp4" autoplay loop muted playsinline title="Red marker failure"></video></div>
 
-- **The Coming End:** Lopez introduces lasers with expanding red aoes for this pattern. It boils down to dodging red AoEs, red tiles, and expanding lasers throughout, using Skirmish, and canceling Annihilation Strike with the white tile whenever it comes up. The sequence is fixed after the opening, so you can memorize this over time. 
+- **Annihilation Strike:** In P2, the white tile no longer raises a shield, instead jump + basic attack on it cancels the Annihilation Strike attack Lopez casts. Only interact with the white tile when Lopez is on screen (he has a habit of disappearing during some attacks). If you use the white tile while he is gone you will fail to interrupt the attack and get punished.
+
+- **The Coming End:** Lopez introduces lasers with expanding red AoEs for this pattern. It boils down to dodging red AoEs, red tiles, and expanding lasers, using Skirmish and canceling Annihilation Strike. The sequence is fixed after the opening. 
   <div><video src="images/attack-type1.mp4" autoplay loop muted playsinline title="Attack Type 1"></video><video src="images/attack-type2.mp4" autoplay loop muted playsinline title="Attack Type 2"></video><video src="images/ce-variants.mp4" autoplay loop muted playsinline title="Coming End variants"></video><video src="images/impending-doom.mp4" autoplay loop muted playsinline title="Impending Doom repositioning"></video><video src="images/coming-end.mp4" autoplay loop muted playsinline title="The Coming End"></video></div>
 
-  - After the marker rounds, a green warning-sign attack appears; the tiles it covers turn green and stay bad, so lure it as far to the map edge as possible to minimize how much of the arena you lose.
+    - Later in this pattern a green AoE will appear underneath a player. The tiles it covers after being placed turn green and become dangerous. Lure it as close to the map edge as possible to minimize how much of the arena you lose.
     <video src="images/green-tile.mp4" autoplay loop muted playsinline title="Green tiles"></video>
 
 #### Phase 3 (enrage: triggers off Coming End ending, or Neutralization fully drained)
@@ -224,48 +248,55 @@ Revive windows are party-only (solo gets none, and any wipe restarts from P1).
 
 #### Phase 1 (base 75%)
 
-- **End Pillar:** Upon entry, you will need to immediately interact with a white tile to spawn a barrier. Afterwards, it's the same laser concept from C2, avoid it while juggling other patterns. The End Domain pattern will overlap here, surrounded by red tiles. When the laser stops moving, interact with the white tile. Afterwards 4 lasers close in while rotating counter-clockwise. Dodge the lasers and two slash attacks Lopez casts towards the center of the screen. Finally, activate the white tile and use Skirmish for the groggy. After Groggy or upon reaching 0% HP, you move to P2-1.
-  <video src="images/p1-groggy.mp4" autoplay loop muted playsinline title="End Pillar C3 groggy"></video>
+- **End Pillar:** Upon entry, you will need to immediately interact with a white tile to spawn a barrier.
+    - Afterwards, it's the same laser concept from C2, avoid it while juggling other patterns. The End Domain pattern will overlap here, surrounded by red tiles.
+    - When the laser stops moving, interact with the white tile.
+    - Afterwards 4 lasers close in while rotating counter-clockwise. Dodge the lasers and two slash attacks Lopez casts towards the center of the screen.
+    - Activate the white tile and use Skirmish for groggy. After Groggy or upon reaching 0% HP, you move to P2-1.
+    <video src="images/p1-groggy.mp4" autoplay loop muted playsinline title="End Pillar C3 groggy"></video>
 
 #### Phase 2-1 (base 75%, up to 175% via Overwhelm)
 
 - This phase is really just dodging based off what you've learned to get here.
 
-- Overwhelm: Permanent damage-taken buff based on how much HP you chip off each phase, carries over and stacks as you progress
+- **Overwhelm:** Permanent damage-taken buff based on how much HP you chip off each phase, carries over and stacks as you progress.
 - **Scarring:** Expelled from the fight after 3 hits. Using Skirmish successfully during a pattern clears your stacks.
 - **Flame of Ruin:** Tracking laser + tiles turning green sequentially in a counter-clockwise direction, starting at 12 o’clock. The final safe tile will be the center one. If the laser is too close, you can jump over the green tiles safely (without landing) and skirmish from that position. It is suggested that you move the laser to the right as much as you can to make returning to the center easy.
   <video src="images/flame-of-ruin.mp4" autoplay loop muted playsinline title="Flame of Ruin"></video>
 
 - **Destruction and the End:** Fixed sequence.
-  - Tiles turn red around Lopez, you must move towards regular tiles to avoid being hit. Repeat until there is 1 left. He then shoots a red aoe alongside two screen slashes. Avoid all of them from the safe tile you're standing on. He then slams the ground, dodge that too. He will turn the floor red again while jumping onto a tile that will become a safe zone. He jumps away and casts a large red aoe. Stay in your tile until the tile he is standing on becomes a new safe zone and jump to it to avoid the aoe. This pattern continues with a variety of differences, but the concept is the same as the prior two explanations. 
-    <video src="images/lopez-destruction-sequence-1.mp4" autoplay loop muted playsinline title="Destruction and the End: sequence 1"></video><video src="images/lopez-destruction-sequence-2.mp4" autoplay loop muted playsinline title="Destruction and the End: sequence 2"></video><video src="images/lopez-destruction-finale-collapse.mp4" autoplay loop muted playsinline title="Destruction and the End: finale collapse"></video>
+    - Tiles turn red around Lopez, move toward regular tiles to avoid being hit. Repeat until there is 1 left.
+    <video src="images/lopez-destruction-sequence-1.mp4" autoplay loop muted playsinline title="Destruction and the End: sequence 1"></video>
+    - He then shoots a red AoE alongside two screen slashes, avoid all of them from the safe tile you're standing on. Afterwards he slams the ground, dodge per usual.
+    <video src="images/lopez-destruction-sequence-2.mp4" autoplay loop muted playsinline title="Destruction and the End: sequence 2"></video>
+    - He turns the floor red again while jumping onto a tile that becomes a new safe zone. He jumps away and casts a large red AoE: stay in your tile until the tile he's standing on becomes the new safe zone, then jump to it to avoid the AoE. This repeats with variations, but the concept stays the same as the prior two steps.
+    <video src="images/lopez-destruction-finale-collapse.mp4" autoplay loop muted playsinline title="Destruction and the End: finale collapse"></video>
 
 #### Phase 2-2 (descent: 4 fixed segments, reskins of the mid-bosses)
 
-- **Archive segment (Socors’ floor):** A yellow orb will spawn near Lopez during Annihilation. Grab it for a shield. Floor tilts, dodge the debris that slides. One piece of rubble will fall with jump prompt. It will create a safe zone on one side. Stand in the safe zone to avoid his attacks and finally repeat the yellow orb shield to block Annihilation.
+- **Archive segment (Socors’ floor):** A yellow orb will spawn near Lopez during Annihilation. Grab it for a shield. The floor will tilt afterwards, dodge the debris that slides. One piece of rubble will fall with jump prompt. It will create a safe zone on one side. Stand in the safe zone to avoid his attacks and repeat the yellow orb shield to block Annihilation.
   <video src="images/archive.mp4" autoplay loop muted playsinline title="Archive segment"></video>
 
-- **Selection segment (Bliss’ floor):** Dodge the reds, place the spotlight on Lopez’s real body to cancel his attack. 3 rocks eventually appear and they each provide a safe zone: use them to block his next three attacks. On the 3rd, you must also jump, since it overlaps a ground slam. Finally, place the spotlight on Lopez from there.
+- **Selection segment (Bliss’ floor):** Dodge the reds, place the spotlight on Lopez’s real body to cancel his attack. 3 rocks appear, each provides a safe zone. Use them to block his next three attacks. On the 3rd, you must also jump, since it overlaps a ground slam. Finally, place the spotlight on Lopez.
   <div><video src="images/selection-spotlight.mp4" autoplay loop muted playsinline title="Selection spotlight"></video><video src="images/selection.mp4" autoplay loop muted playsinline title="Selection segment"></video></div>
 
-- **Coordination segment (Fictum's floor):** Dark-red jump pad: jump right as it finishes filling, then jump onto Lopez himself to cancel his attack. Eventually you'll have to chain 4x jump pads in a row.
+- **Coordination segment (Fictum's floor):** Red jump pads appear periodically, jump before it finishes filling, then jump onto Lopez himself to cancel his attack. Eventually you'll have to chain 4x jump pads in a row.
   <video src="images/coordination.mp4" autoplay loop muted playsinline title="Coordination segment"></video>
 
-- **Mist segment (Ica’s floor):** The Doom gauge here works like Ica’s heat gauge: cross the line to lower it. As usual, dodge everything. At some point Lopez will forcibly knock you down. Hold Quick Rebound's iframe to survive the 4 expanding lasers that will fill the screen. Beat the overpower skill check afterwards for groggy.
+- **Mist segment (Ica’s floor):** The Doom gauge here works like Ica’s ice gauge: cross the line to lower it. As usual, dodge everything. At some point Lopez will forcibly knock you down. Hold Quick Rebound's iframe to survive the 4 expanding lasers that will fill the screen. Beat the overpower skill check afterwards for groggy.
   <video src="images/quick-rebound.mp4" autoplay loop muted playsinline title="Mist laser"></video>
 
 #### Phase 3 (no base multiplier: runs entirely on Overwhelm, cap 200%)
 
-- **Arena:** You can fall off of the arena in this phase. Take care running around as it gets smaller. Note you may jump over the edge of the arena and return if you need extra space to dodge.
+**Arena:** You can fall off of the arena in this phase. Take care running around as it gets smaller. Note you may jump over the edge of the arena and return if you need extra space to dodge.
 
-- **Gaze into the Abyss:** Orb telegraphed in front of him; move behind him and face him with your shield up, it turns white when you're in the right spot.
+- **Gaze into the Abyss:** Lopez spawns a red orb in front of him. At the same time, a shield is summoned on the player. Move behind Lopez and turn your shield toward the red orb to avoid being hit. If you are positioned correctly your shield will turn white.
   <video src="images/gaze-into-abyss.mp4" autoplay loop muted playsinline title="Gaze into the Abyss"></video>
-
-  - Standing too far near the edge can knock you out of the arena, and even a successful cancel knocks you back, so don't sit right on the boundary.
+    - Standing too far near the edge can knock you out of the arena, and even a successful cancel knocks you back, so don't sit right on the boundary.
     <video src="images/arena-knockback.mp4" autoplay loop muted playsinline title="Arena knockback risk"></video>
 
-- His other common patterns here mostly reuse what you've already learned from the earlier phases, tied together with the Gaze into the Abyss shield, so there's no real need to break each one down individually.
-- **The Advent of the End:** Eventually Lopez goes invulnerable and appears behind the Arena. He throws a meteor towards the center of the arena without hit indicators (no red aoes). Meteors then fly in repeatedly. You must manage avoiding the regular attacks and the meteors as they're being thrown at you. Eventually, Lopez returns to the arena and begins to drop meteors on top of it. He shrinks the arena as this happens. You must pick up the beads that appear around the red aoe of the meteor to expand it back out enough to find a safe zone. Repeat until a crack appears in the Arena. Step into the cracked floor that appears for the groggy.
+- His other common patterns here mostly reuse what you've already learned from the earlier phases, tied together with the Gaze into the Abyss mechanic, so there's no real need to break each one down individually.
+- **The Advent of the End:** Eventually Lopez goes invulnerable and appears behind the arena. He throws a meteor towards the center of the arena without hit indicators (no red AoEs). Lopez will continue to throw Meteors towards the arena. You must manage avoiding regular attacks and the meteors at the same time. Lopez returns and begins to drop meteors on the arena while shrinking it. Pick up the beads that appear around the red AoE of the meteor to expand the arena enough to find a safe zone. Repeat until a crack appears in the arena and step into it for groggy.
   <video src="images/advent-full.mp4" autoplay loop muted playsinline title="Advent of the End full sequence"></video>
 
 ## Sources
@@ -279,3 +310,7 @@ Revive windows are party-only (solo gets none, and any wipe restarts from P1).
 - [YouTube guide (C3 focus)](https://www.youtube.com/watch?v=APHchLSAH2o)
 - [YouTube guide (comprehensive)](https://www.youtube.com/watch?v=fiojBTDTvxQ)
 - [DCInside DFIP forum: C3 pattern tips](https://m.dcinside.com/board/dfip/5096970)
+
+## Credits
+
+- @Pyro, @Uni: Helped proofread
