@@ -1,0 +1,21 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Build output
+bin/
+obj/
+
+# Editors and IDEs
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Generated data at the repo root: raw API dumps, statistics, downloaded art, run logs
+/data/
+
+# OS
+Thumbs.db
+.DS_Store
