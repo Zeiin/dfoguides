@@ -3,6 +3,75 @@ using System.Text.Json.Nodes;
 
 namespace Collector.Commands;
 
+// Saves the detail of every skill (prerequisites, max level) once per job and skill id, for laying out the skill tree.
+class FetchSkillDetailsCommand : ICommand
+{
+    public string Name => "fetch-skill-details";
+    public string Usage => "fetch-skill-details                       save every class skill's detail (prerequisites); resumable";
+    public int MinArgs => 0;
+    public bool NeedsApiKey => true;
+
+    public async Task<int> RunAsync(CommandContext ctx, string[] args)
+    {
+        var dir = Path.Combine(ctx.RawDir, "skilldetails");
+        Directory.CreateDirectory(dir);
+
+        var jobs = JsonNode.Parse(await File.ReadAllTextAsync(Path.Combine(ctx.RawDir, "jobs.json")))!["rows"]!.AsArray();
+        var saved = 0;
+        var failed = 0;
+
+        foreach (var baseClass in jobs)
+        {
+            var jobId = baseClass!["jobId"]!.GetValue<string>();
+            foreach (var chain in baseClass["rows"]!.AsArray())
+            {
+                var last = chain!;
+                while (last["next"] != null) last = last["next"]!;
+                var key = ClassKey.From(baseClass["jobName"]!.GetValue<string>(), last["jobGrowName"]!.GetValue<string>());
+                var listPath = Path.Combine(ctx.ReferenceDir, "skilllists", $"skilllist_{key}.json");
+                if (!File.Exists(listPath)) continue;
+
+                foreach (var skill in JsonNode.Parse(await File.ReadAllTextAsync(listPath))!["skills"]!.AsArray())
+                {
+                    var skillId = skill!["skillId"]!.GetValue<string>();
+                    var file = Path.Combine(dir, $"{jobId}_{skillId}.json");
+                    if (File.Exists(file)) continue;
+
+                    try
+                    {
+                        await File.WriteAllTextAsync(file, await ctx.Client.GetAsync($"/skills/{jobId}/{skillId}"));
+                        if (++saved % 100 == 0) Console.WriteLine($"  {saved} saved");
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        failed++;
+                        Console.WriteLine($"  failed {skillId[..8]}: {ex.Message}");
+                    }
+                }
+            }
+        }
+        await SaveCombinedPrerequisitesAsync(ctx, dir);
+        Console.WriteLine($"Done. {saved} saved, {failed} failed.");
+        return 0;
+    }
+
+    // The page only needs each skill's prerequisites, so the saved details are boiled down to one small committed file
+    // ("<jobId>_<skillId>" -> ids that must be learned first; skills without prerequisites are left out).
+    static async Task SaveCombinedPrerequisitesAsync(CommandContext ctx, string detailDir)
+    {
+        var combined = new SortedDictionary<string, string[]>(StringComparer.Ordinal);
+        foreach (var file in Directory.GetFiles(detailDir, "*.json"))
+        {
+            var detail = JsonNode.Parse(await File.ReadAllTextAsync(file))!;
+            var ids = detail["preRequiredSkill"]?.AsArray().Select(p => p!["skillId"]!.GetValue<string>()).ToArray() ?? [];
+            if (ids.Length > 0) combined[Path.GetFileNameWithoutExtension(file)] = ids;
+        }
+        Directory.CreateDirectory(ctx.ReferenceDir);
+        await File.WriteAllTextAsync(Path.Combine(ctx.ReferenceDir, "skillprereqs.json"), JsonSerializer.Serialize(combined, Json.Pretty));
+        Console.WriteLine($"Wrote skillprereqs.json: {combined.Count} skills with prerequisites.");
+    }
+}
+
 // Saves each class skill list and downloads skill icons from dfogang's CDN (<Base>/<Advancement>/<Skill_Name>.png).
 class FetchSkillIconsCommand : ICommand
 {
@@ -41,17 +110,20 @@ class FetchSkillIconsCommand : ICommand
                 var key = ClassKey.From(baseName, last["jobGrowName"]!.GetValue<string>());
 
                 // The skill list also feeds the skill tree on the page.
-                var listPath = Path.Combine(ctx.RawDir, $"skilllist_{key}.json");
+                var listPath = Path.Combine(ctx.ReferenceDir, "skilllists", $"skilllist_{key}.json");
+                Directory.CreateDirectory(Path.GetDirectoryName(listPath)!);
                 if (!File.Exists(listPath))
-                    await File.WriteAllTextAsync(listPath, await ctx.Client.GetAsync($"/skills/{baseClass["jobId"]!.GetValue<string>()}", $"jobGrowId={last["jobGrowId"]!.GetValue<string>()}"));
+                    await File.WriteAllTextAsync(listPath,await ctx.Client.GetAsync($"/skills/{baseClass["jobId"]!.GetValue<string>()}", $"jobGrowId={last["jobGrowId"]!.GetValue<string>()}"));
 
                 var skills = JsonNode.Parse(await File.ReadAllTextAsync(listPath))!["skills"]!.AsArray();
                 var classHits = 0;
+                var classDir = Path.Combine(siteSkills, key);
+                Directory.CreateDirectory(classDir);
                 foreach (var skill in skills)
                 {
                     var id = skill!["skillId"]!.GetValue<string>();
                     var name = skill["name"]!.GetValue<string>();
-                    var target = Path.Combine(siteSkills, $"{id}.png");
+                    var target = Path.Combine(classDir, $"{id}.png");
                     total++;
                     if (File.Exists(target)) { classHits++; continue; }
 

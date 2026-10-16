@@ -29,7 +29,7 @@ static class Analysis
         var display = ctx.LoadClassCatalog().GetValueOrDefault(classKey)?.Display ?? classKey;
         await File.WriteAllTextAsync(Path.Combine(ctx.OutDir, $"report_{classKey}.md"), ReportWriter.Render(display, stats));
 
-        Console.WriteLine($"{display} ({classKey}): {records.Count} characters, {skipped} skipped (missing files), records {new FileInfo(recordsPath).Length / 1024} KB");
+        Console.WriteLine($"{display} ({classKey}): {records.Count} characters, {skipped} skipped (missing files or changed class), records {new FileInfo(recordsPath).Length / 1024} KB");
         return stats;
     }
 

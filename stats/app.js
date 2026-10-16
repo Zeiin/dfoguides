@@ -5,6 +5,10 @@
   const D = window.DFO_DATA;
   const app = document.getElementById('app');
   const tip = document.getElementById('tooltip');
+  if (!D) {
+    app.textContent = 'Statistics are not available yet.';
+    return;
+  }
 
   // Base class display order; unlisted ones follow.
   const BASE_ORDER = ['Slayer (M)', 'Slayer (F)', 'Fighter (M)', 'Fighter (F)', 'Gunner (M)', 'Gunner (F)', 'Mage (M)', 'Mage (F)',
@@ -82,8 +86,9 @@
   // One ranked list of bars; `initial` rows show, the rest behind "Show all".
   // counts: print the character count next to the percent.
   // absolute: scale bars against 100% instead of the top row.
-  function barCard({ title, rows, initial = 8, icon, wide = false, longLabels = false, counts = false, absolute = false, labelOf }) {
-    const card = h('section', { class: `card${wide ? ' wide' : ''}${longLabels ? ' long-labels' : ''}${counts ? ' with-counts' : ''}` }, h('h3', {}, title));
+  function barCard({ title, rows, initial = 8, icon, titleIcon, wide = false, longLabels = false, counts = false, absolute = false, labelOf }) {
+    rows = (rows || []).filter((r) => r.name !== '(none)'); // nothing worn (e.g. a rental weapon): not worth a row
+    const card = h('section', { class: `card${wide ? ' wide' : ''}${longLabels ? ' long-labels' : ''}${counts ? ' with-counts' : ''}` }, h('h3', {}, titleIcon, title));
     if (!rows || rows.length === 0) {
       card.append(h('div', { class: 'empty' }, 'No data.'));
       return card;
@@ -125,9 +130,89 @@
     return card;
   }
 
-  function tabs(basePath, list, active) {
+  function tabs(basePath, list, active, query = '') {
     return h('nav', { class: 'tabs', role: 'tablist' }, list.map((t) =>
-      h('a', { class: `tab${t.id === active ? ' active' : ''}`, href: `#${basePath}/${t.id}`, role: 'tab', 'aria-selected': String(t.id === active) }, t.label)));
+      h('a', { class: `tab${t.id === active ? ' active' : ''}`, href: `#${basePath}/${t.id}${query}`, role: 'tab', 'aria-selected': String(t.id === active) }, t.label)));
+  }
+
+  // ---------- filters (class pages) ----------
+
+  const F = window.DFO_FILTER;
+  const familyOf = (setName) => D.setFamilies[setName] || setName;
+
+  // The filter lives in the URL so a view can be shared: #/class/<key>/<tab>?set=A~B&oath=C&min=100000&max=125000
+  function parseFilter(query) {
+    const q = new URLSearchParams(query);
+    const list = (name) => new Set((q.get(name) || '').split('~').filter(Boolean));
+    const limit = (name) => (q.get(name) ? Number(q.get(name)) : null);
+    return { sets: list('set'), oaths: list('oath'), min: limit('min'), max: limit('max') };
+  }
+
+  const filterActive = (f) => f.sets.size > 0 || f.oaths.size > 0 || f.min != null || f.max != null;
+
+  function filterQuery(f) {
+    const q = new URLSearchParams();
+    if (f.sets.size) q.set('set', [...f.sets].join('~'));
+    if (f.oaths.size) q.set('oath', [...f.oaths].join('~'));
+    if (f.min != null) q.set('min', String(f.min));
+    if (f.max != null) q.set('max', String(f.max));
+    const text = q.toString();
+    return text ? `?${text}` : '';
+  }
+
+  // A class's character rows load once, when a filter is first used.
+  const recordCache = new Map();
+  function loadRecords(key) {
+    if (recordCache.has(key)) return Promise.resolve(recordCache.get(key));
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = `data/records/${encodeURIComponent(key)}.js`;
+      script.onload = () => { recordCache.set(key, window.DFO_RECORDS[key]); resolve(window.DFO_RECORDS[key]); };
+      script.onerror = () => reject(new Error('Could not load the characters.'));
+      document.head.append(script);
+    });
+  }
+
+  // Several classes at once, a few files at a time so the browser is not flooded.
+  async function loadManyRecords(keys, batch = 6) {
+    const out = [];
+    for (let i = 0; i < keys.length; i += batch) out.push(...await Promise.all(keys.slice(i, i + batch).map(loadRecords)));
+    return out;
+  }
+
+  const FAMILY_ORDER = ['Cleansing Darkness', 'Dragon Arena Uprising', "Hideout's Endless Gold", 'Overwhelming Nature', 'Death in the Shadows', 'Magic Domain',
+    'Serendipity', 'Ethereal Orb Arts', 'Ancient Battlefield Valkyrie', 'Soul Fairy', 'Beyond Limit Energy', 'Alpha of the Pack Hunt'];
+
+  // Set and oath buttons (emblems only) and the fame range. Choosing nothing in a row means every character.
+  function filterBar(path, tab, info, base, filter) {
+    const go = (next) => { location.hash = `#${path}/${tab}${filterQuery(next)}`; };
+    const toggled = (set, value) => { const next = new Set(set); if (next.has(value)) next.delete(value); else next.add(value); return next; };
+    // Icon-only button; the name is the tooltip.
+    const chip = (label, iconFile, active, onClick) => h('button', { class: `fchip icon-only${active ? ' active' : ''}`, type: 'button', title: label, 'aria-label': label, 'aria-pressed': String(active), onclick: onClick },
+      h('img', { class: 'item-icon', src: `img/items/${iconFile}`, alt: '' }));
+
+    // Every emblem set and its oath set, always in the same order so the two rows line up (an oath uses the emblem of its themed set).
+    const setChips = FAMILY_ORDER.filter((family) => D.familyIcons[family])
+      .map((family) => chip(family, D.familyIcons[family], filter.sets.has(family), () => go({ ...filter, sets: toggled(filter.sets, family) })));
+    const familyOfIcon = new Map(Object.entries(D.familyIcons).map(([family, file]) => [file, family]));
+    const oathRank = (name) => FAMILY_ORDER.indexOf(familyOfIcon.get(D.icons.oath[name]));
+    const oathChips = Object.keys(D.icons.oath || {}).sort((a, b) => oathRank(a) - oathRank(b))
+      .map((name) => chip(name.replace(/ Oath$/, ''), D.icons.oath[name], filter.oaths.has(name), () => go({ ...filter, oaths: toggled(filter.oaths, name) })));
+
+    const fameInput = (field, label, placeholder) => {
+      const input = h('input', { class: 'fame-input', type: 'number', inputmode: 'numeric', min: '0', step: '100', placeholder: num(placeholder), 'aria-label': label, value: filter[field] ?? '' });
+      input.addEventListener('change', () => go({ ...filter, [field]: input.value === '' ? null : Number(input.value) }));
+      return input;
+    };
+    const clear = filterActive(filter)
+      ? h('button', { class: 'fchip clear', type: 'button', onclick: () => go({ sets: new Set(), oaths: new Set(), min: null, max: null }) }, 'Clear filters')
+      : null;
+
+    return h('div', { class: 'filters' },
+      h('div', { class: 'filter-row' }, h('span', { class: 'filter-label' }, 'Set'), setChips),
+      h('div', { class: 'filter-row' }, h('span', { class: 'filter-label' }, 'Oath'), oathChips),
+      h('div', { class: 'filter-row' }, h('span', { class: 'filter-label' }, 'Fame'),
+        fameInput('min', 'Lowest fame', info.fameMin), h('span', { class: 'fame-dash' }, '–'), fameInput('max', 'Highest fame', info.fameMax), clear));
   }
 
   const sectionTitle = (text) => h('h2', { class: 'section-title' }, text);
@@ -140,6 +225,20 @@
     labelOf: () => '3 of 3',
     absolute: true,
   });
+
+  // The most used oath sets, one card each with the rates of its options within that set.
+  const oathBoxes = (s) => h('div', { class: 'card-grid three' },s.oathBreakdown.map((set) => {
+    const file = (D.icons.oath || {})[set.set];
+    return barCard({
+      title: `${set.set.replace(/ Oath$/, '')} · ${pct(set.percent)}`,
+      titleIcon: file ? h('img', { class: 'item-icon', src: `img/items/${file}`, alt: '' }) : null,
+      rows: set.options,
+      labelOf: (row) => row.name.replace(/^[^:]+: /, ''),
+      absolute: true,
+    });
+  }));
+
+  const oathContent = (s) => h('div', {}, grid(barCard({ title: 'Oath sets', rows: s.oathSets, icon: itemIcon('oath') })), oathBoxes(s));
 
   const distinctCard = (s) => barCard({ title: 'Distinct pieces by slot', rows: s.distinctBySlot, initial: 11 });
   const exaltedCard = (s) => barCard({ title: 'Exalted pieces', rows: s.exalted, icon: itemIcon('exalted'), counts: true, absolute: true });
@@ -190,21 +289,38 @@
       ...sections);
   }
 
-  function renderGroup(id, tab = 'rates') {
-    const title = GROUPS[id], s = D.stats[id];
-    if (!title || !s) return renderNotFound();
+  async function renderGroup(id, tab = 'rates', query = '') {
+    const title = GROUPS[id], base = D.stats[id];
+    if (!title || !base) return renderNotFound();
     document.title = `${title} \u00B7 DFO Class Statistics`;
+
+    // Without a filter the exported numbers are used; with one every member class's characters are loaded and recounted.
+    const members = D.classes.filter((c) => id === 'all' || (id === 'support') === (c.role === 'Support'));
+    const range = { fameMin: Math.min(...members.map((c) => c.fameMin)), fameMax: Math.max(...members.map((c) => c.fameMax)) };
+    const filter = parseFilter(query);
+    const filtered = filterActive(filter);
+    let s = base;
+    if (filtered) {
+      const here = location.hash;
+      if (!members.every((c) => recordCache.has(c.key))) app.replaceChildren(h('div', { class: 'empty' }, 'Loading\u2026'));
+      let loaded;
+      try { loaded = await loadManyRecords(members.map((c) => c.key)); } catch (e) { app.replaceChildren(h('div', { class: 'empty' }, e.message)); return; }
+      if (location.hash !== here) return; // moved on while loading
+      s = F.computeGroupStats(members.map((c, i) => ({ display: c.display, table: loaded[i].s, rows: F.filterRows(loaded[i].s, loaded[i].r, familyOf, filter) })));
+    }
 
     const tabList = [{ id: 'rates', label: 'Play rates' }, { id: 'gear', label: 'Gear' }, { id: 'oath', label: 'Oath' }, { id: 'special', label: 'Special pieces' }];
     const active = tabList.some((t) => t.id === tab) ? tab : 'rates';
 
     let content;
-    if (active === 'rates') {
+    if (s.sample === 0) {
+      content = h('div', { class: 'empty' }, 'No characters match these filters.');
+    } else if (active === 'rates') {
       content = grid(barCard({ title: 'Play rate by class', rows: s.classShare, initial: 15, icon: classIcon, wide: true }));
     } else if (active === 'gear') {
       content = grid(barCard({ title: 'Gear sets', rows: s.sets, icon: itemIcon('sets') }), barCard({ title: 'Titles', rows: s.titles }));
     } else if (active === 'oath') {
-      content = grid(barCard({ title: 'Oath sets', rows: s.oathSets, icon: itemIcon('oath') }), barCard({ title: 'Oath set and option', rows: s.oathSetOptions }));
+      content = oathContent(s);
     } else {
       content = grid(distinctCard(s), exaltedCard(s), blackFangCard(s));
     }
@@ -213,27 +329,43 @@
       h('div', { class: 'crumbs' }, h('a', { href: '#/' }, 'All classes'), ' / ', title),
       h('div', { class: 'page-head' },
         h('div', { class: 'titles' }, h('h1', {}, title)),
-        h('div', { class: 'hero-figure' }, h('div', { class: 'value' }, num(s.sample)), h('div', { class: 'label' }, 'characters'))),
-      tabs(`/group/${id}`, tabList, active),
+        h('div', { class: 'hero-figure' }, h('div', { class: 'value' }, num(s.sample)), h('div', { class: 'label' }, filtered ? `of ${num(base.sample)} characters` : 'characters'))),
+      tabs(`/group/${id}`, tabList, active, filterQuery(filter)),
+      filterBar(`/group/${id}`, active, range, base, filter),
       content);
   }
 
-  function renderClass(key, tab = 'gear') {
-    const info = classByKey.get(key), s = D.stats[key];
-    if (!info || !s) return renderNotFound();
+  async function renderClass(key, tab = 'gear', query = '') {
+    const info = classByKey.get(key), base = D.stats[key];
+    if (!info || !base) return renderNotFound();
     document.title = `${info.display} \u00B7 DFO Class Statistics`;
+
+    // Without a filter the exported numbers are used; with one they are recomputed from the class's characters.
+    const filter = parseFilter(query);
+    const filtered = filterActive(filter);
+    let s = base;
+    if (filtered) {
+      const here = location.hash;
+      if (!recordCache.has(key)) app.replaceChildren(h('div', { class: 'empty' }, 'Loading\u2026'));
+      let records;
+      try { records = await loadRecords(key); } catch (e) { app.replaceChildren(h('div', { class: 'empty' }, e.message)); return; }
+      if (location.hash !== here) return; // moved on while loading
+      s = F.computeClassStats(records.s, F.filterRows(records.s, records.r, familyOf, filter));
+    }
 
     const tabList = [{ id: 'gear', label: 'Gear' }, { id: 'oath', label: 'Oath' }, { id: 'skills', label: 'Skills' }, { id: 'avatar', label: 'Avatar & Emblems' }];
     const active = tabList.some((t) => t.id === tab) ? tab : 'gear';
 
     let content;
-    if (active === 'gear') {
+    if (s.sample === 0) {
+      content = h('div', { class: 'empty' }, 'No characters match these filters.');
+    } else if (active === 'gear') {
       content = h('div', {},
         grid(barCard({ title: 'Gear sets', rows: s.sets, icon: itemIcon('sets') }), barCard({ title: 'Weapons', rows: s.weapons, icon: itemIcon('weapons') }), barCard({ title: 'Titles', rows: s.titles })),
         sectionTitle('Special pieces'),
         grid(distinctCard(s), exaltedCard(s), blackFangCard(s)));
     } else if (active === 'oath') {
-      content = grid(barCard({ title: 'Oath sets', rows: s.oathSets, icon: itemIcon('oath') }), barCard({ title: 'Oath set and option', rows: s.oathSetOptions }));
+      content = oathContent(s);
     } else if (active === 'skills') {
       const tree = D.skillTree[key] || [];
       const byName = new Map(tree.map((sk) => [sk.name, sk]));
@@ -276,8 +408,10 @@
         h('div', { class: 'titles' },
           h('h1', {}, info.display),
           h('div', { class: 'chips' }, h('span', { class: 'chip' }, info.baseClass), h('span', { class: 'chip gold' }, info.role === 'Support' ? 'Sader' : 'DPS'))),
-        h('div', { class: 'hero-figure' }, h('div', { class: 'value' }, num(s.sample)), h('div', { class: 'label' }, `characters \u00B7 ${pct(info.share)} of all`))),
-      tabs(`/class/${key}`, tabList, active),
+        h('div', { class: 'hero-figure' }, h('div', { class: 'value' }, num(s.sample)),
+          h('div', { class: 'label' }, filtered ? `of ${num(base.sample)} characters` : `characters \u00B7 ${pct(info.share)} of all`))),
+      tabs(`/class/${key}`, tabList, active, filterQuery(filter)),
+      filterBar(`/class/${key}`, active, info, base, filter),
       content);
   }
 
@@ -286,7 +420,7 @@
   // Skill icon with an optional corner badge; text tile when there is no icon.
   function skillIcon(skill, badge, label) {
     const wrap = h('span', { class: 'skill-icon', title: label || (skill ? skill.name : '') });
-    if (skill && skill.icon) wrap.append(h('img', { src: `img/skills/${skill.id}.png`, alt: skill.name, loading: 'lazy' }));
+    if (skill && skill.icon) wrap.append(h('img', { src: `img/skills/${skill.icon}`, alt: skill.name, loading: 'lazy' }));
     else wrap.append(h('span', { class: 'skill-fallback' }, ((skill && skill.name) || '?').slice(0, 3)));
     if (badge) wrap.append(h('img', { class: 'skill-badge', src: `img/skills/badges/${badge}.png`, alt: '' }));
     return wrap;
@@ -342,27 +476,120 @@
     return h('section', { class: 'card' }, h('h3', {}, title), h('table', { class: 'option-table' }, h('thead', {}, head), body));
   }
 
-  // Skill tree: a row per required level, each skill with adoption rate and average level.
+  // Rows and columns exactly as the game's skill window draws them (each skill's x and y come from the export).
+  // A skill without a position goes into a last row, in required-level order. Returns { rows: [{ level, cells: [{ skill, col }] }], columns }.
+  function gameLayout(skills) {
+    const byRow = new Map();
+    const loose = skills.filter((s) => s.x == null).sort((a, b) => a.level - b.level);
+    for (const s of skills.filter((sk) => sk.x != null)) {
+      if (!byRow.has(s.y)) byRow.set(s.y, []);
+      byRow.get(s.y).push(s);
+    }
+    const rows = [...byRow.keys()].sort((a, b) => a - b).map((y) => {
+      const inRow = byRow.get(y);
+      return { level: Math.min(...inRow.map((s) => s.level)), cells: inRow.map((s) => ({ skill: s, col: s.x - 1 })) };
+    });
+    if (loose.length) rows.push({ level: '–', cells: loose.map((s, i) => ({ skill: s, col: i })) });
+    const columns = Math.max(0, ...rows.flatMap((r) => r.cells.map((c) => c.col + 1)));
+    return { rows, columns };
+  }
+
+  const layoutTree = (skills) => (skills.some((s) => s.x != null) ? gameLayout(skills) : inferLayout(skills));
+
+  // Fallback for a class without game positions: a row per required level, skills in the game's list order, and a skill that needs
+  // another skill in the same column below it (when that column is free). Same return shape as gameLayout.
+  function inferLayout(skills) {
+    const colOf = new Map();
+    const lastLevel = new Map(); // skill id -> level of the deepest skill that needs it
+    for (const s of skills) for (const id of s.pre || []) lastLevel.set(id, Math.max(lastLevel.get(id) || 0, s.level));
+    const reserved = new Map(); // column -> level its chain runs down to; nothing else may sit in it until then
+    let columns = 0;
+
+    const rows = [...new Set(skills.map((s) => s.level))].sort((a, b) => a - b).map((level) => {
+      const inRow = skills.filter((s) => s.level === level);
+      const used = new Set();
+      const chosen = new Map();
+      // 1. A skill that needs another goes under it (or in the nearest free column when that one is taken).
+      for (const s of inRow) {
+        const want = (s.pre || []).map((id) => colOf.get(id)).find((c) => c !== undefined);
+        if (want === undefined) continue;
+        let col = want;
+        for (let d = 1; used.has(col) || col < 0 || (col !== want && reserved.has(col)); d++) col = d % 2 ? want + Math.ceil(d / 2) : want - d / 2;
+        chosen.set(s.id, col);
+        used.add(col);
+      }
+      // 2. Everything else takes the leftmost column that no chain is running through.
+      let next = 0;
+      const cells = inRow.map((s) => {
+        let col = chosen.get(s.id);
+        if (col === undefined) {
+          while (used.has(next) || reserved.has(next)) next++;
+          col = next;
+          used.add(col);
+        }
+        colOf.set(s.id, col);
+        columns = Math.max(columns, col + 1);
+        return { skill: s, col };
+      });
+      for (const [col, until] of [...reserved]) if (until <= level) reserved.delete(col);
+      for (const { skill, col } of cells) if ((lastLevel.get(skill.id) || 0) > level) reserved.set(col, lastLevel.get(skill.id));
+      return { level, cells };
+    });
+    return { rows, columns };
+  }
+
+  // Lines from each skill down to the skills that need it, drawn over the grid once it has a size.
+  function drawTreeLinks(tree, svg) {
+    const origin = tree.getBoundingClientRect();
+    const spot = new Map();
+    tree.querySelectorAll('.tree-cell').forEach((el) => {
+      const icon = el.querySelector('.skill-icon').getBoundingClientRect();
+      const cell = el.getBoundingClientRect();
+      // A line leaves from under the cell's numbers and arrives at the top of the icon.
+      spot.set(el.dataset.id, { x: icon.left - origin.left + icon.width / 2 + tree.scrollLeft, top: icon.top - origin.top, bottom: cell.bottom - origin.top, row: Number(el.dataset.row) });
+    });
+    svg.setAttribute('width', String(tree.scrollWidth));
+    svg.setAttribute('height', String(tree.scrollHeight));
+    svg.replaceChildren();
+    tree.querySelectorAll('.tree-cell[data-pre]').forEach((el) => {
+      const to = spot.get(el.dataset.id);
+      for (const id of el.dataset.pre.split(',')) {
+        const from = spot.get(id);
+        // Only skills in neighbouring rows are joined; a longer line would cross other skills and the game's own routing is unknown.
+        if (!from || !to || to.row - from.row !== 1) continue;
+        const turn = (from.bottom + to.top) / 2;
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', `M${from.x} ${from.bottom} V${turn} H${to.x} V${to.top}`);
+        svg.append(path);
+      }
+    });
+  }
+
+  // Skill tree: the game's layout, each skill with adoption rate and average level.
   function skillTreeCard(tree, ratesList) {
     const rates = new Map(ratesList.map((r) => [r.skill, r]));
     const shown = tree.filter((sk) => sk.icon || (rates.get(sk.name) && rates.get(sk.name).takePercent > 0));
-    const levels = [...new Set(shown.map((sk) => sk.level))].sort((a, b) => a - b);
+    const layout = layoutTree(shown);
 
-    const rows = levels.map((level) => {
-      const cells = shown.filter((sk) => sk.level === level)
-        .sort((a, b) => (a.type === b.type ? 0 : a.type === 'active' ? -1 : 1))
-        .map((sk) => {
-          const r = rates.get(sk.name);
-          const take = r ? r.takePercent : 0;
-          const tone = take >= 99.5 ? 'full' : take >= 50 ? 'mid' : take > 0 ? 'low' : 'none';
-          return h('div', { class: `tree-cell ${tone}`, title: sk.name },
-            skillIcon(sk),
-            h('div', { class: 'take' }, take.toFixed(1)),
-            h('div', { class: 'avg' }, r ? r.averageLevelTakers.toFixed(1) : '0'));
-        });
-      return h('div', { class: 'tree-row' }, h('div', { class: 'tree-level' }, String(level)), h('div', { class: 'tree-cells' }, cells));
-    });
-    return h('section', { class: 'card wide' }, h('h3', {}, 'Skill tree'), h('div', { class: 'tree' }, rows));
+    const rows = layout.rows.map(({ level, cells }, rowIndex) => h('div', { class: 'tree-row' },
+      h('div', { class: 'tree-level' }, String(level)),
+      h('div', { class: 'tree-cells', style: `grid-template-columns: repeat(${layout.columns}, 56px)` }, cells.map(({ skill: sk, col }) => {
+        const r = rates.get(sk.name);
+        const take = r ? r.takePercent : 0;
+        const tone = take >= 99.5 ? 'full' : take >= 50 ? 'mid' : take > 0 ? 'low' : 'none';
+        const pre = (sk.pre || []).filter((id) => shown.some((s) => s.id === id));
+        return h('div', { class: `tree-cell ${tone}`, title: sk.name, style: `grid-column: ${col + 1}; grid-row: 1`, 'data-id': sk.id, 'data-row': rowIndex, 'data-pre': pre.length ? pre.join(',') : null },
+          skillIcon(sk),
+          h('div', { class: 'take' }, take.toFixed(1)),
+          h('div', { class: 'avg' }, r ? r.averageLevelTakers.toFixed(1) : '0'));
+      }))));
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'tree-links');
+    const box = h('div', { class: 'tree' }, svg, rows);
+    // Redraws whenever the grid gets a size or changes (first paint, window resize).
+    new ResizeObserver(() => drawTreeLinks(box, svg)).observe(box);
+    return h('section', { class: 'card wide' }, h('h3', {}, 'Skill tree'), box);
   }
   function renderNotFound() {
     app.replaceChildren(h('h1', {}, 'Not found'), h('a', { class: 'chip gold', href: '#/' }, 'Back to all classes'));
@@ -370,14 +597,19 @@
 
   // ---------- routing ----------
 
+  // The part after "?" is the filter; changing only that keeps the scroll position.
+  let lastPath = null;
+
   function route() {
     hideTip();
-    const parts = (location.hash.replace(/^#\/?/, '') || '').split('/').filter(Boolean);
+    const [path, query = ''] = location.hash.replace(/^#\/?/, '').split('?');
+    const parts = (path || '').split('/').filter(Boolean);
     if (parts.length === 0) renderHome();
-    else if (parts[0] === 'group') renderGroup(parts[1], parts[2]);
-    else if (parts[0] === 'class') renderClass(parts[1], parts[2]);
+    else if (parts[0] === 'group') renderGroup(parts[1], parts[2], query);
+    else if (parts[0] === 'class') renderClass(parts[1], parts[2], query);
     else renderNotFound();
-    window.scrollTo(0, 0);
+    if (path !== lastPath) window.scrollTo(0, 0);
+    lastPath = path;
   }
 
   const tableToggle = document.getElementById('table-toggle');

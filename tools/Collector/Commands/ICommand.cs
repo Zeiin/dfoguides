@@ -28,6 +28,9 @@ record CommandContext(NeopleClient Client, string RawDir, string OutDir)
     public Dictionary<string, ClassInfo> LoadClassCatalog() =>
         ClassCatalog.FromJobs(File.ReadAllText(Path.Combine(RawDir, "jobs.json"))).ToDictionary(c => c.Key);
 
+    // Hand-collected inputs that no job generates (committed): skill lists, prerequisites, grid layout, set families, icon sources.
+    public string ReferenceDir => Path.Combine(RepoRoot.Find(), "reference");
+
     public string PortraitDir => Path.Combine(OutDir, "..", "art", "classes");
 
     // Hand-made art wins: a ready 240x300 PNG, then a transparent PNG, then the downloaded JPEG.
@@ -60,6 +63,6 @@ static class Commands
         new JobsCommand(), new ProbeCommand(), new CharacterCommand(), new GetCommand(), new DamageTypesCommand(),
         new ScanCommand(), new RosterCommand(), new PullCommand(), new SampleCommand(), new SampleAllCommand(), new PullAllCommand(),
         new AnalyzeCommand(), new AnalyzeAllCommand(), new AnalyzeEveryCommand(),
-        new RateTestCommand(), new FetchArtCommand(), new FetchSkillIconsCommand(), new ExportSiteCommand(),
+        new RateTestCommand(), new FetchArtCommand(), new FetchSkillIconsCommand(), new FetchSkillDetailsCommand(), new FetchSkillLayoutCommand(), new FetchSetIconsCommand(), new ApplySkillIconMapCommand(), new RefreshCommand(), new ExportSiteCommand(),
     ];
 }

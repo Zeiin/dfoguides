@@ -127,10 +127,12 @@ h2.section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0
 
 /* ---------- cards + bars ---------- */
 .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: var(--gap); margin-top: 20px; align-items: start; }
+.card-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .card-grid.tight { margin-top: 12px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px 14px; min-width: 0; }
 .card.wide { grid-column: 1 / -1; }
-.card h3 { font-size: 15px; }
+.card h3 { font-size: 15px; display: flex; align-items: center; gap: 8px; }
+.card h3 .item-icon { width: 26px; height: 26px; object-fit: contain; flex: none; }
 .card .note { color: var(--faint); font-size: 12.5px; margin-top: 2px; }
 .card .empty { color: var(--faint); font-size: 13px; padding: 14px 0 4px; }
 
@@ -192,10 +194,12 @@ h2.section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0
 .skill-name { display: flex; align-items: center; gap: 12px; font-size: 13.5px; }
 .skill-name .sub { color: var(--faint); font-size: 12px; font-variant-numeric: tabular-nums; }
 
-.tree { margin-top: 12px; }
-.tree-row { display: flex; gap: 14px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid rgba(236, 233, 226, 0.06); }
+.tree { position: relative; margin-top: 12px; overflow-x: auto; }
+.tree-links { position: absolute; left: 0; top: 0; pointer-events: none; }
+.tree-links path { fill: none; stroke: var(--gold-dim); stroke-width: 1.5; opacity: 0.7; }
+.tree-row { position: relative; display: flex; gap: 14px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid rgba(236, 233, 226, 0.06); }
 .tree-level { width: 44px; flex: none; text-align: center; color: var(--muted); font-size: 13px; background: var(--surface-2); border-radius: 6px; padding: 8px 0; margin-top: 2px; }
-.tree-cells { display: flex; flex-wrap: wrap; gap: 8px 12px; }
+.tree-cells { display: grid; gap: 8px 12px; }
 .tree-cell { width: 56px; text-align: center; font-variant-numeric: tabular-nums; font-size: 12.5px; line-height: 1.35; }
 .tree-cell .skill-icon { margin-bottom: 2px; }
 .tree-cell .avg { color: var(--ink); }
@@ -219,7 +223,7 @@ h2.section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0
 @media (max-width: 720px) {
   main { padding: 20px 16px 0; }
   .site-header { padding: 12px 16px; gap: 14px; }
-  .card-grid { grid-template-columns: 1fr; }
+  .card-grid, .card-grid.three { grid-template-columns: 1fr; }
   .hero-figure { text-align: left; }
   .hero-figure .label { margin-left: 0; }
   .bar-row { grid-template-columns: minmax(80px, 42%) 1fr 48px; gap: 8px; }
@@ -227,3 +231,19 @@ h2.section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* Filters on class pages */
+.filters { display: flex; flex-direction: column; gap: 10px; margin: 20px 0 6px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.filter-label { width: 52px; flex: none; color: var(--muted); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
+.fchip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px 4px 8px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--muted); font: inherit; font-size: 13px; cursor: pointer; }
+.fchip .item-icon { width: 20px; height: 20px; }
+.fchip.icon-only { width: 44px; height: 44px; padding: 0; justify-content: center; border-radius: 10px; }
+.fchip.icon-only .item-icon { width: 30px; height: 30px; object-fit: contain; }
+.fchip:hover { color: var(--ink); border-color: var(--gold-dim); }
+.fchip.active { color: var(--gold-hi); border-color: var(--gold); background: rgba(201, 161, 90, 0.10); }
+.fchip.clear { margin-left: 8px; padding: 4px 12px; }
+.fame-input { width: 110px; padding: 5px 10px; background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: 13px; font-variant-numeric: tabular-nums; }
+.fame-input::placeholder { color: var(--faint); }
+.fame-dash { color: var(--faint); }
+.empty { padding: 28px 4px; color: var(--muted); }

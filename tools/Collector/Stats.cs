@@ -3,12 +3,15 @@ namespace Collector;
 record RateRow(string Name, int Count, double Percent);
 record SkillRow(string Skill, double TakePercent, double AverageLevelAll, double AverageLevelTakers);
 
+// One oath set with the rates of its options; Percent is of all oath wearers, option percents are within the set.
+record OathSetBreakdown(string Set, int Count, double Percent, List<RateRow> Options);
+
 record ClassStats(
     int Sample,
     List<RateRow> Sets,
     int OathSample,
     List<RateRow> OathSets,
-    List<RateRow> OathSetOptions,
+    List<OathSetBreakdown> OathBreakdown,
     List<RateRow> Weapons,
     List<RateRow> Titles,
     List<RateRow> DistinctBySlot,
@@ -37,7 +40,7 @@ record AgnosticStats(
     List<RateRow> Sets,
     int OathSample,
     List<RateRow> OathSets,
-    List<RateRow> OathSetOptions,
+    List<OathSetBreakdown> OathBreakdown,
     List<RateRow> Titles,
     List<RateRow> DistinctBySlot,
     double AnyDistinctPercent,
@@ -52,6 +55,7 @@ record AgnosticReport(AgnosticStats All, AgnosticStats Dps, AgnosticStats Suppor
 static class Stats
 {
     const int BlackFangSlots = 3;   // ring, necklace, bracelet
+    const int OathBoxes = 3;        // oath sets shown with their options
 
     public static AgnosticReport ComputeAgnosticReport(IReadOnlyList<CharacterRecord> chars)
     {
@@ -71,7 +75,7 @@ static class Stats
             Rates(chars.Select(c => c.Set), n),
             withOath.Count,
             Rates(withOath.Select(c => c.OathSet), withOath.Count),
-            Rates(withOath.Select(c => $"{c.OathSet} | {c.OathOption}"), withOath.Count),
+            OathBreakdown(withOath),
             Rates(chars.Select(c => c.TitleLevel is { } l ? $"{c.Title} [{l}]" : c.Title), n),
             Rates(chars.SelectMany(c => c.DistinctSlots.Select(SlotNames.Display)), n),
             Percent(chars.Count(c => c.DistinctSlots.Length > 0), n),
@@ -84,6 +88,14 @@ static class Stats
     // Characters with no oath are excluded from the oath tables.
     internal static List<CharacterRecord> WithOath(IReadOnlyList<CharacterRecord> chars) =>
         chars.Where(c => c.OathSet != "(none)").ToList();
+
+    // The most used oath sets, each with the rates of its options within that set.
+    internal static List<OathSetBreakdown> OathBreakdown(IReadOnlyList<CharacterRecord> withOath) =>
+        withOath.GroupBy(c => c.OathSet)
+            .OrderByDescending(g => g.Count())
+            .Take(OathBoxes)
+            .Select(g => new OathSetBreakdown(g.Key, g.Count(), Percent(g.Count(), withOath.Count), Rates(g.Select(c => c.OathOption), g.Count())))
+            .ToList();
 
     // Only characters with none or all three Black Fang pieces are counted.
     internal static List<CharacterRecord> FullOrNoBlackFang(IReadOnlyList<CharacterRecord> chars) =>
@@ -131,7 +143,7 @@ static class Stats
             Rates(chars.Select(c => c.Set), n),
             withOath.Count,
             Rates(withOath.Select(c => c.OathSet), withOath.Count),
-            Rates(withOath.Select(c => $"{c.OathSet} | {c.OathOption}"), withOath.Count),
+            OathBreakdown(withOath),
             Rates(chars.Select(c => c.Weapon), n),
             Rates(chars.Select(c => c.TitleLevel is { } l ? $"{c.Title} [{l}]" : c.Title), n),
             Rates(chars.SelectMany(c => c.DistinctSlots.Select(SlotNames.Display)), n),

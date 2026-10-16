@@ -18,8 +18,8 @@ static class CharacterPuller
     const int MaxRateLimitHits = 5;
 
     // Existing files are skipped so an interrupted run resumes.
-    // `only` limits which endpoints are fetched.
-    public static async Task PullAsync(NeopleClient client, IReadOnlyList<RosterEntry> roster, string outDir, IReadOnlyCollection<string>? only = null)
+    // `only` limits which endpoints are fetched. Returns false when the deadline cut the pull short.
+    public static async Task<bool> PullAsync(NeopleClient client, IReadOnlyList<RosterEntry> roster, string outDir, IReadOnlyCollection<string>? only = null, DateTime? deadline = null)
     {
         Directory.CreateDirectory(outDir);
         var done = 0;
@@ -58,7 +58,14 @@ static class CharacterPuller
 
             if (++done % 50 == 0)
                 Console.WriteLine($"  {done}/{roster.Count} characters, {failed} failed, elapsed {DateTime.UtcNow - started:hh\\:mm\\:ss}");
+
+            if (deadline is { } limit && DateTime.UtcNow >= limit)
+            {
+                Console.WriteLine($"  time budget used up after {done}/{roster.Count} characters");
+                return false;
+            }
         }
         Console.WriteLine($"  finished {done}/{roster.Count}, {failed} failed");
+        return true;
     }
 }

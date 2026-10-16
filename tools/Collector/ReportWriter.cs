@@ -13,7 +13,7 @@ static class ReportWriter
         sb.AppendLine($"# {classKey}").AppendLine().AppendLine($"Sample: **{s.Sample}** characters (fame cutoff applied).").AppendLine();
         Table(sb, "Sets", s.Sets);
         Table(sb, $"Oath sets (of {s.OathSample} characters with an oath)", s.OathSets);
-        Table(sb, "Oath set and option", s.OathSetOptions);
+        OathTables(sb, s.OathBreakdown);
         Table(sb, "Weapons", s.Weapons);
         Table(sb, "Titles", s.Titles);
         Table(sb, $"Distinct pieces by slot (any Distinct: {s.AnyDistinctPercent:F1}%)", s.DistinctBySlot);
@@ -55,11 +55,16 @@ static class ReportWriter
         Table(sb, "Class share", s.ClassShare, take: 80);
         Table(sb, "Sets", s.Sets);
         Table(sb, $"Oath sets (of {s.OathSample} characters with an oath)", s.OathSets);
-        Table(sb, "Oath set and option", s.OathSetOptions);
+        OathTables(sb, s.OathBreakdown);
         Table(sb, "Titles", s.Titles);
         Table(sb, $"Distinct pieces by slot (any Distinct: {s.AnyDistinctPercent:F1}%)", s.DistinctBySlot);
         Table(sb, "Exalted pieces", s.Exalted);
         Table(sb, $"Black Fang accessories (average across ring, necklace, bracelet: {s.BlackFangAveragePercent:F1}%; {s.BlackFangSample} characters with none or all three)", s.BlackFangCounts);
+    }
+
+    static void OathTables(StringBuilder sb, List<OathSetBreakdown> sets)
+    {
+        foreach (var set in sets) Table(sb, $"Options of {set.Set} ({set.Count} characters)", set.Options);
     }
 
     static void Table(StringBuilder sb, string title, List<RateRow> rows, int take = TopRows)

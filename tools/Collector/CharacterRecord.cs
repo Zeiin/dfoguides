@@ -56,6 +56,10 @@ static partial class CharacterReader
     [GeneratedRegex(@"^Rare Clone Weapon Avatar.*?(?<level>\d+)")]
     private static partial Regex RareCloneWeapon();
 
+    // Characters can change class between the roster scan and the pull; only those still in the class belong in its statistics.
+    internal static bool BelongsTo(EquipmentResponse equipment, string classKey) =>
+        equipment.JobName == null || equipment.JobGrowName == null || ClassKey.From(equipment.JobName, equipment.JobGrowName) == classKey;
+
     // requireSkills=false is for samples where skill files were not pulled.
     public static async Task<CharacterRecord?> ReadAsync(string dir, RosterEntry entry, string classKey, bool requireSkills = true)
     {
@@ -72,6 +76,7 @@ static partial class CharacterReader
         var creature = await Load<CreatureResponse>("creature");
         // Gear is required; having no oath is still a valid record.
         if (equipment?.Equipment == null) return null;
+        if (!BelongsTo(equipment, classKey)) return null;
         if (requireSkills && skills?.Skill?.Style == null) return null;
 
         var items = equipment.Equipment;

@@ -1,0 +1,523 @@
+{
+ "Dark_Knight_Neo_Dark_Knight": {
+  "skills": {
+   "Dark Burst": {
+    "source": "file:skillicon-sources/dfmax/b1732acfaf117f8e9ff130f47d3ed0e7.png",
+    "x": 6,
+    "y": 10
+   },
+   "Charge Explosion": {
+    "source": "file:skillicon-sources/dfmax/f45301a5590cccefbe0becf2f8d029f5.png",
+    "x": 7,
+    "y": 9
+   },
+   "Bounce Blow": {
+    "source": "file:skillicon-sources/dfmax/9dc8438e4572d39243c97da31c113acc.png",
+    "x": 4,
+    "y": 2
+   },
+   "Dark Explosion": {
+    "source": "file:skillicon-sources/dfmax/506e7ed77d517419a6e1c437a2cedb17.png",
+    "x": 5,
+    "y": 3
+   },
+   "Time Lord": {
+    "source": "file:skillicon-sources/dfmax/3aacd652747f6729f079bc48747724a4.png",
+    "x": 1,
+    "y": 7
+   },
+   "Hop Smash": {
+    "source": "file:skillicon-sources/dfmax/6e33d47e6622ce03b6defdd912140270.png",
+    "x": 5,
+    "y": 2
+   },
+   "Time Break": {
+    "source": "file:skillicon-sources/dfmax/d204ec03a0aed2f20211fb6ccc48d46d.png",
+    "x": 5,
+    "y": 10
+   },
+   "Diabolic Slash": {
+    "source": "file:skillicon-sources/dfmax/33ad4930f4724a7d025c3046c6f6074b.png",
+    "x": 7,
+    "y": 11
+   },
+   "The End of Time": {
+    "source": "file:skillicon-sources/dfmax/9ceb0c55f40f1fc0fe0fcc65c8fee3a0.png",
+    "x": 5,
+    "y": 12
+   },
+   "Basic Training": {
+    "source": "file:skillicon-sources/dfmax/5a56514f35cf0270ae8d6c65f8fefd78.png",
+    "x": 1,
+    "y": 0
+   },
+   "Whip Attack": {
+    "source": "file:skillicon-sources/dfmax/d429147c372b549c3dadcabcba50787f.png",
+    "x": 4,
+    "y": 4
+   },
+   "Quick Rebound": {
+    "source": "file:skillicon-sources/dfmax/ce26c6b69d02a440a81b552bec94f03b.png",
+    "x": 2,
+    "y": 0
+   },
+   "Fierce Strike": {
+    "source": "file:skillicon-sources/dfmax/2a0a39184de92acf1c1375e00b77404c.png",
+    "x": 3,
+    "y": 4
+   },
+   "Shadowy Bludgeon Mastery": {
+    "source": "file:skillicon-sources/dfmax/9cb6f9ed646fa87f9b7680a42ce83d1a.png",
+    "x": 1,
+    "y": 4
+   },
+   "Dark Wave Fall": {
+    "source": "file:skillicon-sources/dfmax/5c00ce6d7dbbb5e9a0f6e1071d486832.png",
+    "x": 4,
+    "y": 8
+   },
+   "Dark Lust": {
+    "source": "file:skillicon-sources/dfmax/3829c15bf5f520c13998a3479ba0ce7b.png",
+    "x": 7,
+    "y": 3
+   },
+   "Dark Slash": {
+    "source": "file:skillicon-sources/dfmax/eb71e1d82d92c7e1d40500a0dcd77aa6.png",
+    "x": 4,
+    "y": 1
+   },
+   "Shock Wave": {
+    "source": "file:skillicon-sources/dfmax/c61f5a010370101402b05b21916c2071.png",
+    "x": 6,
+    "y": 5
+   },
+   "Uppercut": {
+    "source": "file:skillicon-sources/dfmax/fc7a3f4c2852c832a2f20af63d5d212f.png",
+    "x": 3,
+    "y": 1
+   },
+   "Dark Fall": {
+    "source": "file:skillicon-sources/dfmax/e49e57b2e8fbeceb0a2c56a0c63fe6c5.png",
+    "x": 4,
+    "y": 5
+   },
+   "Backstep": {
+    "source": "file:skillicon-sources/dfmax/7822d6d52e10964a6755f142c666b494.png",
+    "x": 3,
+    "y": 0
+   },
+   "Dark Sword": {
+    "source": "file:skillicon-sources/dfmax/e0daa922b19cdc35de879e938361464e.png",
+    "x": 5,
+    "y": 5
+   },
+   "Swordsman of Darkness": {
+    "source": "file:skillicon-sources/dfmax/8ee0099656df08a0b39225f8a21d514b.png",
+    "x": 2,
+    "y": 3
+   },
+   "Shadowy Zanbato Mastery": {
+    "source": "file:skillicon-sources/dfmax/8c2379737c5acc935c1731f67f607655.png",
+    "x": 1,
+    "y": 3
+   },
+   "Backstep Upgrade": {
+    "source": "file:skillicon-sources/dfmax/2b340542e776818b78f3212af184bd6b.png",
+    "x": 4,
+    "y": 0
+   },
+   "Phantom Sword": {
+    "source": "file:skillicon-sources/dfmax/ce7cd04a44e32212e80f120f4421996e.png",
+    "x": 3,
+    "y": 7
+   },
+   "Dark Flame Sword": {
+    "source": "file:skillicon-sources/dfmax/0b8db1e10b3abbd24d38564e708675d5.png",
+    "x": 3,
+    "y": 6
+   },
+   "Conversion": {
+    "source": "file:skillicon-sources/dfmax/12dca7fbf791e882b025a0d916181673.png",
+    "x": 11,
+    "y": 0
+   },
+   "Shadowy Short Sword Mastery": {
+    "source": "file:skillicon-sources/dfmax/01c3a2fb793d293a25ed8dc7a0d70c1a.png",
+    "x": 1,
+    "y": 1
+   },
+   "Time Stop": {
+    "source": "file:skillicon-sources/dfmax/6067de229738524687e5a9ee1c53d583.png",
+    "x": 5,
+    "y": 11
+   },
+   "Leap": {
+    "source": "file:skillicon-sources/dfmax/1fea5a626f15230237946a11a9d11582.png",
+    "x": 6,
+    "y": 0
+   },
+   "Brief Cut": {
+    "source": "file:skillicon-sources/dfmax/f2fb27162beb0b87a7cb9af7900e95f2.png",
+    "x": 3,
+    "y": 2
+   },
+   "Dark Wave": {
+    "source": "file:skillicon-sources/dfmax/c91a62dc0a18360acf5031ac0ebf09f5.png",
+    "x": 6,
+    "y": 3
+   },
+   "Shadowy Katana Mastery": {
+    "source": "file:skillicon-sources/dfmax/8f73f243041c2d27739fe7696f02bf9b.png",
+    "x": 1,
+    "y": 2
+   },
+   "Spin Attack": {
+    "source": "file:skillicon-sources/dfmax/a2d943797daca862a6f321aca6ac9bfa.png",
+    "x": 3,
+    "y": 3
+   },
+   "Shadowy Lightsabre Mastery": {
+    "source": "file:skillicon-sources/dfmax/717f1e2104fe4b796f800352fa143ecc.png",
+    "x": 1,
+    "y": 5
+   },
+   "Focus: Critical": {
+    "source": "file:skillicon-sources/dfmax/fc1262c19f3d0477ee8eda47b8db8696.png",
+    "x": 5,
+    "y": 0
+   },
+   "Space-time Union": {
+    "source": "file:skillicon-sources/dfmax/65827d506df24a870ef7d2e1aefbfeb7.png",
+    "x": 1,
+    "y": 9
+   },
+   "Dark Break": {
+    "source": "file:skillicon-sources/dfmax/ecc23c980ea71450c0ad0c3fd232f329.png",
+    "x": 5,
+    "y": 6
+   },
+   "Dark Ball": {
+    "source": "file:skillicon-sources/dfmax/9dda3f4a849dba1a288dd65e116860f2.png",
+    "x": 6,
+    "y": 4
+   },
+   "Illusion Slash": {
+    "source": "file:skillicon-sources/dfmax/8510294202d0e042dd29a2422fc6770d.png",
+    "x": 7,
+    "y": 6
+   },
+   "Dark Rave": {
+    "source": "file:skillicon-sources/dfmax/1b1cfab062e0768bcc889e33e1f30dbf.png",
+    "x": 5,
+    "y": 4
+   },
+   "Wave": {
+    "source": "file:skillicon-sources/dfmax/3d8f3d438405d79f8d3ed68072674d1e.png",
+    "x": 6,
+    "y": 1
+   },
+   "Overflow": {
+    "source": "file:skillicon-sources/dfmax/1c1a9606eb702ebe5a7bb4397f3aeae0.png",
+    "x": 10,
+    "y": 7
+   },
+   "Grand Wave": {
+    "source": "file:skillicon-sources/dfmax/92360eab6e1f378902018eca681ac629.png",
+    "x": 6,
+    "y": 2
+   },
+   "Rapid Move": {
+    "source": "file:skillicon-sources/dfmax/669f1428193f61f9d92c743b72438c4d.png",
+    "x": 7,
+    "y": 2
+   },
+   "Dark Crasher": {
+    "source": "file:skillicon-sources/dfmax/28b583c75a49103a1d8aabf799c000a4.png",
+    "x": 3,
+    "y": 5
+   },
+   "Vein Slash": {
+    "source": "file:skillicon-sources/dfmax/202edb928046f4fa6dedf6337377efd5.png",
+    "x": 7,
+    "y": 1
+   },
+   "Wave Spin": {
+    "source": "file:skillicon-sources/dfmax/b3659936a9a74c4ed6f7faf07cca1f9e.png",
+    "x": 6,
+    "y": 6
+   },
+   "Dark Cross": {
+    "source": "file:skillicon-sources/dfmax/ca75c965f20a150f99f54155a37400df.png",
+    "x": 5,
+    "y": 1
+   },
+   "Momentary Slash": {
+    "source": "file:skillicon-sources/dfmax/bc11d28c04e01923a093d65752c55516.png",
+    "x": 4,
+    "y": 6
+   },
+   "Draw Sword": {
+    "source": "file:skillicon-sources/dfmax/cfacda0647b9a0f595df2c2aad30c18d.png",
+    "x": 7,
+    "y": 5
+   },
+   "Triple Stabs": {
+    "source": "file:skillicon-sources/dfmax/7ec521d063d2190e1fcc5bd229af9bcf.png",
+    "x": 4,
+    "y": 3
+   },
+   "Armor Mastery": {
+    "source": "file:skillicon-sources/dfmax/892ef624d8bf3d7fc045f84825fd6104.png",
+    "x": 10,
+    "y": 1
+   },
+   "Awakening": {
+    "source": "file:skillicon-sources/dfmax/56aa7844a2da23f5bea9b585aea5ae45.png",
+    "x": 10,
+    "y": 6
+   },
+   "One Step Closer": {
+    "source": "file:skillicon-sources/wiki/One Step Closer.png"
+   },
+   "Subitism": {
+    "source": "file:skillicon-sources/wiki/Subitism.png"
+   },
+   "Clues to Awakening": {
+    "source": "file:skillicon-sources/wiki/Clues to Awakening.png"
+   }
+  }
+ },
+ "Creator_Neo_Creator": {
+  "skills": {
+   "Ice Plate": {
+    "source": "file:skillicon-sources/dfmax/fa3ee243b36699e9d3fc34328adf6417.png",
+    "x": 4,
+    "y": 2
+   },
+   "Boost": {
+    "source": "file:skillicon-sources/dfmax/2ff50c35efcf0f287c4c418c8454da48.png",
+    "x": 1,
+    "y": 5
+   },
+   "Draw": {
+    "source": "file:skillicon-sources/dfmax/b5e3d014f75f3d17abdea52cca57f7e9.png",
+    "x": 6,
+    "y": 2
+   },
+   "Firewall": {
+    "source": "file:skillicon-sources/dfmax/527cdc3ecca985e18ef819d456532b26.png",
+    "x": 1,
+    "y": 2
+   },
+   "Wind": {
+    "source": "file:skillicon-sources/dfmax/d204ec03a0aed2f20211fb6ccc48d46d.png",
+    "x": 9,
+    "y": 1
+   },
+   "Wind Storm": {
+    "source": "file:skillicon-sources/dfmax/75747c67e14eec6088ce67f63ea41628.png",
+    "x": 10,
+    "y": 2
+   },
+   "Fire": {
+    "source": "file:skillicon-sources/dfmax/ce7cd04a44e32212e80f120f4421996e.png",
+    "x": 1,
+    "y": 1
+   },
+   "Type Upgrade": {
+    "source": "file:skillicon-sources/dfmax/ef9d26746effee9199b54541f01b8752.png",
+    "x": 3,
+    "y": 5
+   },
+   "Ice Shield": {
+    "source": "file:skillicon-sources/dfmax/dd32a9825ec1af42a91f2223be6658e5.png",
+    "x": 8,
+    "y": 2
+   },
+   "Tuning": {
+    "source": "file:skillicon-sources/dfmax/b1ccbd90d0b40f543ece3b18fcef827f.png",
+    "x": 4,
+    "y": 3
+   },
+   "Awakening": {
+    "source": "file:skillicon-sources/dfmax/845e0ce3235e19f60cc82a082d072cba.png",
+    "x": 11,
+    "y": 4
+   },
+   "Backstep": {
+    "source": "file:skillicon-sources/dfmax/7822d6d52e10964a6755f142c666b494.png",
+    "x": 3,
+    "y": 0
+   },
+   "Interference": {
+    "source": "file:skillicon-sources/dfmax/5c00ce6d7dbbb5e9a0f6e1071d486832.png",
+    "x": 5,
+    "y": 1
+   },
+   "Destruction": {
+    "source": "file:skillicon-sources/dfmax/5536486eaf9b13c9a8283447cb5e77ab.png",
+    "x": 1,
+    "y": 3
+   },
+   "Understanding": {
+    "source": "file:skillicon-sources/dfmax/68062215e75d92575958873ac8ede31a.png",
+    "x": 4,
+    "y": 5
+   },
+   "Imagination": {
+    "source": "file:skillicon-sources/dfmax/aa6dd52e1c925d87cdc0ca340056c543.png",
+    "x": 2,
+    "y": 5
+   },
+   "Protection": {
+    "source": "file:skillicon-sources/dfmax/b1732acfaf117f8e9ff130f47d3ed0e7.png",
+    "x": 7,
+    "y": 1
+   },
+   "Ice": {
+    "source": "file:skillicon-sources/dfmax/f45301a5590cccefbe0becf2f8d029f5.png",
+    "x": 3,
+    "y": 1
+   },
+   "Wind Press": {
+    "source": "file:skillicon-sources/dfmax/5197b141332a65a89d452adf227c2f30.png",
+    "x": 9,
+    "y": 2
+   },
+   "Wooden Trap": {
+    "source": "file:skillicon-sources/dfmax/d110449993fb973f1a62c62c695003db.png",
+    "x": 5,
+    "y": 2
+   },
+   "Meteor Drop": {
+    "source": "file:skillicon-sources/dfmax/902a016f6978f13740f237e4740a5646.png",
+    "x": 2,
+    "y": 2
+   },
+   "Destiny": {
+    "source": "file:skillicon-sources/dfmax/3736fe00a26b0086c23db9a4426a5641.png",
+    "x": 9,
+    "y": 3
+   },
+   "Light of Genesis": {
+    "source": "file:skillicon-sources/dfmax/bcbaa4338139bc9342c8a8415dfbe39a.png",
+    "x": 8,
+    "y": 5
+   },
+   "Quick Rebound": {
+    "source": "file:skillicon-sources/dfmax/ce26c6b69d02a440a81b552bec94f03b.png",
+    "x": 2,
+    "y": 0
+   },
+   "Ice Stone": {
+    "source": "file:skillicon-sources/dfmax/370586038cf40378f20d338d507a780c.png",
+    "x": 3,
+    "y": 2
+   },
+   "Ice Age": {
+    "source": "file:skillicon-sources/dfmax/d8ff976e2aaa4720272a5175d1eb9126.png",
+    "x": 2,
+    "y": 4
+   },
+   "Flame Hurricane": {
+    "source": "file:skillicon-sources/dfmax/e788de1a4498c99fcc790302c4d41fed.png",
+    "x": 7,
+    "y": 2
+   },
+   "Distortion": {
+    "source": "file:skillicon-sources/dfmax/dacd5c2848a1eb33489e5471f1a73759.png",
+    "x": 5,
+    "y": 3
+   },
+   "Creation": {
+    "source": "file:skillicon-sources/dfmax/c47b66efd27845ef14954928ea2f95c8.png",
+    "x": 6,
+    "y": 3
+   },
+   "Birth": {
+    "source": "file:skillicon-sources/dfmax/1bf9711f3f15865e38d7dce51c6b5a8c.png",
+    "x": 8,
+    "y": 3
+   },
+   "Artifact of Creation": {
+    "source": "file:skillicon-sources/dfmax/8eeca98333667959c403104f6d24da34.png",
+    "x": 7,
+    "y": 5
+   },
+   "Basic Training": {
+    "source": "file:skillicon-sources/dfmax/5a56514f35cf0270ae8d6c65f8fefd78.png",
+    "x": 1,
+    "y": 0
+   },
+   "Reenactment": {
+    "source": "file:skillicon-sources/dfmax/3aacd652747f6729f079bc48747724a4.png",
+    "x": 2,
+    "y": 3
+   },
+   "World Creator": {
+    "source": "file:skillicon-sources/dfmax/9376d04c476cd41d60ed1974ca69ab95.png",
+    "x": 5,
+    "y": 5
+   },
+   "Leap": {
+    "source": "file:skillicon-sources/dfmax/1fea5a626f15230237946a11a9d11582.png",
+    "x": 6,
+    "y": 0
+   },
+   "Wormhole": {
+    "source": "file:skillicon-sources/dfmax/dec8961c485edb02036ba00c789010f0.png",
+    "x": 1,
+    "y": 4
+   },
+   "Creative Space": {
+    "source": "file:skillicon-sources/dfmax/66a9967e677651d0def34c475795ccde.png",
+    "x": 7,
+    "y": 4
+   },
+   "Link": {
+    "source": "file:skillicon-sources/dfmax/394e2f09c1f37ae61d831d8567707170.png",
+    "x": 4,
+    "y": 4
+   },
+   "Backstep Upgrade": {
+    "source": "file:skillicon-sources/dfmax/2b340542e776818b78f3212af184bd6b.png",
+    "x": 4,
+    "y": 0
+   },
+   "Cataclysm": {
+    "source": "file:skillicon-sources/dfmax/03bd172c9c50cfdcf9d7e83a3ef82842.png",
+    "x": 9,
+    "y": 5
+   },
+   "Focus: Critical": {
+    "source": "file:skillicon-sources/dfmax/fc1262c19f3d0477ee8eda47b8db8696.png",
+    "x": 5,
+    "y": 0
+   },
+   "Time Forward": {
+    "source": "file:skillicon-sources/dfmax/bae12a6dc7d22a5cf149673e88ddda28.png",
+    "x": 5,
+    "y": 4
+   },
+   "Armor Mastery": {
+    "source": "file:skillicon-sources/dfmax/892ef624d8bf3d7fc045f84825fd6104.png",
+    "x": 11,
+    "y": 1
+   },
+   "Life Tree": {
+    "source": "file:skillicon-sources/dfmax/1c1a9606eb702ebe5a7bb4397f3aeae0.png",
+    "x": 6,
+    "y": 4
+   },
+   "One Step Closer": {
+    "source": "file:skillicon-sources/wiki/One Step Closer.png"
+   },
+   "Subitism": {
+    "source": "file:skillicon-sources/wiki/Subitism.png"
+   },
+   "Clues to Awakening": {
+    "source": "file:skillicon-sources/wiki/Clues to Awakening.png"
+   }
+  }
+ }
+}

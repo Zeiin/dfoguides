@@ -8,12 +8,14 @@ using System.Runtime.Versioning;
 
 namespace Collector;
 
-record SiteClass(string Key, string Display, string BaseClass, string Advancement, string Role, string? Portrait, int Sample, double Share);
-// One skill of a class tree; its row is the required level.
-record SiteSkill(string Id, string Name, int Level, string Type, bool Icon);
+record SiteClass(string Key, string Display, string BaseClass, string Advancement, string Role, string? Portrait, int Sample, double Share, int FameMin, int FameMax);
+// One skill of a class tree. Pre lists the skill ids that must be learned first; X and Y are its column and row in the game's skill window
+// (null when the skill could not be placed).
+record SiteSkill(string Id, string Name, int Level, string Type, string? Icon, string[] Pre, int? X, int? Y);
 
 record SiteData(string Generated, int CutoffFame, int TotalCharacters, List<SiteClass> Classes, Dictionary<string, object> Stats,
-    Dictionary<string, Dictionary<string, string>> Icons, Dictionary<string, List<SiteSkill>> SkillTree);
+    Dictionary<string, Dictionary<string, string>> Icons, Dictionary<string, List<SiteSkill>> SkillTree,
+    Dictionary<string, string> SetFamilies, Dictionary<string, string> FamilyIcons);
 
 // Writes the website data file and web-sized portraits into <repo>/stats.
 static class SiteExport
@@ -46,6 +48,7 @@ static class SiteExport
         var catalog = ctx.LoadClassCatalog().Values.OrderBy(c => c.Display).ToList();
         var stats = new Dictionary<string, object>();
         var classes = new List<SiteClass>();
+        var records = new Dictionary<string, List<CharacterRecord>>();
 
         foreach (var c in catalog)
         {
@@ -61,7 +64,11 @@ static class SiteExport
                 if (OperatingSystem.IsWindows()) SavePortrait(portraitFile, Path.Combine(portraitDir, portrait));
                 else Console.WriteLine("  portraits are resized on Windows only; keeping existing files");
             }
-            classes.Add(new SiteClass(c.Key, c.Display, c.BaseClass, c.Advancement, c.Role, portrait, s.Sample, 0));
+            // Without the source art (a fresh checkout) the committed web portrait is used.
+            portrait ??= new[] { $"{c.Key}.png", $"{c.Key}.jpg" }.FirstOrDefault(f => File.Exists(Path.Combine(portraitDir, f)));
+            var classRecords = JsonSerializer.Deserialize<List<CharacterRecord>>(await File.ReadAllTextAsync(Path.Combine(ctx.OutDir, $"records_{c.Key}.json")), Json.Options)!;
+            records[c.Key] = classRecords;
+            classes.Add(new SiteClass(c.Key, c.Display, c.BaseClass, c.Advancement, c.Role, portrait, s.Sample, 0, classRecords.Min(r => r.Fame), classRecords.Max(r => r.Fame)));
         }
 
         var total = classes.Sum(c => c.Sample);
@@ -107,28 +114,69 @@ static class SiteExport
             icons = await SiteIcons.BuildAsync(ctx, Path.Combine(siteDir, "img", "items"), cutoffFame, names);
         }
 
-        // Skill trees from the skill lists fetch-skill-icons saved.
+        // Sets and oath sets are drawn with the set's emblem (fetch-set-icons), not a piece of its gear.
+        SetEmblems.Apply(icons, names, Path.Combine(siteDir, "img", "items"), SetEmblems.ReadFamilies(Path.Combine(ctx.ReferenceDir, "setfamilies.json")));
+
+        // Skill trees from the committed skill lists (reference/).
         var skillTree = new Dictionary<string, List<SiteSkill>>();
+        var jobIds = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(ctx.RawDir, "jobs.json"))).RootElement.GetProperty("rows").EnumerateArray()
+            .ToDictionary(r => r.GetProperty("jobName").GetString()!, r => r.GetProperty("jobId").GetString()!);
+        var layout = ReadSkillLayout(Path.Combine(ctx.ReferenceDir, "skilllayout.json"));
+        var prerequisites = ReadPrerequisites(Path.Combine(ctx.ReferenceDir, "skillprereqs.json"));
         foreach (var c in classes)
         {
-            var listPath = Path.Combine(ctx.RawDir, $"skilllist_{c.Key}.json");
+            var listPath = Path.Combine(ctx.ReferenceDir, "skilllists", $"skilllist_{c.Key}.json");
             if (!File.Exists(listPath)) continue;
+            jobIds.TryGetValue(c.BaseClass, out var jobId);
+            var placed = layout.GetValueOrDefault(c.Key) ?? [];
             var list = JsonDocument.Parse(await File.ReadAllTextAsync(listPath)).RootElement.GetProperty("skills");
+            // Skill ids repeat across classes with different skills, so icons live in one folder per class.
             skillTree[c.Key] = list.EnumerateArray()
-                .Select(s => new SiteSkill(
-                    s.GetProperty("skillId").GetString()!,
-                    s.GetProperty("name").GetString()!,
-                    s.GetProperty("requiredLevel").GetInt32(),
-                    s.GetProperty("type").GetString()!,
-                    File.Exists(Path.Combine(siteDir, "img", "skills", $"{s.GetProperty("skillId").GetString()}.png"))))
+                .Select(s =>
+                {
+                    var id = s.GetProperty("skillId").GetString()!;
+                    var icon = $"{c.Key}/{id}.png";
+                    return new SiteSkill(
+                        id,
+                        s.GetProperty("name").GetString()!,
+                        s.GetProperty("requiredLevel").GetInt32(),
+                        s.GetProperty("type").GetString()!,
+                        File.Exists(Path.Combine(siteDir, "img", "skills", icon)) ? icon : null,
+                        prerequisites.GetValueOrDefault($"{jobId}_{id}") ?? [],
+                        placed.TryGetValue(id, out var spot) ? spot.X : null,
+                        placed.TryGetValue(id, out spot) ? spot.Y : null);
+                })
                 .ToList();
         }
 
-        var data = new SiteData(DateTime.UtcNow.ToString("yyyy-MM-dd"), cutoffFame, total, classes, stats, icons, skillTree);
+        // The filters: every class's characters as compact rows, and which family each set name belongs to (a family is one emblem set).
+        var recordsDir = Path.Combine(siteDir, "data", "records");
+        Directory.CreateDirectory(recordsDir);
+        foreach (var (key, list) in records) await SiteRecords.WriteAsync(recordsDir, key, list);
+        var setFamilies = SetEmblems.ReadFamilies(Path.Combine(ctx.ReferenceDir, "setfamilies.json"));
+        var familyIcons = setFamilies.Values.Distinct()
+            .Where(f => File.Exists(Path.Combine(siteDir, "img", "items", SetEmblems.FileName(f))))
+            .ToDictionary(f => f, SetEmblems.FileName);
+
+        var data = new SiteData(DateTime.UtcNow.ToString("yyyy-MM-dd"), cutoffFame, total, classes, stats, icons, skillTree, setFamilies, familyIcons);
         // A script file, not fetched JSON, so the page also works opened from disk.
         await File.WriteAllTextAsync(Path.Combine(siteDir, "data", "data.js"), "window.DFO_DATA = " + JsonSerializer.Serialize(data, WebJson) + ";");
         Console.WriteLine($"Exported {classes.Count} classes to {siteDir}");
     }
+
+    // class key -> skill id -> (column, row) in the game's skill window, from fetch-skill-layout; empty when it has not been run.
+    internal static Dictionary<string, Dictionary<string, (int X, int Y)>> ReadSkillLayout(string path)
+    {
+        var result = new Dictionary<string, Dictionary<string, (int X, int Y)>>();
+        if (!File.Exists(path)) return result;
+        foreach (var c in JsonDocument.Parse(File.ReadAllText(path)).RootElement.EnumerateObject())
+            result[c.Name] = c.Value.EnumerateArray().ToDictionary(s => s.GetProperty("id").GetString()!, s => (s.GetProperty("x").GetInt32(), s.GetProperty("y").GetInt32()));
+        return result;
+    }
+
+    // "<jobId>_<skillId>" -> ids of the skills that must be learned first, from the file fetch-skill-details writes (empty when it is missing).
+    internal static Dictionary<string, string[]> ReadPrerequisites(string path) =>
+        File.Exists(path) ? JsonSerializer.Deserialize<Dictionary<string, string[]>>(File.ReadAllText(path))! : [];
 
     // Scales to cover a 240x300 card, cropped from the top; a ready-made 240x300 PNG is copied as is.
     // PNG targets keep transparency. Windows-only (System.Drawing).
@@ -169,7 +217,7 @@ static class SiteExport
 
     static ClassStats Trim(ClassStats s) => s with
     {
-        Sets = T(s.Sets), OathSets = T(s.OathSets), OathSetOptions = T(s.OathSetOptions), Weapons = T(s.Weapons), Titles = T(s.Titles),
+        Sets = T(s.Sets), OathSets = T(s.OathSets), Weapons = T(s.Weapons), Titles = T(s.Titles),
         DistinctBySlot = T(s.DistinctBySlot), Exalted = T(s.Exalted), BlackFangCounts = T(s.BlackFangCounts),
         // These tables need every row (each skill appears once per option).
         VpSkills = T(s.VpSkills, 80), VpSets = T(s.VpSets), EnhancementPicks = T(s.EnhancementPicks, 80), EnhancementSets = T(s.EnhancementSets),
@@ -180,7 +228,7 @@ static class SiteExport
 
     static AgnosticStats Trim(AgnosticStats s) => s with
     {
-        Sets = T(s.Sets), OathSets = T(s.OathSets), OathSetOptions = T(s.OathSetOptions), Titles = T(s.Titles),
+        Sets = T(s.Sets, 80), OathSets = T(s.OathSets), Titles = T(s.Titles),
         DistinctBySlot = T(s.DistinctBySlot), Exalted = T(s.Exalted), BlackFangCounts = T(s.BlackFangCounts),
     };
 }

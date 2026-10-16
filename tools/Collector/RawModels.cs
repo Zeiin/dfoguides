@@ -3,7 +3,7 @@ namespace Collector;
 // Only the fields the statistics need; everything else is ignored.
 // Property names match the API camelCase via Json.Options.
 
-record EquipmentResponse(List<EquippedItem>? Equipment, List<SetItemInfo>? SetItemInfo);
+record EquipmentResponse(List<EquippedItem>? Equipment, List<SetItemInfo>? SetItemInfo, string? JobName = null, string? JobGrowName = null, int? Fame = null);
 record EquippedItem(string SlotId, string ItemName, string? ItemRarity, string? ItemId = null);
 record SetItemInfo(string SetItemName);
 
