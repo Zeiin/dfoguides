@@ -16,6 +16,9 @@ obj/
 # Generated data at the repo root: raw API dumps, statistics, downloaded art, run logs
 /data/
 
+# Website data rebuilt by the scheduled workflow; it is published from the `data` branch, not committed here
+/stats/data/
+
 # OS
 Thumbs.db
 .DS_Store

@@ -1,0 +1,163 @@
+﻿name: Refresh statistics
+
+# Daily: rescan the rosters, re-pull new/changed characters, rebuild the statistics and publish them to the `data` branch.
+# A push that changes the collector or its reference data rebuilds from the cached character data (no API pulling).
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+    inputs:
+      reexport_only:
+        description: "Skip the API pull and rebuild from the cached data"
+        type: boolean
+        default: false
+      budget_minutes:
+        description: "Stop pulling after this many minutes"
+        default: "300"
+      delay_ms:
+        description: "Pause between API calls (0 = none)"
+        default: "0"
+      classes:
+        description: "Only these class keys, comma separated (empty = all); for test runs"
+        default: ""
+      min_coverage:
+        description: "Publish only if at least this share of the characters has data"
+        default: "0.95"
+  push:
+    branches: [main]
+    paths:
+      - "tools/Collector/**"
+      - "reference/**"
+
+# One data run at a time; a second one waits instead of cancelling the first.
+concurrency:
+  group: stats-data
+  cancel-in-progress: false
+
+permissions:
+  contents: write   # replaces the data branch
+  actions: write    # keepalive (see the last step)
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    env:
+      REEXPORT: ${{ github.event_name == 'push' || inputs.reexport_only == true }}
+      COLLECTOR: dotnet tools/Collector/bin/Release/net10.0/Collector.dll
+    steps:
+      - uses: actions/checkout@v4
+
+      # The previous data branch: item icons downloaded earlier live there.
+      - uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: data
+          path: _data
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      # Last run's character data (data/raw), so only changes have to be pulled.
+      - name: Restore cached character data
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: data/raw
+          key: raw-${{ github.run_id }}
+          restore-keys: raw-
+
+      - name: Cached data present?
+        id: have
+        run: |
+          if [ -f data/raw/refresh_state.json ]; then echo "cached=true" >> "$GITHUB_OUTPUT"; else echo "cached=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Reuse downloaded item icons
+        run: |
+          if [ -d _data/stats/img/items ]; then cp -rn _data/stats/img/items/. stats/img/items/; fi
+
+      - name: Build
+        run: dotnet build tools/Collector/Collector.csproj -c Release --nologo -v q
+
+      - name: Class list
+        if: env.REEXPORT != 'true'
+        env:
+          NEOPLE_API_KEY: ${{ secrets.NEOPLE_API_KEY }}
+        run: $COLLECTOR jobs > /dev/null
+
+      - name: Refresh characters
+        if: env.REEXPORT != 'true'
+        env:
+          NEOPLE_API_KEY: ${{ secrets.NEOPLE_API_KEY }}
+          DELAY: ${{ inputs.delay_ms }}
+          BUDGET: ${{ inputs.budget_minutes }}
+          CLASSES: ${{ inputs.classes }}
+        run: $COLLECTOR refresh "${DELAY:-0}" "${BUDGET:-300}" $CLASSES
+
+      # Saved even when the run was cut short, so the next run continues from here.
+      - name: Save character data
+        if: always() && env.REEXPORT != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: data/raw
+          key: raw-${{ github.run_id }}
+
+      # A re-export with nothing cached yet (the very first push) has nothing to rebuild.
+      - name: Statistics
+        if: env.REEXPORT != 'true' || steps.have.outputs.cached == 'true'
+        run: $COLLECTOR analyze-every > /dev/null
+
+      - name: Website data
+        if: env.REEXPORT != 'true' || steps.have.outputs.cached == 'true'
+        run: $COLLECTOR export-site
+
+      # A run that pulled too little (first runs, or cut off early) must not replace good data.
+      - name: Check coverage
+        id: gate
+        if: env.REEXPORT != 'true' || steps.have.outputs.cached == 'true'
+        env:
+          MIN: ${{ inputs.min_coverage }}
+          CLASSES: ${{ inputs.classes }}
+        run: |
+          if [ "$REEXPORT" = "true" ]; then echo "publish=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          # A run limited to some classes is only a test: its data must never replace the site's.
+          if [ -n "$CLASSES" ]; then
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Test run (classes limited): nothing is published."
+            cat data/out/refresh_summary.txt | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          cat data/out/refresh_summary.txt | tee -a "$GITHUB_STEP_SUMMARY"
+          coverage=$(grep '^coverage=' data/out/refresh_summary.txt | cut -d= -f2)
+          if awk -v c="$coverage" -v m="${MIN:-0.95}" 'BEGIN { exit !(c >= m) }'; then
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Coverage $coverage is below the minimum; the site keeps the previous data."
+          fi
+
+      # One commit, force-pushed: old snapshots are never kept.
+      - name: Publish data branch
+        if: steps.gate.outputs.publish == 'true'
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p _publish/stats/img
+          cp -r stats/data _publish/stats/data
+          cp -r stats/img/items _publish/stats/img/items
+          cd _publish
+          git init -q -b data
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Statistics data $(date -u +%F)"
+          auth=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)
+          git -c http.extraheader="AUTHORIZATION: basic $auth" push -q --force "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" HEAD:data
+
+      # Scheduled workflows of a public repo are switched off after 60 days without activity; re-enabling resets that clock.
+      - name: Keepalive
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow enable stats.yml --repo "$GITHUB_REPOSITORY" || true

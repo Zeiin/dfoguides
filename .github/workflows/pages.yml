@@ -1,0 +1,90 @@
+name: Deploy site
+
+# Publishes the website: the landing page, guides and stats page from `main`, plus the generated statistics from the `data` branch.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "tools/**"
+      - "reference/**"
+      - ".github/workflows/stats.yml"
+      - "README.md"
+  workflow_run:
+    workflows: ["Refresh statistics"]
+    types: [completed]
+  workflow_dispatch:
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      url: ${{ steps.deployment.outputs.page_url }}
+      has_data: ${{ steps.assemble.outputs.has_data }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: data
+          path: _data
+
+      - name: Assemble the site
+        id: assemble
+        run: |
+          mkdir _site
+          cp index.html CNAME _site/
+          cp -r images legion stats _site/
+          rm -rf _site/stats/data
+          if [ -f _data/stats/data/data.js ]; then
+            cp -r _data/stats/. _site/stats/
+            echo "has_data=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::No statistics data on the data branch yet; deploying without it."
+            echo "has_data=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  # The pages must actually answer after the deploy.
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the live site
+        env:
+          BASE: ${{ needs.deploy.outputs.url }}
+          HAS_DATA: ${{ needs.deploy.outputs.has_data }}
+        run: |
+          paths="" ; paths="$paths stats/"
+          if [ "$HAS_DATA" = "true" ]; then paths="$paths stats/data/data.js stats/data/records/Archer_Neo_Chimera.js"; fi
+          fail=0
+          for p in "" $paths; do
+            code=000
+            for i in 1 2 3 4 5 6; do
+              code=$(curl -s -o /dev/null -w '%{http_code}' "${BASE}${p}")
+              [ "$code" = "200" ] && break
+              sleep 20
+            done
+            echo "/${p} -> ${code}"
+            [ "$code" = "200" ] || fail=1
+          done
+          exit $fail

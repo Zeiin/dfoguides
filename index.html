@@ -98,6 +98,92 @@
     border-radius: 2px;
     letter-spacing: 0.04em;
   }
+  .entries {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 36px 56px;
+    text-align: left;
+  }
+  .entry { flex: 1 1 250px; max-width: 320px; }
+  .entry-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin: 0 0 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(201, 161, 90, 0.28);
+  }
+  .entry .guide-link { display: flex; justify-content: space-between; width: 100%; }
+  .guide-link svg { width: 18px; height: 18px; flex: none; color: var(--gold); }
+  .menu-tab {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 20;
+    padding: 9px 18px;
+    background: var(--scrim);
+    color: var(--ink);
+    border: 1px solid var(--gold-dim);
+    border-radius: 3px;
+    font: inherit;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+  }
+  .menu-tab:hover { border-color: var(--gold); }
+  .menu-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    background: rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s;
+  }
+  .menu-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    width: min(320px, 88vw);
+    padding: 26px 26px 32px;
+    background: #0a0b0d;
+    border-left: 1px solid var(--gold-dim);
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform 0.25s ease, visibility 0.25s;
+    overflow-y: auto;
+  }
+  body.menu-open .menu-backdrop { opacity: 1; visibility: visible; }
+  body.menu-open .menu-panel { transform: none; visibility: visible; }
+  .menu-close {
+    display: block;
+    margin: 0 0 22px auto;
+    background: none;
+    border: 1px solid var(--gold-dim);
+    color: var(--muted);
+    border-radius: 3px;
+    padding: 6px 14px;
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+  .menu-close:hover { color: var(--ink); border-color: var(--gold); }
+  .menu-panel section + section { margin-top: 30px; }
+  .menu-panel a {
+    display: block;
+    padding: 11px 4px;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.95rem;
+  }
+  .menu-panel a:hover { color: var(--gold); }
+  .menu-panel a small { color: var(--muted); margin-left: 8px; font-size: 0.75rem; }
   footer {
     background: #0a0b0d;
     padding: 22px 24px 28px;
@@ -115,12 +201,38 @@
     <div class="hero-content">
       <div class="kicker">Work in progress</div>
       <h1>Community Written<br>Guides for DFO</h1>
-      <a class="guide-link" href="legion/apocalypse/">
-        <span>Apocalypse</span>
-        <span class="tag">Legion dungeon</span>
-      </a>
+      <div class="entries">
+        <section class="entry">
+          <h2 class="entry-label">Guides</h2>
+          <a class="guide-link" href="legion/apocalypse/">
+            <span>Apocalypse</span>
+            <span class="tag">Legion dungeon</span>
+          </a>
+        </section>
+        <section class="entry">
+          <h2 class="entry-label">Statistics</h2>
+          <a class="guide-link" href="stats/">
+            <span>Class Statistics</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 20V11M12 20V4M19 20v-6"/></svg>
+          </a>
+        </section>
+      </div>
     </div>
   </div>
+
+  <button class="menu-tab" id="menu-tab" type="button" aria-expanded="false" aria-controls="menu-panel">Menu</button>
+  <div class="menu-backdrop" id="menu-backdrop"></div>
+  <nav class="menu-panel" id="menu-panel" aria-label="Site menu">
+    <button class="menu-close" id="menu-close" type="button">Close</button>
+    <section>
+      <h2 class="entry-label">Guides</h2>
+      <a href="legion/apocalypse/">Apocalypse<small>Legion dungeon</small></a>
+    </section>
+    <section>
+      <h2 class="entry-label">Statistics</h2>
+      <a href="stats/">Class Statistics</a>
+    </section>
+  </nav>
   <footer>dfoguides.com &middot; not affiliated with Neople or Nexon</footer>
   <script>
     // Add new filenames here any time to grow the rotation, no other changes needed.
@@ -134,6 +246,17 @@
     ];
     const pick = backgrounds[Math.floor(Math.random() * backgrounds.length)];
     document.documentElement.style.setProperty('--bg-photo', `url('${pick}')`);
+
+    // Side menu: opens from the Menu tab, closes on Close, the backdrop or Escape.
+    const menuTab = document.getElementById('menu-tab');
+    const setMenu = (open) => {
+      document.body.classList.toggle('menu-open', open);
+      menuTab.setAttribute('aria-expanded', String(open));
+    };
+    menuTab.addEventListener('click', () => setMenu(true));
+    document.getElementById('menu-close').addEventListener('click', () => setMenu(false));
+    document.getElementById('menu-backdrop').addEventListener('click', () => setMenu(false));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
   </script>
 </body>
 </html>
