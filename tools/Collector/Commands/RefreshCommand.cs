@@ -95,13 +95,17 @@ class RefreshCommand : ICommand
 
         var coverage = total == 0 ? 0 : (double)covered / total;
         Directory.CreateDirectory(ctx.OutDir);
-        await File.WriteAllLinesAsync(Path.Combine(ctx.OutDir, "refresh_summary.txt"),
+        // Also kept in raw/ (which the workflow caches) so a later re-export knows whether the data behind it is complete.
+        string[] summary =
         [
             $"coverage={coverage.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture)}",
-            $"stoppedEarly={stoppedEarly}",
+            $"limited={(only != null ? "true" : "false")}",
+            $"stoppedEarly={(stoppedEarly ? "true" : "false")}",
             $"pulled={counters.Pulled}", $"keptOriginal={counters.Kept}", $"dropped={counters.Dropped}",
             $"requests={ctx.Client.RequestCount - requestsAtStart}",
-        ]);
+        ];
+        await File.WriteAllLinesAsync(Path.Combine(ctx.OutDir, "refresh_summary.txt"), summary);
+        await File.WriteAllLinesAsync(Path.Combine(ctx.RawDir, "refresh_summary.txt"), summary);
         Console.WriteLine($"Refresh done: {counters.Pulled} pulled, {counters.Kept} kept as original, {counters.Dropped} dropped, coverage {coverage:P1}, {ctx.Client.RequestCount - requestsAtStart} requests{(stoppedEarly ? " (stopped early)" : "")}.");
         return 0;
     }

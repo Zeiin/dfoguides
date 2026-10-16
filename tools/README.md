@@ -11,7 +11,7 @@ Commands that call the API need `NEOPLE_API_KEY`.
 | Command | Purpose |
 |---|---|
 | `jobs` | Save the class list (`data/raw/jobs.json`). Run first. |
-| `refresh [delayMs] [budgetMinutes] [keys]` | The daily job: rescan every class roster, pull new and changed characters plus the oldest 1/7 of the rest, keep everything else from last time. Resumable. Stops cleanly when `budgetMinutes` is used up or the API pushes back (5 rate-limit responses). `keys` limits it to some classes. Writes `data/out/refresh_summary.txt` (coverage and counts). |
+| `refresh [delayMs] [budgetMinutes] [keys]` | The daily job: rescan every class roster, pull new and changed characters plus the oldest 1/7 of the rest, keep everything else from last time. Resumable. Stops cleanly when `budgetMinutes` is used up or the API pushes back (5 rate-limit responses). `keys` limits it to some classes. Writes `data/out/refresh_summary.txt` and `data/raw/refresh_summary.txt` (coverage, whether the run was limited to some classes, counts). The fame search has no upper limit. |
 | `scan`, `pull-all` | The older full pipeline: roster everything, then download everything. `refresh` replaces it for normal use. |
 | `analyze-every [minFame]` | Statistics for every class and for all/DPS/Saders (default cutoff 91582). |
 | `export-site [skip-icons]` | Write `stats/data/` and the item icons. Run `analyze-every` first. |

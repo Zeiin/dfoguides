@@ -112,31 +112,33 @@ jobs:
         if: env.REEXPORT != 'true' || steps.have.outputs.cached == 'true'
         run: $COLLECTOR export-site
 
-      # A run that pulled too little (first runs, or cut off early) must not replace good data.
+      # Only complete data is published: not a run that pulled too little (first runs, cut off early) and never a test run limited to some
+      # classes. A re-export reads the same verdict from the summary the last pull saved in the cache.
       - name: Check coverage
         id: gate
         if: env.REEXPORT != 'true' || steps.have.outputs.cached == 'true'
         env:
           MIN: ${{ inputs.min_coverage }}
-          CLASSES: ${{ inputs.classes }}
         run: |
-          if [ "$REEXPORT" = "true" ]; then echo "publish=true" >> "$GITHUB_OUTPUT"; exit 0; fi
-          # A run limited to some classes is only a test: its data must never replace the site's.
-          if [ -n "$CLASSES" ]; then
+          summary=data/raw/refresh_summary.txt
+          if [ ! -f "$summary" ]; then
             echo "publish=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::Test run (classes limited): nothing is published."
-            cat data/out/refresh_summary.txt | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "::notice::No pull summary in the cache; nothing is published."
             exit 0
           fi
-          cat data/out/refresh_summary.txt | tee -a "$GITHUB_STEP_SUMMARY"
-          coverage=$(grep '^coverage=' data/out/refresh_summary.txt | cut -d= -f2)
+          tee -a "$GITHUB_STEP_SUMMARY" < "$summary"
+          if grep -q '^limited=true' "$summary"; then
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::The cached data comes from a test run (classes limited); nothing is published."
+            exit 0
+          fi
+          coverage=$(grep '^coverage=' "$summary" | cut -d= -f2)
           if awk -v c="$coverage" -v m="${MIN:-0.95}" 'BEGIN { exit !(c >= m) }'; then
             echo "publish=true" >> "$GITHUB_OUTPUT"
           else
             echo "publish=false" >> "$GITHUB_OUTPUT"
             echo "::warning::Coverage $coverage is below the minimum; the site keeps the previous data."
           fi
-
       # One commit, force-pushed: old snapshots are never kept.
       - name: Publish data branch
         if: steps.gate.outputs.publish == 'true'

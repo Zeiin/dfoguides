@@ -28,14 +28,19 @@ static class Roster
     const int PageLimit = 200;
 
     // floorFame skips everything below a cutoff.
-    public static async Task<List<RosterEntry>> BuildAsync(NeopleClient client, string jobId, string jobGrowId, int startFame = 170_000, int floorFame = 0)
+    // The scan starts far above any real fame (the top is about 130,000) so there is no upper limit; empty windows at the top cost one request each.
+    const int DefaultStartFame = 250_000;
+    const int EmptyWindowsBeforeFirst = 14;
+    const int EmptyWindowsAfterFirst = 3;
+
+    public static async Task<List<RosterEntry>> BuildAsync(NeopleClient client, string jobId, string jobGrowId, int startFame = DefaultStartFame, int floorFame = 0)
     {
         var seen = new Dictionary<string, RosterEntry>();
         var maxFame = startFame;
         var emptyStreak = 0;
 
-        // Stop after 3 empty windows once characters are found (8 before the first).
-        while (maxFame >= floorFame && maxFame > 0 && emptyStreak < (seen.Count == 0 ? 8 : 3))
+        // Stop after a few empty windows once characters are found (more before the first).
+        while (maxFame >= floorFame && maxFame > 0 && emptyStreak < (seen.Count == 0 ? EmptyWindowsBeforeFirst : EmptyWindowsAfterFirst))
         {
             var minFame = Math.Max(floorFame, maxFame - WindowWidth);
             var json = await client.GetAsync("/servers/all/characters-fame",
