@@ -261,3 +261,9 @@ h2.section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0
 .rarity-unique { outline-color: #C21FCB !important; }
 .rarity-rare { outline-color: #9A78D8 !important; }
 .rarity-common { outline-color: #7C838C !important; }
+
+/* class totals next to the base-class heading on the home page */
+.section-title .section-meta { margin-left: 12px; color: var(--ink); text-transform: none; letter-spacing: 0; font-size: 15px; font-weight: 500; }
+
+/* low-representation warning under the filters */
+.warning { margin-top: 14px; padding: 10px 14px; border: 1px solid #C9A15A; border-left-width: 4px; border-radius: 8px; background: rgba(201, 161, 90, 0.10); color: var(--ink); font-size: 14px; }

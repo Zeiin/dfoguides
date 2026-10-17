@@ -94,11 +94,11 @@ static class SiteExport
             {
                 Want("weapons", c.Weapons); Want("sets", c.Sets); Want("oath", c.OathSets); Want("creatures", c.Creatures);
                 Want("weaponAvatars", c.WeaponAvatarLevels); Want("platinum", c.PlatinumTop); Want("platinum", c.PlatinumBottom);
-                Want("platinum", c.PlatinumAura); Want("emblems", c.EmblemEffects); Want("exalted", c.Exalted);
+                Want("platinum", c.PlatinumAura); Want("emblems", c.EmblemEffects); Want("exalted", c.Exalted); Want("distinct", c.DistinctItems);
             }
             else if (value is AgnosticStats a)
             {
-                Want("sets", a.Sets); Want("oath", a.OathSets); Want("exalted", a.Exalted);
+                Want("sets", a.Sets); Want("oath", a.OathSets); Want("exalted", a.Exalted); Want("distinct", a.DistinctItems);
             }
         }
         var previous = Path.Combine(siteDir, "data", "data.js");
@@ -226,7 +226,7 @@ static class SiteExport
     static ClassStats Trim(ClassStats s) => s with
     {
         Sets = T(s.Sets), OathSets = T(s.OathSets), Weapons = T(s.Weapons), Titles = T(s.Titles),
-        DistinctBySlot = T(s.DistinctBySlot), Exalted = T(s.Exalted), BlackFangCounts = T(s.BlackFangCounts), BlackFangSets = T(s.BlackFangSets),
+        DistinctItems = T(s.DistinctItems), Exalted = T(s.Exalted), BlackFangCounts = T(s.BlackFangCounts), BlackFangSets = T(s.BlackFangSets),
         // These tables need every row (each skill appears once per option).
         VpSkills = T(s.VpSkills, 80), VpSets = T(s.VpSets), EnhancementPicks = T(s.EnhancementPicks, 80), EnhancementSets = T(s.EnhancementSets),
         WeaponAvatarLevels = T(s.WeaponAvatarLevels), Creatures = T(s.Creatures),
@@ -237,6 +237,6 @@ static class SiteExport
     static AgnosticStats Trim(AgnosticStats s) => s with
     {
         Sets = T(s.Sets, 80), OathSets = T(s.OathSets), Titles = T(s.Titles),
-        DistinctBySlot = T(s.DistinctBySlot), Exalted = T(s.Exalted), BlackFangCounts = T(s.BlackFangCounts), BlackFangSets = T(s.BlackFangSets),
+        DistinctItems = T(s.DistinctItems), Exalted = T(s.Exalted), BlackFangCounts = T(s.BlackFangCounts), BlackFangSets = T(s.BlackFangSets),
     };
 }

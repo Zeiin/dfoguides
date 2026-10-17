@@ -96,7 +96,9 @@ static class SiteIcons
                 {
                     if (item.SlotId == "WEAPON") votes.Add("weapons", item.ItemName, item.ItemId);
                     if (CharacterReader.ExaltedItems.TryGetValue(item.SlotId, out var exalted) && exalted == item.ItemName)
-                        votes.Add("exalted", SlotNames.Display(item.SlotId), item.ItemId);
+                        votes.Add("exalted", item.ItemName, item.ItemId);
+                    if (item.ItemName.Contains("Distinct"))
+                        votes.Add("distinct", CharacterReader.DistinctName(item.ItemName), item.ItemId);
                 }
 
                 // A set is shown by its normal top piece.

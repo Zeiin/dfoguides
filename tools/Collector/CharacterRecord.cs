@@ -23,8 +23,8 @@ record CharacterRecord(
     string Weapon,
     string Title,
     int? TitleLevel,
-    string[] DistinctSlots,
-    string[] ExaltedSlots,
+    string[] DistinctItems,                     // names of the Distinct pieces worn (the Scourge form counts as the same piece)
+    string[] ExaltedItems,                      // names of the Exalted pieces worn
     int BlackFangCount,
     Dictionary<string, int> SkillLevels,
     SkillPick[] Vp,
@@ -45,6 +45,10 @@ static partial class CharacterReader
         ["MAGIC_STON"] = "Perfume of Graceful Elegance",
         ["EARRING"] = "Brilliant Weather Cube",
     };
+
+    // "Scourge: Distinct - X" is the upgraded form of "Distinct - X"; both are the same piece.
+    internal static string DistinctName(string itemName) =>
+        itemName.StartsWith("Scourge: ") ? itemName["Scourge: ".Length..] : itemName;
 
     [GeneratedRegex(@"^(?<base>.*?)\s+Platinum\b.*?(?<level>\d+)")]
     private static partial Regex PlatinumTitle();
@@ -118,8 +122,8 @@ static partial class CharacterReader
             items.FirstOrDefault(i => i.SlotId == "WEAPON")?.ItemName ?? "(none)",
             title,
             titleLevel,
-            items.Where(i => i.ItemName.Contains("Distinct")).Select(i => i.SlotId).ToArray(),
-            items.Where(i => ExaltedItems.TryGetValue(i.SlotId, out var n) && n == i.ItemName).Select(i => i.SlotId).ToArray(),
+            items.Where(i => i.ItemName.Contains("Distinct")).Select(i => DistinctName(i.ItemName)).ToArray(),
+            items.Where(i => ExaltedItems.TryGetValue(i.SlotId, out var n) && n == i.ItemName).Select(i => i.ItemName).ToArray(),
             items.Count(i => (i.SlotId is "AMULET" or "WRIST" or "RING") && i.ItemName.StartsWith("Black Fang:")),
             allSkills.Where(s => s.Level > 0).ToDictionary(s => s.Name, s => s.Level),
             (style.Evolution ?? []).Select(e => new SkillPick(NameOf(e.SkillId), e.Type)).ToArray(),

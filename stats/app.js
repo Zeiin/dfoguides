@@ -218,6 +218,15 @@
         fameInput('min', 'Lowest fame', info.fameMin), h('span', { class: 'fame-dash' }, '–'), fameInput('max', 'Highest fame', info.fameMax), clear));
   }
 
+  // A filter that keeps very few of the characters says little about the class: warn below this share.
+  const LOW_SHARE = 0.05;
+  // Always returns a node (replaceChildren would print "null"): an empty fragment when there is nothing to warn about.
+  function lowSampleNote(filtered, shown, all) {
+    if (!filtered || shown === 0 || shown / all >= LOW_SHARE) return document.createDocumentFragment();
+    return h('div', { class: 'warning', role: 'status' },
+      `Low representation: only ${num(shown)} of ${num(all)} characters (${pct((100 * shown) / all)}) match these filters, so the statistics may not be representative.`);
+  }
+
   const sectionTitle = (text) => h('h2', { class: 'section-title' }, text);
   const grid = (...cards) => h('div', { class: 'card-grid' }, cards);
 
@@ -247,7 +256,7 @@
 
   const oathContent = (s) => h('div', {}, grid(barCard({ title: 'Oath sets', rows: s.oathSets, icon: itemIcon('oath') })), oathBoxes(s));
 
-  const distinctCard = (s) => barCard({ title: 'Distinct pieces by slot', rows: s.distinctBySlot, initial: 11 });
+  const distinctCard = (s) => barCard({ title: 'Distinct pieces', rows: s.distinctItems, icon: itemIcon('distinct'), initial: 10, longLabels: true });
   const exaltedCard = (s) => barCard({ title: 'Exalted pieces', rows: s.exalted, icon: itemIcon('exalted'), counts: true, absolute: true });
 
   // ---------- pages ----------
@@ -279,7 +288,10 @@
             h('div', { class: 'cname' }, c.display),
             h('div', { class: 'csub' }, `${num(c.sample)} characters \u00B7 ${pct(c.share)}`),
             h('div', { class: 'mini-bar', title: 'Share of all characters' }, h('i', { style: `width:${(c.share / maxShare) * 100}%` })))));
-      return h('section', { class: 'base-group' }, sectionTitle(base), h('div', { class: 'class-grid' }, cards));
+      const members = bases.get(base);
+      const total = members.reduce((sum, c) => sum + c.sample, 0);
+      const title = h('h2', { class: 'section-title' }, base, h('span', { class: 'section-meta' }, `${total} Characters \u2022 ${pct((100 * total) / D.totalCharacters)}`));
+      return h('section', { class: 'base-group' }, title, h('div', { class: 'class-grid' }, cards));
     });
 
     const search = h('input', { class: 'search', type: 'search', placeholder: 'Find a class\u2026', 'aria-label': 'Find a class' });
@@ -339,6 +351,7 @@
         h('div', { class: 'hero-figure' }, h('div', { class: 'value' }, num(s.sample)), h('div', { class: 'label' }, filtered ? `of ${num(base.sample)} characters` : 'characters'))),
       tabs(`/group/${id}`, tabList, active, filterQuery(filter)),
       filterBar(`/group/${id}`, active, range, base, filter),
+      lowSampleNote(filtered, s.sample, base.sample),
       content);
   }
 
@@ -419,6 +432,7 @@
           h('div', { class: 'label' }, filtered ? `of ${num(base.sample)} characters` : `characters \u00B7 ${pct(info.share)} of all`))),
       tabs(`/class/${key}`, tabList, active, filterQuery(filter)),
       filterBar(`/class/${key}`, active, info, base, filter),
+      lowSampleNote(filtered, s.sample, base.sample),
       content);
   }
 
