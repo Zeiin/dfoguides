@@ -275,15 +275,6 @@
     "source": "file:skillicon-sources/dfmax/56aa7844a2da23f5bea9b585aea5ae45.png",
     "x": 10,
     "y": 6
-   },
-   "One Step Closer": {
-    "source": "file:skillicon-sources/general/One Step Closer.png"
-   },
-   "Subitism": {
-    "source": "file:skillicon-sources/general/Subitism.png"
-   },
-   "Clues to Awakening": {
-    "source": "file:skillicon-sources/general/Clues to Awakening.png"
    }
   }
  },
@@ -508,15 +499,6 @@
     "source": "file:skillicon-sources/dfmax/1c1a9606eb702ebe5a7bb4397f3aeae0.png",
     "x": 6,
     "y": 4
-   },
-   "One Step Closer": {
-    "source": "file:skillicon-sources/general/One Step Closer.png"
-   },
-   "Subitism": {
-    "source": "file:skillicon-sources/general/Subitism.png"
-   },
-   "Clues to Awakening": {
-    "source": "file:skillicon-sources/general/Clues to Awakening.png"
    }
   }
  }

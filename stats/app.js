@@ -438,12 +438,10 @@
 
   // ---------- skills tab ----------
 
-  // VP1 / VP2 are drawn as a numbered disc (the game's own diamonds are too small and dark to tell apart); enhancement badges keep the game's
-  // orange (damage) and blue (cooldown) icons.
+  // The game's own VP and enhancement badges; the VP ones (I / II) get extra contrast in the stylesheet.
   function badgeEl(name, extraClass = '') {
-    const vp = name.match(/^Evolve([12])$/);
-    if (vp) return h('span', { class: `vp-badge vp${vp[1]} ${extraClass}`.trim(), 'aria-hidden': 'true' }, vp[1]);
-    return h('img', { class: extraClass, src: `img/skills/badges/${name}.png`, alt: '' });
+    const kind = name.startsWith('Evolve') ? ' vp-badge' : '';
+    return h('img', { class: `${extraClass}${kind}`.trim(), src: `img/skills/badges/${name}.png`, alt: '' });
   }
 
   // Skill icon with an optional corner badge; text tile when there is no icon.

@@ -192,10 +192,10 @@ h2.section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0
 .option-table td.lead { color: var(--gold); font-weight: 600; }
 .opt-head { display: inline-flex; align-items: center; gap: 6px; }
 .opt-head img { width: 18px; height: 18px; }
-.vp-badge { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--surface); font-size: 11px; font-weight: 700; line-height: 1; color: #15171B; }
-.vp1 { background: #B69CFF; }
-.vp2 { background: #F2C14E; }
-.skill-icon .vp-badge { width: 18px; height: 18px; }
+/* the game's VP diamonds are small and dark: brighter, more saturated, with a dark edge so the I and II stand out on any icon */
+img.vp-badge { filter: brightness(1.7) contrast(1.35) saturate(1.5) drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000); }
+.skill-icon .skill-badge.vp-badge { width: 22px; height: 22px; right: -5px; bottom: -5px; }
+.opt-head img.vp-badge { width: 22px; height: 22px; }
 .skill-name { display: flex; align-items: center; gap: 12px; font-size: 13.5px; }
 .skill-name .sub { color: var(--faint); font-size: 12px; font-variant-numeric: tabular-nums; }
 

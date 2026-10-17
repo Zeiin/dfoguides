@@ -21,8 +21,8 @@ record SiteData(string Generated, int CutoffFame, int TotalCharacters, List<Site
 static class SiteExport
 {
     const int TopRows = 20;
-    // Left out of the skill tree: it is not a choice anyone makes.
-    internal static readonly HashSet<string> HiddenSkills = ["Skill Chain"];
+    // Left out of the skill tree: Skill Chain and the three Neo awakening passives are not skills anyone chooses (they sit at level 0 in every class).
+    internal static readonly HashSet<string> HiddenSkills = ["Skill Chain", "Subitism", "One Step Closer", "Clues to Awakening"];
     const int PortraitWidth = 240;
     const int PortraitHeight = 300;
 
