@@ -21,19 +21,28 @@ static class SiteIcons
             ids[id] = ids.GetValueOrDefault(id) + 1;
         }
 
-        public string? Best(string category, string name) =>
-            _byCategory.TryGetValue(category, out var names) && names.TryGetValue(name, out var ids)
-                ? ids.MaxBy(kv => kv.Value).Key
-                : null;
+        public string? Best(string category, string name) => Ranked(category, name).FirstOrDefault();
 
-        // Every id seen for a name, most common first (one title name can come with several item ids).
-        public IEnumerable<string> Ranked(string category, string name) =>
-            _byCategory.TryGetValue(category, out var names) && names.TryGetValue(name, out var ids)
-                ? ids.OrderByDescending(kv => kv.Value).Select(kv => kv.Key)
-                : [];
+        // Every id seen for a name, most common first (one title name can come with several item ids). A name with no ids of its own (the
+        // level-free "Voyage Captain Celena Platinum" of the group pages) uses the ids of its levelled forms ("... Platinum [80]").
+        public IEnumerable<string> Ranked(string category, string name)
+        {
+            if (!_byCategory.TryGetValue(category, out var names)) return [];
+            if (names.TryGetValue(name, out var own)) return own.OrderByDescending(kv => kv.Value).Select(kv => kv.Key);
 
-        // Displayed title name -> the item name the API reported (the title icon service wants it).
-        public Dictionary<string, string> TitleItemNames { get; } = new();
+            var pooled = new Dictionary<string, int>();
+            foreach (var (other, ids) in names.Where(n => n.Key.StartsWith(name + " [")))
+                foreach (var (id, count) in ids) pooled[id] = pooled.GetValueOrDefault(id) + count;
+            return pooled.OrderByDescending(kv => kv.Value).Select(kv => kv.Key);
+        }
+
+        // "<category>|<displayed name>" -> the item name the API reported (dfogang's icon services want it). A level-free name uses a levelled form's.
+        public Dictionary<string, string> ItemNames { get; } = new();
+
+        public string? ItemName(string category, string name) =>
+            ItemNames.TryGetValue($"{category}|{name}", out var exact)
+                ? exact
+                : ItemNames.FirstOrDefault(kv => kv.Key.StartsWith($"{category}|{name} [")).Value;
     }
 
     // The file name of a title's hand-made icon: the title without its Platinum level, with characters a file name cannot hold replaced by "-".
@@ -82,23 +91,23 @@ static class SiteIcons
         var unavailablePath = Path.Combine(iconDir, UnavailableFile);
         var failedIds = File.Exists(unavailablePath) ? File.ReadAllLines(unavailablePath).ToHashSet() : new HashSet<string>();
 
-        // Titles: Neople's image server lacks many of them (and every Platinum level), so the title icon service of dfogang (which serves the
+        // Titles and creatures: Neople's image server lacks many of them (and every Platinum level), so dfogang's icon service (which serves the
         // same Neople artwork) is tried next. Each item id seen for the name is tried in turn.
-        async Task<string?> TitleIconAsync(string name)
+        async Task<string?> ServiceIconAsync(string category, string name)
         {
             // A hand-made icon (reference/titleicons/<title>.png) wins: it is for titles no image source has.
-            if (ManualTitleIcon(ctx, name, iconDir) is { } manual) return manual;
+            if (category == "titles" && ManualTitleIcon(ctx, name, iconDir) is { } manual) return manual;
 
-            var ids = votes.Ranked("titles", name).ToList();
+            var ids = votes.Ranked(category, name).ToList();
             foreach (var id in ids)
                 if (File.Exists(Path.Combine(iconDir, $"{id}.png"))) return $"{id}.png";
 
             foreach (var id in ids.Where(i => !failedIds.Contains(i)))
                 if (await TryDownloadAsync(http, $"https://img-api.dfoneople.com/df/items/{id}", Path.Combine(iconDir, $"{id}.png"), PauseMs)) { downloaded++; return $"{id}.png"; }
 
-            if (votes.TitleItemNames.TryGetValue(name, out var itemName))
+            if (votes.ItemName(category, name) is { } itemName)
                 foreach (var id in ids.Where(i => !failedIds.Contains(i)))
-                    if (await TryDownloadAsync(http, $"https://api.dfogang.com/api/title-icon/{id}/{Uri.EscapeDataString(itemName)}", Path.Combine(iconDir, $"{id}.png"), 250)) { downloaded++; return $"{id}.png"; }
+                    if (await TryDownloadAsync(http, $"https://api.dfogang.com/api/{(category == "titles" ? "title-icon" : "creature-icon")}/{id}/{Uri.EscapeDataString(itemName)}", Path.Combine(iconDir, $"{id}.png"), 250)) { downloaded++; return $"{id}.png"; }
 
             foreach (var id in ids) failedIds.Add(id);
             return null;
@@ -107,15 +116,15 @@ static class SiteIcons
         foreach (var (category, wanted) in names)
         {
             iconByName[category] = new();
-            if (category == "titles")
+            if (category is "titles" or "creatures")
             {
                 foreach (var name in wanted)
                 {
-                    var file = await TitleIconAsync(name);
+                    var file = await ServiceIconAsync(category, name);
                     if (file != null) iconByName[category][name] = file;
                     else missing.Add($"{category}: {name}");
                 }
-                // A Platinum level with no image of its own borrows another level of the same title (the artwork is the same).
+                // A Platinum level with no image of its own borrows another level of the same title or creature (the artwork is the same).
                 foreach (var name in wanted.Where(n => !iconByName[category].ContainsKey(n) && n.Contains(" Platinum [")))
                 {
                     var prefix = name[..name.IndexOf(" [", StringComparison.Ordinal)];
@@ -195,13 +204,15 @@ static class SiteIcons
                     var (titleName, titleLevel) = CharacterReader.ParseTitle(titleItem.ItemName);
                     var shownTitle = titleLevel is { } tl ? $"{titleName} [{tl}]" : titleName;
                     votes.Add("titles", shownTitle, titleItem.ItemId);
-                    votes.TitleItemNames[shownTitle] = titleItem.ItemName;
+                    votes.ItemNames[$"titles|{shownTitle}"] = titleItem.ItemName;
                 }
 
                 if (creature?.Creature?.ItemName is { } creatureName)
                 {
                     var (baseName, level) = CharacterReader.ParseTitle(creatureName);
-                    votes.Add("creatures", level is { } l ? $"{baseName} [{l}]" : baseName, creature.Creature.ItemId);
+                    var shownCreature = level is { } l ? $"{baseName} [{l}]" : baseName;
+                    votes.Add("creatures", shownCreature, creature.Creature.ItemId);
+                    votes.ItemNames[$"creatures|{shownCreature}"] = creatureName;
                 }
 
                 var slots = avatar?.Avatar ?? [];

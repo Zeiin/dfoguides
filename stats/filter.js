@@ -13,6 +13,9 @@
   const OATH_BOXES = 3;       // oath sets shown with their options
   const EMBLEM_COLORS = ['Red', 'Yellow', 'Green', 'Blue', 'Multicolored'];
 
+  // "Voyage Captain Celena Platinum [80]" -> "... Platinum": the group pages only tell Platinum from not Platinum.
+  const withoutLevel = (name) => name.replace(/ \[\d+\]$/, '');
+
   const percent = (part, total) => (total === 0 ? 0 : (100 * part) / total);
 
   // [flat array of pairs] -> [[a, b], ...]
@@ -69,7 +72,8 @@
       oathSample: withOath.length,
       oathSets: top(rates(withOath.map((x) => x.text(x.r[I.OATH])), withOath.length)),
       oathBreakdown: oathBreakdown(withOath.map((x) => ({ set: x.text(x.r[I.OATH]), option: x.text(x.r[I.OPTION]) }))),
-      titles: top(rates(all.map((x) => x.text(x.r[I.TITLE])), n)),
+      titles: top(rates(all.map((x) => withoutLevel(x.text(x.r[I.TITLE]))), n)),
+      creatures: top(rates(all.map((x) => withoutLevel(x.text(x.r[I.CREATURE]))), n)),
       distinctItems: top(rates(all.flatMap((x) => x.r[I.DISTINCT].map(x.text)), n)),
       anyDistinctPercent: percent(all.filter((x) => x.r[I.DISTINCT].length > 0).length, n),
       exalted: top(rates(all.flatMap((x) => x.r[I.EXALTED].map(x.text)), n)),

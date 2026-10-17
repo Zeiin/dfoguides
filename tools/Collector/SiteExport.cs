@@ -98,7 +98,7 @@ static class SiteExport
             }
             else if (value is AgnosticStats a)
             {
-                Want("sets", a.Sets); Want("oath", a.OathSets); Want("exalted", a.Exalted); Want("distinct", a.DistinctItems); Want("titles", a.Titles);
+                Want("sets", a.Sets); Want("oath", a.OathSets); Want("exalted", a.Exalted); Want("distinct", a.DistinctItems); Want("titles", a.Titles); Want("creatures", a.Creatures);
             }
         }
         var previous = Path.Combine(siteDir, "data", "data.js");
@@ -237,6 +237,6 @@ static class SiteExport
     static AgnosticStats Trim(AgnosticStats s) => s with
     {
         Sets = T(s.Sets, 80), OathSets = T(s.OathSets), Titles = T(s.Titles),
-        DistinctItems = T(s.DistinctItems), Exalted = T(s.Exalted), BlackFangCounts = T(s.BlackFangCounts), BlackFangSets = T(s.BlackFangSets),
+        DistinctItems = T(s.DistinctItems), Exalted = T(s.Exalted), BlackFangCounts = T(s.BlackFangCounts), BlackFangSets = T(s.BlackFangSets), Creatures = T(s.Creatures),
     };
 }

@@ -15,7 +15,8 @@ static class ReportWriter
         Table(sb, $"Oath sets (of {s.OathSample} characters with an oath)", s.OathSets);
         OathTables(sb, s.OathBreakdown);
         Table(sb, "Weapons", s.Weapons);
-        Table(sb, "Titles", s.Titles);
+        Table(sb, "Titles (Platinum levels merged)", s.Titles);
+        Table(sb, "Creatures (Platinum levels merged)", s.Creatures);
         Table(sb, $"Distinct pieces (any Distinct: {s.AnyDistinctPercent:F1}%)", s.DistinctItems);
         Table(sb, "Exalted pieces", s.Exalted);
         Table(sb, $"Black Fang accessories (average across ring, necklace, bracelet: {s.BlackFangAveragePercent:F1}%; {s.BlackFangSample} characters with none or all three)", s.BlackFangCounts);

@@ -49,7 +49,8 @@ record AgnosticStats(
     int BlackFangSample,
     double BlackFangAveragePercent,
     List<RateRow> BlackFangCounts,
-    List<RateRow> BlackFangSets);
+    List<RateRow> BlackFangSets,
+    List<RateRow> Creatures);       // like Titles: no levels, so Platinum versus not is all that is told apart
 
 // All classes, DPS only and support only.
 record AgnosticReport(AgnosticStats All, AgnosticStats Dps, AgnosticStats Support, double SupportSharePercent);
@@ -78,14 +79,15 @@ static class Stats
             withOath.Count,
             Rates(withOath.Select(c => c.OathSet), withOath.Count),
             OathBreakdown(withOath),
-            Rates(chars.Select(c => c.TitleLevel is { } l ? $"{c.Title} [{l}]" : c.Title), n),
+            Rates(chars.Select(c => c.Title), n),   // no level: across classes only Platinum versus not matters
             Rates(chars.SelectMany(c => c.DistinctItems), n),
             Percent(chars.Count(c => c.DistinctItems.Length > 0), n),
             Rates(chars.SelectMany(c => c.ExaltedItems), n),
             blackFang.Count,
             BlackFangAveragePercent(chars),
             BlackFangCounts(chars),
-            BlackFangSets(chars));
+            BlackFangSets(chars),
+            Rates(chars.Select(c => c.Creature), n));
     }
 
     // Characters with no oath are excluded from the oath tables.

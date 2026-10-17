@@ -14,7 +14,7 @@
   const BASE_ORDER = ['Slayer (M)', 'Slayer (F)', 'Fighter (M)', 'Fighter (F)', 'Gunner (M)', 'Gunner (F)', 'Mage (M)', 'Mage (F)',
     'Priest (M)', 'Priest (F)', 'Thief', 'Knight', 'Demonic Lancer', 'Agent', 'Archer', 'Dark Knight', 'Creator'];
 
-  const GROUPS = { all: 'All Classes', dps: 'DPS', support: 'Saders' };
+  const GROUPS = { all: 'All Classes', dps: 'DPS', support: 'Buffers' };
 
   const EMBLEM_COLORS = { Red: '#D8645B', Yellow: '#E2C458', Green: '#6FBF73', Blue: '#5B9BD8', Multicolored: 'conic-gradient(#D8645B, #E2C458, #6FBF73, #5B9BD8, #D8645B)' };
 
@@ -340,7 +340,8 @@
     } else if (active === 'rates') {
       content = grid(barCard({ title: 'Play rate by class', rows: s.classShare, initial: 15, icon: classIcon, wide: true }));
     } else if (active === 'gear') {
-      content = grid(barCard({ title: 'Gear sets', rows: s.sets, icon: itemIcon('sets') }), barCard({ title: 'Titles', rows: s.titles, icon: itemIcon('titles'), longLabels: true }));
+      content = grid(barCard({ title: 'Gear sets', rows: s.sets, icon: itemIcon('sets') }), barCard({ title: 'Titles', rows: s.titles, icon: itemIcon('titles'), longLabels: true }),
+        barCard({ title: 'Creatures', rows: s.creatures, icon: itemIcon('creatures'), longLabels: true }));
     } else if (active === 'oath') {
       content = oathContent(s);
     } else {
@@ -430,7 +431,7 @@
         h('div', { class: 'portrait' }, info.portrait ? h('img', { src: `img/classes/${info.portrait}`, alt: `${info.display} portrait` }) : null),
         h('div', { class: 'titles' },
           h('h1', {}, info.display),
-          h('div', { class: 'chips' }, h('span', { class: 'chip' }, info.baseClass), h('span', { class: 'chip gold' }, info.role === 'Support' ? 'Sader' : 'DPS'))),
+          h('div', { class: 'chips' }, h('span', { class: 'chip' }, info.baseClass), h('span', { class: 'chip gold' }, info.role === 'Support' ? 'Buffer' : 'DPS'))),
         h('div', { class: 'hero-figure' }, h('div', { class: 'value' }, num(s.sample)),
           h('div', { class: 'label' }, filtered ? `of ${num(base.sample)} characters` : `characters \u00B7 ${pct(info.share)} of all`))),
       tabs(`/class/${key}`, tabList, active, filterQuery(filter)),
