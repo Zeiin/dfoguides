@@ -424,12 +424,20 @@
 
   // ---------- skills tab ----------
 
+  // VP1 / VP2 are drawn as a numbered disc (the game's own diamonds are too small and dark to tell apart); enhancement badges keep the game's
+  // orange (damage) and blue (cooldown) icons.
+  function badgeEl(name, extraClass = '') {
+    const vp = name.match(/^Evolve([12])$/);
+    if (vp) return h('span', { class: `vp-badge vp${vp[1]} ${extraClass}`.trim(), 'aria-hidden': 'true' }, vp[1]);
+    return h('img', { class: extraClass, src: `img/skills/badges/${name}.png`, alt: '' });
+  }
+
   // Skill icon with an optional corner badge; text tile when there is no icon.
   function skillIcon(skill, badge, label) {
     const wrap = h('span', { class: 'skill-icon', title: label || (skill ? skill.name : '') });
     if (skill && skill.icon) wrap.append(h('img', { src: `img/skills/${skill.icon}`, alt: skill.name, loading: 'lazy' }));
     else wrap.append(h('span', { class: 'skill-fallback' }, ((skill && skill.name) || '?').slice(0, 3)));
-    if (badge) wrap.append(h('img', { class: 'skill-badge', src: `img/skills/badges/${badge}.png`, alt: '' }));
+    if (badge) wrap.append(badgeEl(badge, 'skill-badge'));
     return wrap;
   }
 
@@ -473,7 +481,7 @@
     }
     const ordered = [...skills.values()].sort((a, b) => (b.values[0] + b.values[1]) - (a.values[0] + a.values[1]));
 
-    const head = h('tr', {}, h('th', {}, 'Skill'), headings.map((text, i) => h('th', { class: 'num' }, h('span', { class: 'opt-head' }, h('img', { src: `img/skills/badges/${badges[i]}.png`, alt: '' }), text))));
+    const head = h('tr', {}, h('th', {}, 'Skill'), headings.map((text, i) => h('th', { class: 'num' }, h('span', { class: 'opt-head' }, badgeEl(badges[i]), text))));
     const body = h('tbody', {}, ordered.map((e) => {
       const lead = e.values[0] >= e.values[1] ? 0 : 1;
       return h('tr', {},
