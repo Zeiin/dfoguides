@@ -15,12 +15,14 @@ record SiteSkill(string Id, string Name, int Level, string Type, string? Icon, s
 
 record SiteData(string Generated, int CutoffFame, int TotalCharacters, List<SiteClass> Classes, Dictionary<string, object> Stats,
     Dictionary<string, Dictionary<string, string>> Icons, Dictionary<string, List<SiteSkill>> SkillTree,
-    Dictionary<string, string> SetFamilies, Dictionary<string, string> FamilyIcons);
+    Dictionary<string, string> SetFamilies, Dictionary<string, string> FamilyIcons, Dictionary<string, string> WeaponRarity);
 
 // Writes the website data file and web-sized portraits into <repo>/stats.
 static class SiteExport
 {
     const int TopRows = 20;
+    // Left out of the skill tree: it is not a choice anyone makes.
+    internal static readonly HashSet<string> HiddenSkills = ["Skill Chain"];
     const int PortraitWidth = 240;
     const int PortraitHeight = 300;
 
@@ -132,6 +134,7 @@ static class SiteExport
             var list = JsonDocument.Parse(await File.ReadAllTextAsync(listPath)).RootElement.GetProperty("skills");
             // Skill ids repeat across classes with different skills, so icons live in one folder per class.
             skillTree[c.Key] = list.EnumerateArray()
+                .Where(s => !HiddenSkills.Contains(s.GetProperty("name").GetString()!))
                 .Select(s =>
                 {
                     var id = s.GetProperty("skillId").GetString()!;
@@ -158,7 +161,12 @@ static class SiteExport
             .Where(f => File.Exists(Path.Combine(siteDir, "img", "items", SetEmblems.FileName(f))))
             .ToDictionary(f => f, SetEmblems.FileName);
 
-        var data = new SiteData(DateTime.UtcNow.ToString("yyyy-MM-dd"), cutoffFame, total, classes, stats, icons, skillTree, setFamilies, familyIcons);
+        // Weapon name -> the rarity most of its wearers have (the page draws a coloured frame from it).
+        var weaponRarity = records.Values.SelectMany(r => r).Where(c => c.WeaponRarity != null)
+            .GroupBy(c => c.Weapon)
+            .ToDictionary(g => g.Key, g => g.GroupBy(c => c.WeaponRarity!).MaxBy(x => x.Count())!.Key);
+
+        var data = new SiteData(DateTime.UtcNow.ToString("yyyy-MM-dd"), cutoffFame, total, classes, stats, icons, skillTree, setFamilies, familyIcons, weaponRarity);
         // A script file, not fetched JSON, so the page also works opened from disk.
         await File.WriteAllTextAsync(Path.Combine(siteDir, "data", "data.js"), "window.DFO_DATA = " + JsonSerializer.Serialize(data, WebJson) + ";");
         Console.WriteLine($"Exported {classes.Count} classes to {siteDir}");
@@ -218,7 +226,7 @@ static class SiteExport
     static ClassStats Trim(ClassStats s) => s with
     {
         Sets = T(s.Sets), OathSets = T(s.OathSets), Weapons = T(s.Weapons), Titles = T(s.Titles),
-        DistinctBySlot = T(s.DistinctBySlot), Exalted = T(s.Exalted), BlackFangCounts = T(s.BlackFangCounts),
+        DistinctBySlot = T(s.DistinctBySlot), Exalted = T(s.Exalted), BlackFangCounts = T(s.BlackFangCounts), BlackFangSets = T(s.BlackFangSets),
         // These tables need every row (each skill appears once per option).
         VpSkills = T(s.VpSkills, 80), VpSets = T(s.VpSets), EnhancementPicks = T(s.EnhancementPicks, 80), EnhancementSets = T(s.EnhancementSets),
         WeaponAvatarLevels = T(s.WeaponAvatarLevels), Creatures = T(s.Creatures),
@@ -229,6 +237,6 @@ static class SiteExport
     static AgnosticStats Trim(AgnosticStats s) => s with
     {
         Sets = T(s.Sets, 80), OathSets = T(s.OathSets), Titles = T(s.Titles),
-        DistinctBySlot = T(s.DistinctBySlot), Exalted = T(s.Exalted), BlackFangCounts = T(s.BlackFangCounts),
+        DistinctBySlot = T(s.DistinctBySlot), Exalted = T(s.Exalted), BlackFangCounts = T(s.BlackFangCounts), BlackFangSets = T(s.BlackFangSets),
     };
 }

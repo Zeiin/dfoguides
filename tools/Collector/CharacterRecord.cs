@@ -33,7 +33,8 @@ record CharacterRecord(
     int? CreatureLevel,
     int? RareCloneWeaponLevel,                  // null unless a Rare Clone
     Dictionary<string, string> PlatinumBySlot,  // avatar slot id -> skill (JACKET top, PANTS bottom, AURORA aura)
-    Dictionary<string, int> EmblemCounts);      // "Color|Effect" -> count
+    Dictionary<string, int> EmblemCounts,       // "Color|Effect" -> count
+    string? WeaponRarity = null);               // Primeval, Epic, Legendary, Unique, Rare, Common (null in records written before this field)
 
 static partial class CharacterReader
 {
@@ -111,7 +112,7 @@ static partial class CharacterReader
         return new CharacterRecord(
             classKey,
             entry.Fame,
-            SetNames.Display(equipment.SetItemInfo?.FirstOrDefault()?.SetItemName ?? "(none)"),
+            SetNames.Of(equipment),
             oath?.Oath?.SetInfo?.SetName ?? "(none)",
             oath?.Oath?.SetInfo?.SetOptionName ?? "(none)",
             items.FirstOrDefault(i => i.SlotId == "WEAPON")?.ItemName ?? "(none)",
@@ -127,7 +128,8 @@ static partial class CharacterReader
             creatureLevel,
             RareCloneLevel(weaponAvatar),
             platinumBySlot,
-            emblemCounts);
+            emblemCounts,
+            items.FirstOrDefault(i => i.SlotId == "WEAPON")?.ItemRarity);
     }
 
     // -> level, or null for any other weapon avatar.

@@ -60,7 +60,7 @@ static class SetEmblems
             if (!icons.TryGetValue(category, out var byName)) icons[category] = byName = new();
             byName[name] = FileName(family);
         }
-        foreach (var name in names.GetValueOrDefault("sets") ?? []) Use("sets", name, familyOfSetName.GetValueOrDefault(name));
+        foreach (var name in names.GetValueOrDefault("sets") ?? []) Use("sets", name, familyOfSetName.GetValueOrDefault(name, name));
         foreach (var name in names.GetValueOrDefault("oath") ?? []) Use("oath", name, OathFamilies.GetValueOrDefault(name));
     }
 }

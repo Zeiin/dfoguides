@@ -41,6 +41,32 @@ class ApplySkillIconMapCommand : ICommand
         }
 
         await File.WriteAllTextAsync(layoutPath, layout.ToJsonString(Json.Pretty));
+        await ApplyGeneralSkillsAsync(ctx);
         return 0;
+    }
+
+    // The Neo awakening passives every class has have no icon on dfogang. One image per skill name lives in
+    // reference/skillicon-sources/general and is copied to every class that has the skill and no icon yet.
+    internal static readonly HashSet<string> GeneralSkills = ["Subitism", "One Step Closer", "Clues to Awakening"];
+
+    static async Task ApplyGeneralSkillsAsync(CommandContext ctx)
+    {
+        var sourceDir = Path.Combine(ctx.ReferenceDir, "skillicon-sources", "general");
+        var copied = 0;
+        foreach (var listFile in Directory.GetFiles(Path.Combine(ctx.ReferenceDir, "skilllists"), "skilllist_*.json"))
+        {
+            var classKey = Path.GetFileNameWithoutExtension(listFile)["skilllist_".Length..];
+            var target = Path.Combine(RepoRoot.Find(), "stats", "img", "skills", classKey);
+            Directory.CreateDirectory(target);
+            foreach (var skill in JsonNode.Parse(await File.ReadAllTextAsync(listFile))!["skills"]!.AsArray())
+            {
+                var source = Path.Combine(sourceDir, skill!["name"]!.GetValue<string>() + ".png");
+                var destination = Path.Combine(target, skill["skillId"]!.GetValue<string>() + ".png");
+                if (!File.Exists(source) || File.Exists(destination)) continue;
+                File.Copy(source, destination);
+                copied++;
+            }
+        }
+        Console.WriteLine($"General skills: {copied} icons copied.");
     }
 }

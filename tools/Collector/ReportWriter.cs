@@ -19,6 +19,7 @@ static class ReportWriter
         Table(sb, $"Distinct pieces by slot (any Distinct: {s.AnyDistinctPercent:F1}%)", s.DistinctBySlot);
         Table(sb, "Exalted pieces", s.Exalted);
         Table(sb, $"Black Fang accessories (average across ring, necklace, bracelet: {s.BlackFangAveragePercent:F1}%; {s.BlackFangSample} characters with none or all three)", s.BlackFangCounts);
+        Table(sb, "Black Fang (3 of 3) by gear set, share of the Black Fang sample", s.BlackFangSets);
         Table(sb, "VP: skills picked", s.VpSkills);
         Table(sb, "VP: full sets", s.VpSets);
         Table(sb, "Enhancement: picks", s.EnhancementPicks);

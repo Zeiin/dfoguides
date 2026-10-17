@@ -1,12 +1,13 @@
 /* DFO Class Statistics: dark theme matching the guides. */
 :root {
-  --bg: #0E1013;
-  --surface: #14171C;
-  --surface-2: #1A1E24;
-  --line: rgba(236, 233, 226, 0.10);
-  --ink: #ECE9E2;
-  --muted: #A79E8C;
-  --faint: #6F685B;
+  --bg: #15171B;
+  --surface: #1D2026;
+  --surface-2: #24272E;
+  --line: #30343B;
+  --ink: #D2D6DC;
+  --ink-strong: #E7E9ED;
+  --muted: #93989F;
+  --faint: #6D727A;
   --gold: #C9A15A;
   --gold-hi: #E0BC76;
   --gold-dim: #8A7442;
@@ -37,7 +38,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, .bar-row:focus-visib
   padding: 14px 28px;
   border-bottom: 1px solid var(--line);
   position: sticky; top: 0; z-index: 10;
-  background: rgba(14, 16, 19, 0.92);
+  background: rgba(21, 23, 27, 0.92);
   backdrop-filter: blur(8px);
 }
 .back { color: var(--muted); font-size: 13px; }
@@ -58,7 +59,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, .bar-row:focus-visib
 main { max-width: 1280px; margin: 0 auto; padding: 28px 28px 0; }
 
 /* ---------- shared bits ---------- */
-h1, h2, h3 { font-weight: 600; margin: 0; }
+h1, h2, h3 { font-weight: 600; margin: 0; color: var(--ink-strong); }
 h1 { font-family: 'Cinzel', serif; font-size: 34px; letter-spacing: 0.02em; }
 h2.section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin: 36px 0 14px; }
 .chip {
@@ -141,7 +142,7 @@ h2.section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0
   display: grid; grid-template-columns: minmax(90px, 40%) 1fr 54px; align-items: center; gap: 12px;
   padding: 5px 4px; margin: 0 -4px; border-radius: 6px; cursor: default;
 }
-.bar-row:hover, .bar-row:focus-visible { background: rgba(236, 233, 226, 0.04); }
+.bar-row:hover, .bar-row:focus-visible { background: rgba(231, 233, 237, 0.04); }
 .card.long-labels .bar-row { grid-template-columns: minmax(120px, 62%) 1fr 54px; }
 .card.with-counts .bar-row { grid-template-columns: minmax(90px, 40%) 1fr 96px; }
 .bar-row .label .item-icon { width: 28px; height: 28px; object-fit: contain; flex: none; }
@@ -161,7 +162,7 @@ h2.section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0
 /* table view (every chart as a plain table) */
 .bar-table { display: none; width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
 .bar-table th { text-align: left; color: var(--muted); font-weight: 500; padding: 4px 6px; border-bottom: 1px solid var(--line); }
-.bar-table td { padding: 4px 6px; border-bottom: 1px solid rgba(236, 233, 226, 0.05); font-variant-numeric: tabular-nums; }
+.bar-table td { padding: 4px 6px; border-bottom: 1px solid rgba(231, 233, 237, 0.05); font-variant-numeric: tabular-nums; }
 .bar-table td.num, .bar-table th.num { text-align: right; }
 .table-view .bar-list { display: none; }
 .table-view .bar-table { display: table; }
@@ -176,8 +177,8 @@ h2.section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0
 .skill-fallback { width: 40px; height: 40px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface-2); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--faint); }
 
 .setup-list { list-style: none; margin: 12px 0 0; padding: 0; }
-.setup-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 7px 4px; margin: 0 -4px; border-radius: 6px; border-bottom: 1px solid rgba(236, 233, 226, 0.05); }
-.setup-row:hover, .setup-row:focus-visible { background: rgba(236, 233, 226, 0.04); }
+.setup-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 7px 4px; margin: 0 -4px; border-radius: 6px; border-bottom: 1px solid rgba(231, 233, 237, 0.05); }
+.setup-row:hover, .setup-row:focus-visible { background: rgba(231, 233, 237, 0.04); }
 .setup-row .value { font-variant-numeric: tabular-nums; font-size: 14px; }
 .setup-icons { display: flex; gap: 6px; }
 .setup-row.extra { display: none; }
@@ -186,7 +187,7 @@ h2.section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0
 .option-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
 .option-table th { text-align: left; color: var(--muted); font-weight: 500; font-size: 12.5px; padding: 6px 8px; border-bottom: 1px solid var(--line); }
 .option-table th.num, .option-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
-.option-table td { padding: 8px; border-bottom: 1px solid rgba(236, 233, 226, 0.05); }
+.option-table td { padding: 8px; border-bottom: 1px solid rgba(231, 233, 237, 0.05); }
 .option-table td.num { color: var(--muted); }
 .option-table td.lead { color: var(--gold); font-weight: 600; }
 .opt-head { display: inline-flex; align-items: center; gap: 6px; }
@@ -197,7 +198,7 @@ h2.section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0
 .tree { position: relative; margin-top: 12px; overflow-x: auto; }
 .tree-links { position: absolute; left: 0; top: 0; pointer-events: none; }
 .tree-links path { fill: none; stroke: var(--gold-dim); stroke-width: 1.5; opacity: 0.7; }
-.tree-row { position: relative; display: flex; gap: 14px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid rgba(236, 233, 226, 0.06); }
+.tree-row { position: relative; display: flex; gap: 14px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid rgba(231, 233, 237, 0.06); }
 .tree-level { width: 44px; flex: none; text-align: center; color: var(--muted); font-size: 13px; background: var(--surface-2); border-radius: 6px; padding: 8px 0; margin-top: 2px; }
 .tree-cells { display: grid; gap: 8px 12px; }
 .tree-cell { width: 56px; text-align: center; font-variant-numeric: tabular-nums; font-size: 12.5px; line-height: 1.35; }
@@ -213,7 +214,7 @@ h2.section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0
 /* ---------- tooltip ---------- */
 .tooltip {
   position: fixed; z-index: 50; pointer-events: none;
-  background: #0A0B0D; border: 1px solid var(--gold-dim); border-radius: 8px;
+  background: #101216; border: 1px solid var(--gold-dim); border-radius: 8px;
   padding: 8px 12px; font-size: 12.5px; max-width: 320px; box-shadow: 0 6px 24px rgba(0,0,0,0.5);
 }
 .tooltip .tv { font-size: 18px; font-weight: 600; color: var(--ink); }
@@ -247,3 +248,12 @@ h2.section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0
 .fame-input::placeholder { color: var(--faint); }
 .fame-dash { color: var(--faint); }
 .empty { padding: 28px 4px; color: var(--muted); }
+
+/* weapon frames by rarity (colours sampled from dfogang's item frames; a Delezie-upgraded weapon is still Primeval) */
+.item-icon[class*="rarity-"] { outline: 2px solid transparent; outline-offset: -2px; border-radius: 4px; }
+.rarity-primeval { outline-color: #45ADB0 !important; }
+.rarity-epic { outline-color: #E3B53A !important; }
+.rarity-legendary { outline-color: #E8731A !important; }
+.rarity-unique { outline-color: #C21FCB !important; }
+.rarity-rare { outline-color: #9A78D8 !important; }
+.rarity-common { outline-color: #7C838C !important; }

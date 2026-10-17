@@ -100,9 +100,9 @@ static class SiteIcons
                 }
 
                 // A set is shown by its normal top piece.
-                var tierLabel = equipment?.SetItemInfo?.FirstOrDefault()?.SetItemName;
+                var setName = SetNames.Of(equipment);
                 var top = items.FirstOrDefault(i => i.SlotId == "JACKET" && !i.ItemName.Contains("Distinct") && !i.ItemName.Contains("Starter"));
-                if (tierLabel != null) votes.Add("sets", SetNames.Display(tierLabel), top?.ItemId);
+                if (setName != "(none)") votes.Add("sets", setName, top?.ItemId);
 
                 // An oath set is shown by its crystal.
                 votes.Add("oath", oath?.Oath?.SetInfo?.SetName, oath?.Oath?.Crystal?.FirstOrDefault()?.ItemId);

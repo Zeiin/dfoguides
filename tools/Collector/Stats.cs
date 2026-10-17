@@ -20,6 +20,7 @@ record ClassStats(
     int BlackFangSample,                  // excludes 1 or 2 pieces
     double BlackFangAveragePercent,
     List<RateRow> BlackFangCounts,
+    List<RateRow> BlackFangSets,          // gear sets of the characters with all three, as a share of the Black Fang sample
     List<RateRow> VpSkills,
     List<RateRow> VpSets,
     List<RateRow> EnhancementPicks,
@@ -47,7 +48,8 @@ record AgnosticStats(
     List<RateRow> Exalted,
     int BlackFangSample,
     double BlackFangAveragePercent,
-    List<RateRow> BlackFangCounts);
+    List<RateRow> BlackFangCounts,
+    List<RateRow> BlackFangSets);
 
 // All classes, DPS only and support only.
 record AgnosticReport(AgnosticStats All, AgnosticStats Dps, AgnosticStats Support, double SupportSharePercent);
@@ -82,7 +84,8 @@ static class Stats
             Rates(chars.SelectMany(c => c.ExaltedSlots.Select(SlotNames.Display)), n),
             blackFang.Count,
             BlackFangAveragePercent(chars),
-            BlackFangCounts(chars));
+            BlackFangCounts(chars),
+            BlackFangSets(chars));
     }
 
     // Characters with no oath are excluded from the oath tables.
@@ -112,6 +115,14 @@ static class Stats
     {
         var counted = FullOrNoBlackFang(chars);
         return Rates(counted.Select(c => $"{c.BlackFangCount} of {BlackFangSlots}"), counted.Count);
+    }
+
+    // Of the characters with none or all three Black Fang pieces, how many wear all three with each gear set. The percentages are of that
+    // whole sample, so they add up to the 3 of 3 share (10% with all three, half of them in Cleansing Darkness: Cleansing Darkness 5%).
+    internal static List<RateRow> BlackFangSets(IReadOnlyList<CharacterRecord> chars)
+    {
+        var counted = FullOrNoBlackFang(chars);
+        return Rates(counted.Where(c => c.BlackFangCount == BlackFangSlots).Select(c => c.Set), counted.Count);
     }
 
     // 0 instead of NaN when nothing is counted.
@@ -152,6 +163,7 @@ static class Stats
             FullOrNoBlackFang(chars).Count,
             BlackFangAveragePercent(chars),
             BlackFangCounts(chars),
+            BlackFangSets(chars),
             Rates(chars.SelectMany(c => c.Vp.Select(v => $"{v.Skill} (VP{v.Type})")), n),
             Rates(chars.Select(c => string.Join(" + ", c.Vp.Select(v => $"{v.Skill} VP{v.Type}").Order())), n),
             Rates(chars.SelectMany(c => c.Enhancement.Select(e => $"{e.Skill} ({(e.Type == 1 ? "damage" : "cooldown")})")), n),

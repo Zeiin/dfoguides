@@ -66,9 +66,12 @@
   // ---------- icons ----------
 
   // Item icon for a row; names without an icon get a blank spacer so labels line up.
+  // Weapons also get a frame in their rarity colour (D.weaponRarity: weapon name -> rarity).
   const itemIcon = (category) => (row) => {
     const file = (D.icons[category] || {})[row.name];
-    return file ? h('img', { class: 'item-icon', src: `img/items/${file}`, alt: '', loading: 'lazy' }) : h('span', { class: 'item-icon' });
+    const rarity = category === 'weapons' ? (D.weaponRarity || {})[row.name] : null;
+    const cls = `item-icon${rarity ? ` rarity-${rarity.toLowerCase()}` : ''}`;
+    return file ? h('img', { class: cls, src: `img/items/${file}`, alt: '', loading: 'lazy' }) : h('span', { class: cls });
   };
 
   const classIcon = (row) => {
@@ -218,13 +221,17 @@
   const sectionTitle = (text) => h('h2', { class: 'section-title' }, text);
   const grid = (...cards) => h('div', { class: 'card-grid' }, cards);
 
-  // Black Fang: only the 3-of-3 share.
-  const blackFangCard = (s) => barCard({
-    title: 'Black Fang',
-    rows: s.blackFangCounts.filter((r) => r.name === '3 of 3'),
-    labelOf: () => '3 of 3',
-    absolute: true,
-  });
+  // Black Fang (3/3): the share wearing all three, then the same share split by gear set (percent of everyone counted, so the rows add up to the first one).
+  const blackFangCard = (s) => {
+    const all = s.blackFangCounts.find((r) => r.name === '3 of 3') || { count: 0, percent: 0 };
+    return barCard({
+      title: 'Black Fang (3/3)',
+      rows: [{ name: 'All sets', count: all.count, percent: all.percent }, ...s.blackFangSets],
+      icon: itemIcon('sets'),
+      counts: true,
+      initial: 9,
+    });
+  };
 
   // The most used oath sets, one card each with the rates of its options within that set.
   const oathBoxes = (s) => h('div', { class: 'card-grid three' },s.oathBreakdown.map((set) => {

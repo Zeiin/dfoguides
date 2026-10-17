@@ -277,13 +277,13 @@
     "y": 6
    },
    "One Step Closer": {
-    "source": "file:skillicon-sources/wiki/One Step Closer.png"
+    "source": "file:skillicon-sources/general/One Step Closer.png"
    },
    "Subitism": {
-    "source": "file:skillicon-sources/wiki/Subitism.png"
+    "source": "file:skillicon-sources/general/Subitism.png"
    },
    "Clues to Awakening": {
-    "source": "file:skillicon-sources/wiki/Clues to Awakening.png"
+    "source": "file:skillicon-sources/general/Clues to Awakening.png"
    }
   }
  },
@@ -510,13 +510,13 @@
     "y": 4
    },
    "One Step Closer": {
-    "source": "file:skillicon-sources/wiki/One Step Closer.png"
+    "source": "file:skillicon-sources/general/One Step Closer.png"
    },
    "Subitism": {
-    "source": "file:skillicon-sources/wiki/Subitism.png"
+    "source": "file:skillicon-sources/general/Subitism.png"
    },
    "Clues to Awakening": {
-    "source": "file:skillicon-sources/wiki/Clues to Awakening.png"
+    "source": "file:skillicon-sources/general/Clues to Awakening.png"
    }
   }
  }

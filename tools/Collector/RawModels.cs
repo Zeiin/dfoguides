@@ -4,7 +4,7 @@ namespace Collector;
 // Property names match the API camelCase via Json.Options.
 
 record EquipmentResponse(List<EquippedItem>? Equipment, List<SetItemInfo>? SetItemInfo, string? JobName = null, string? JobGrowName = null, int? Fame = null);
-record EquippedItem(string SlotId, string ItemName, string? ItemRarity, string? ItemId = null);
+record EquippedItem(string SlotId, string ItemName, string? ItemRarity, string? ItemId = null, string? SetItemName = null);
 record SetItemInfo(string SetItemName);
 
 record OathResponse(OathBlock? Oath);

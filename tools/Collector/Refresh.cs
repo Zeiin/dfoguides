@@ -56,7 +56,7 @@ static class Refresh
         }
         var equipment = Load<EquipmentResponse>("equipment");
         var oath = Load<OathResponse>("oath");
-        return (SetNames.Display(equipment?.SetItemInfo?.FirstOrDefault()?.SetItemName ?? "(none)"), oath?.Oath?.SetInfo?.SetName ?? "(none)");
+        return (SetNames.Of(equipment), oath?.Oath?.SetInfo?.SetName ?? "(none)");
     }
 }
 

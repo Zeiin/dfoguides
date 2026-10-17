@@ -76,6 +76,7 @@
       blackFangSample: blackFang.length,
       blackFangAveragePercent: percent(blackFang.reduce((sum, x) => sum + x.r[I.BLACK_FANG], 0), BLACK_FANG_SLOTS * blackFang.length),
       blackFangCounts: top(rates(blackFang.map((x) => `${x.r[I.BLACK_FANG]} of ${BLACK_FANG_SLOTS}`), blackFang.length)),
+      blackFangSets: top(rates(blackFang.filter((x) => x.r[I.BLACK_FANG] === BLACK_FANG_SLOTS).map((x) => x.text(x.r[I.SET])), blackFang.length)),
     };
   }
 
@@ -120,6 +121,7 @@
       blackFangSample: blackFang.length,
       blackFangAveragePercent: percent(blackFang.reduce((sum, r) => sum + r[I.BLACK_FANG], 0), BLACK_FANG_SLOTS * blackFang.length),
       blackFangCounts: top(rates(blackFang.map((r) => `${r[I.BLACK_FANG]} of ${BLACK_FANG_SLOTS}`), blackFang.length)),
+      blackFangSets: top(rates(blackFang.filter((r) => r[I.BLACK_FANG] === BLACK_FANG_SLOTS).map((r) => text(r[I.SET])), blackFang.length)),
       vpSkills: top(rates(rows.flatMap((r) => pairs(r[I.VP]).map(([skill, type]) => `${text(skill)} (VP${type})`)), n), TOP_LONG),
       vpSets: top(rates(rows.map((r) => text(r[I.VP_SET])), n)),
       enhancementPicks: top(rates(rows.flatMap((r) => pairs(r[I.ENHANCEMENT]).map(([skill, type]) => `${text(skill)} (${type === 1 ? 'damage' : 'cooldown'})`)), n), TOP_LONG),

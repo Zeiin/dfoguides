@@ -128,6 +128,8 @@ class FetchSkillIconsCommand : ICommand
                     if (File.Exists(target)) { classHits++; continue; }
 
                     var ok = false;
+                    // The general skills have no icon on dfogang; apply-skill-icon-map supplies them.
+                    if (ApplySkillIconMapCommand.GeneralSkills.Contains(name) || SiteExport.HiddenSkills.Contains(name)) { missing.Add($"{key}: {name}"); continue; }
                     foreach (var file in FileNames(name))
                     {
                         var url = $"{CdnRoot}/{Uri.EscapeDataString(baseName)}/{Uri.EscapeDataString(advancement)}/{Uri.EscapeDataString(file)}";
@@ -144,13 +146,18 @@ class FetchSkillIconsCommand : ICommand
         return 0;
     }
 
-    // dfogang file names: spaces to underscores, apostrophes dropped, colon to hyphen; other spellings are fallbacks.
+    // dfogang file names: spaces to underscores, apostrophes dropped, colon to hyphen, "!" and "?" dropped; other spellings are fallbacks.
     internal static IEnumerable<string> FileNames(string skillName)
     {
         yield return skillName.Replace(":", "-").Replace("'", "").Replace(' ', '_') + ".png";
         yield return skillName.Replace(":", "").Replace("'", "").Replace(' ', '_') + ".png";
         yield return skillName.Replace(":", "-").Replace(' ', '_') + ".png";
         yield return skillName.Replace("'", "").Replace(' ', '_') + ".png";
+
+        var plain = skillName.Replace("!", "").Replace("?", "");
+        if (plain == skillName) yield break;
+        yield return plain.Replace(":", "-").Replace("'", "").Replace(' ', '_') + ".png";
+        yield return plain.Replace(":", "").Replace("'", "").Replace(' ', '_') + ".png";
     }
 
     static async Task<bool> DownloadAsync(HttpClient http, string url, string target)
