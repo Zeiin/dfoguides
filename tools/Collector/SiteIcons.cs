@@ -25,6 +25,45 @@ static class SiteIcons
             _byCategory.TryGetValue(category, out var names) && names.TryGetValue(name, out var ids)
                 ? ids.MaxBy(kv => kv.Value).Key
                 : null;
+
+        // Every id seen for a name, most common first (one title name can come with several item ids).
+        public IEnumerable<string> Ranked(string category, string name) =>
+            _byCategory.TryGetValue(category, out var names) && names.TryGetValue(name, out var ids)
+                ? ids.OrderByDescending(kv => kv.Value).Select(kv => kv.Key)
+                : [];
+
+        // Displayed title name -> the item name the API reported (the title icon service wants it).
+        public Dictionary<string, string> TitleItemNames { get; } = new();
+    }
+
+    // The file name of a title's hand-made icon: the title without its Platinum level, with characters a file name cannot hold replaced by "-".
+    internal static string ManualTitleFileName(string shownName)
+    {
+        var withoutLevel = System.Text.RegularExpressions.Regex.Replace(shownName, @" \[\d+\]$", "");
+        return string.Concat(withoutLevel.Select(c => Path.GetInvalidFileNameChars().Contains(c) ? '-' : c)) + ".png";
+    }
+
+    // Copies the hand-made icon of a title into the site's icon folder and returns its file name; null when there is none.
+    static string? ManualTitleIcon(CommandContext ctx, string shownName, string iconDir)
+    {
+        var fileName = ManualTitleFileName(shownName);
+        var source = Path.Combine(ctx.ReferenceDir, "titleicons", fileName);
+        if (!File.Exists(source)) return null;
+        var target = "title-" + fileName.Replace(' ', '-').ToLowerInvariant();
+        File.Copy(source, Path.Combine(iconDir, target), overwrite: true);
+        return target;
+    }
+
+    // Item ids that no image source has; remembered so the daily run does not ask again.
+    const string UnavailableFile = "unavailable.txt";
+
+    static async Task<bool> TryDownloadAsync(HttpClient http, string url, string path, int pauseMs)
+    {
+        using var response = await http.GetAsync(url);
+        await Task.Delay(pauseMs);
+        if (!response.IsSuccessStatusCode) return false;
+        await File.WriteAllBytesAsync(path, await response.Content.ReadAsByteArrayAsync());
+        return true;
     }
 
     // Returns category -> name -> icon file name.
@@ -40,11 +79,52 @@ static class SiteIcons
         var iconByName = new Dictionary<string, Dictionary<string, string>>();
         var missing = new List<string>();
         var downloaded = 0;
-        var failedIds = new HashSet<string>();
+        var unavailablePath = Path.Combine(iconDir, UnavailableFile);
+        var failedIds = File.Exists(unavailablePath) ? File.ReadAllLines(unavailablePath).ToHashSet() : new HashSet<string>();
+
+        // Titles: Neople's image server lacks many of them (and every Platinum level), so the title icon service of dfogang (which serves the
+        // same Neople artwork) is tried next. Each item id seen for the name is tried in turn.
+        async Task<string?> TitleIconAsync(string name)
+        {
+            // A hand-made icon (reference/titleicons/<title>.png) wins: it is for titles no image source has.
+            if (ManualTitleIcon(ctx, name, iconDir) is { } manual) return manual;
+
+            var ids = votes.Ranked("titles", name).ToList();
+            foreach (var id in ids)
+                if (File.Exists(Path.Combine(iconDir, $"{id}.png"))) return $"{id}.png";
+
+            foreach (var id in ids.Where(i => !failedIds.Contains(i)))
+                if (await TryDownloadAsync(http, $"https://img-api.dfoneople.com/df/items/{id}", Path.Combine(iconDir, $"{id}.png"), PauseMs)) { downloaded++; return $"{id}.png"; }
+
+            if (votes.TitleItemNames.TryGetValue(name, out var itemName))
+                foreach (var id in ids.Where(i => !failedIds.Contains(i)))
+                    if (await TryDownloadAsync(http, $"https://api.dfogang.com/api/title-icon/{id}/{Uri.EscapeDataString(itemName)}", Path.Combine(iconDir, $"{id}.png"), 250)) { downloaded++; return $"{id}.png"; }
+
+            foreach (var id in ids) failedIds.Add(id);
+            return null;
+        }
 
         foreach (var (category, wanted) in names)
         {
             iconByName[category] = new();
+            if (category == "titles")
+            {
+                foreach (var name in wanted)
+                {
+                    var file = await TitleIconAsync(name);
+                    if (file != null) iconByName[category][name] = file;
+                    else missing.Add($"{category}: {name}");
+                }
+                // A Platinum level with no image of its own borrows another level of the same title (the artwork is the same).
+                foreach (var name in wanted.Where(n => !iconByName[category].ContainsKey(n) && n.Contains(" Platinum [")))
+                {
+                    var prefix = name[..name.IndexOf(" [", StringComparison.Ordinal)];
+                    var sibling = iconByName[category].FirstOrDefault(kv => kv.Key.StartsWith(prefix + " ["));
+                    if (sibling.Value != null) iconByName[category][name] = sibling.Value;
+                }
+                continue;
+            }
+
             foreach (var name in wanted)
             {
                 var id = votes.Best(category, name);
@@ -64,6 +144,7 @@ static class SiteIcons
             }
         }
 
+        await File.WriteAllLinesAsync(unavailablePath, failedIds.Order());
         Console.WriteLine($"Icons: {downloaded} downloaded, {iconByName.Sum(c => c.Value.Count)} names matched, {missing.Count} without an icon.");
         await File.WriteAllLinesAsync(Path.Combine(ctx.OutDir, "icons_missing.txt"), missing);
         return iconByName;
@@ -108,6 +189,14 @@ static class SiteIcons
 
                 // An oath set is shown by its crystal.
                 votes.Add("oath", oath?.Oath?.SetInfo?.SetName, oath?.Oath?.Crystal?.FirstOrDefault()?.ItemId);
+
+                if (items.FirstOrDefault(i => i.SlotId == "TITLE") is { } titleItem)
+                {
+                    var (titleName, titleLevel) = CharacterReader.ParseTitle(titleItem.ItemName);
+                    var shownTitle = titleLevel is { } tl ? $"{titleName} [{tl}]" : titleName;
+                    votes.Add("titles", shownTitle, titleItem.ItemId);
+                    votes.TitleItemNames[shownTitle] = titleItem.ItemName;
+                }
 
                 if (creature?.Creature?.ItemName is { } creatureName)
                 {

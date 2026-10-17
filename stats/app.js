@@ -71,7 +71,10 @@
     const file = (D.icons[category] || {})[row.name];
     const rarity = category === 'weapons' ? (D.weaponRarity || {})[row.name] : null;
     const cls = `item-icon${rarity ? ` rarity-${rarity.toLowerCase()}` : ''}`;
-    return file ? h('img', { class: cls, src: `img/items/${file}`, alt: '', loading: 'lazy' }) : h('span', { class: cls });
+    // Every level of a Platinum title has the same icon, so the level goes in the corner.
+    const level = category === 'titles' ? row.name.match(/ \[(\d+)\]$/) : null;
+    if (level) return h('span', { class: 'item-icon level-icon' }, file ? h('img', { src: `img/items/${file}`, alt: '', loading: 'lazy' }) : null, h('span', { class: 'level-badge' }, level[1]));
+    return file ?h('img', { class: cls, src: `img/items/${file}`, alt: '', loading: 'lazy' }) : h('span', { class: cls });
   };
 
   const classIcon = (row) => {
@@ -337,7 +340,7 @@
     } else if (active === 'rates') {
       content = grid(barCard({ title: 'Play rate by class', rows: s.classShare, initial: 15, icon: classIcon, wide: true }));
     } else if (active === 'gear') {
-      content = grid(barCard({ title: 'Gear sets', rows: s.sets, icon: itemIcon('sets') }), barCard({ title: 'Titles', rows: s.titles }));
+      content = grid(barCard({ title: 'Gear sets', rows: s.sets, icon: itemIcon('sets') }), barCard({ title: 'Titles', rows: s.titles, icon: itemIcon('titles'), longLabels: true }));
     } else if (active === 'oath') {
       content = oathContent(s);
     } else {
@@ -381,7 +384,7 @@
       content = h('div', { class: 'empty' }, 'No characters match these filters.');
     } else if (active === 'gear') {
       content = h('div', {},
-        grid(barCard({ title: 'Gear sets', rows: s.sets, icon: itemIcon('sets') }), barCard({ title: 'Weapons', rows: s.weapons, icon: itemIcon('weapons') }), barCard({ title: 'Titles', rows: s.titles })),
+        grid(barCard({ title: 'Gear sets', rows: s.sets, icon: itemIcon('sets') }), barCard({ title: 'Weapons', rows: s.weapons, icon: itemIcon('weapons') }), barCard({ title: 'Titles', rows: s.titles, icon: itemIcon('titles'), longLabels: true })),
         sectionTitle('Special pieces'),
         grid(distinctCard(s), exaltedCard(s), blackFangCard(s)));
     } else if (active === 'oath') {

@@ -193,7 +193,7 @@ h2.section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0
 .opt-head { display: inline-flex; align-items: center; gap: 6px; }
 .opt-head img { width: 18px; height: 18px; }
 /* the game's VP diamonds are small and dark: brighter, more saturated, with a dark edge so the I and II stand out on any icon */
-img.vp-badge { filter: brightness(1.7) contrast(1.35) saturate(1.5) drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000); }
+img.vp-badge { filter: brightness(1.45) contrast(1.3) saturate(1.1) hue-rotate(-12deg) drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000); }
 .skill-icon .skill-badge.vp-badge { width: 22px; height: 22px; right: -5px; bottom: -5px; }
 .opt-head img.vp-badge { width: 22px; height: 22px; }
 .skill-name { display: flex; align-items: center; gap: 12px; font-size: 13.5px; }
@@ -267,3 +267,8 @@ img.vp-badge { filter: brightness(1.7) contrast(1.35) saturate(1.5) drop-shadow(
 
 /* low-representation warning under the filters */
 .warning { margin-top: 14px; padding: 10px 14px; border: 1px solid #C9A15A; border-left-width: 4px; border-radius: 8px; background: rgba(201, 161, 90, 0.10); color: var(--ink); font-size: 14px; }
+
+/* Platinum title icons: the level in the corner (every level shares one icon) */
+.level-icon { position: relative; display: inline-block; flex: none; }
+.level-icon > img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.level-badge { position: absolute; right: -5px; bottom: -5px; min-width: 17px; height: 15px; padding: 0 3px; line-height: 13px; border-radius: 8px; background: #15171B; border: 1px solid var(--gold-dim); color: #fff; font-size: 9px; font-weight: 700; text-align: center; box-sizing: border-box; }

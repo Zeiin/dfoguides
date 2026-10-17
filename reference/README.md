@@ -11,3 +11,6 @@ Inputs the website export needs that no scheduled job generates. They are commit
 | `skilliconmap.json`, `skillicon-sources/` | Hand-made mapping of Dark Knight and Creator skills to icons (neither the API nor dfogang has these icons). | By hand; apply with `apply-skill-icon-map` |
 
 Class portraits and item icons are committed under `stats/img/`.
+
+
+`titleicons/<title>.png`: icons made by hand for titles that no image source has (drop a PNG named after the title, without its Platinum level; characters a file name cannot hold become `-`). `export-site` copies them into `stats/img/items` and uses them for every level of that title.

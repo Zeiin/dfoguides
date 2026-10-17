@@ -94,11 +94,11 @@ static class SiteExport
             {
                 Want("weapons", c.Weapons); Want("sets", c.Sets); Want("oath", c.OathSets); Want("creatures", c.Creatures);
                 Want("weaponAvatars", c.WeaponAvatarLevels); Want("platinum", c.PlatinumTop); Want("platinum", c.PlatinumBottom);
-                Want("platinum", c.PlatinumAura); Want("emblems", c.EmblemEffects); Want("exalted", c.Exalted); Want("distinct", c.DistinctItems);
+                Want("platinum", c.PlatinumAura); Want("emblems", c.EmblemEffects); Want("exalted", c.Exalted); Want("distinct", c.DistinctItems); Want("titles", c.Titles);
             }
             else if (value is AgnosticStats a)
             {
-                Want("sets", a.Sets); Want("oath", a.OathSets); Want("exalted", a.Exalted); Want("distinct", a.DistinctItems);
+                Want("sets", a.Sets); Want("oath", a.OathSets); Want("exalted", a.Exalted); Want("distinct", a.DistinctItems); Want("titles", a.Titles);
             }
         }
         var previous = Path.Combine(siteDir, "data", "data.js");
