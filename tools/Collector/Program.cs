@@ -24,4 +24,18 @@ var outDir = Path.Combine(dataRoot, "out");
 Directory.CreateDirectory(rawDir);
 
 var context = new CommandContext(new NeopleClient(key ?? ""), rawDir, outDir);
-return await command.RunAsync(context, args[1..]);
+try
+{
+    return await command.RunAsync(context, args[1..]);
+}
+catch (ApiMaintenanceException ex)
+{
+    // 75 = "try again later"; the workflow waits and retries instead of failing.
+    Console.WriteLine($"The Neople API is in maintenance, nothing was changed: {ex.Message}");
+    return MaintenanceExitCode;
+}
+
+partial class Program
+{
+    public const int MaintenanceExitCode = 75;
+}

@@ -43,6 +43,10 @@ static class CharacterPuller
                     File.Move(temp, file, overwrite: true);
                     consecutiveFailures = 0;
                 }
+                catch (ApiMaintenanceException)
+                {
+                    throw;
+                }
                 catch (HttpRequestException ex)
                 {
                     failed++;

@@ -73,7 +73,7 @@ class RefreshCommand : ICommand
             {
                 stoppedEarly = !await RefreshClassAsync(ctx, run, today, deadline, families, counters);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex) when (ex is InvalidOperationException or ApiMaintenanceException)
             {
                 Console.WriteLine($"STOPPED EARLY: {ex.Message}");
                 stoppedEarly = true;

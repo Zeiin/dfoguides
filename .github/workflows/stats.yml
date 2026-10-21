@@ -80,20 +80,48 @@ jobs:
       - name: Build
         run: dotnet build tools/Collector/Collector.csproj -c Release --nologo -v q
 
+      # While the game is in maintenance the API answers 503 (exit code 75). Wait up to an hour, then skip the day without failing the run.
       - name: Class list
+        id: jobs
         if: env.REEXPORT != 'true'
         env:
           NEOPLE_API_KEY: ${{ secrets.NEOPLE_API_KEY }}
-        run: $COLLECTOR jobs > /dev/null
+        run: |
+          code=1
+          for attempt in 1 2 3 4 5 6 7 8 9 10 11 12; do
+            set +e
+            $COLLECTOR jobs > /dev/null
+            code=$?
+            set -e
+            [ "$code" -eq 0 ] && break
+            [ "$code" -ne 75 ] && exit "$code"
+            echo "The Neople API is in maintenance (attempt $attempt of 12); waiting 5 minutes."
+            sleep 300
+          done
+          if [ "$code" -ne 0 ]; then
+            echo "maintenance=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::The Neople API stayed in maintenance; today's refresh is skipped and the site keeps its data."
+          fi
 
       - name: Refresh characters
-        if: env.REEXPORT != 'true'
+        id: refresh
+        if: env.REEXPORT != 'true' && steps.jobs.outputs.maintenance != 'true'
         env:
           NEOPLE_API_KEY: ${{ secrets.NEOPLE_API_KEY }}
           DELAY: ${{ inputs.delay_ms }}
           BUDGET: ${{ inputs.budget_minutes }}
           CLASSES: ${{ inputs.classes }}
-        run: $COLLECTOR refresh "${DELAY:-0}" "${BUDGET:-300}" $CLASSES
+        run: |
+          set +e
+          $COLLECTOR refresh "${DELAY:-0}" "${BUDGET:-300}" $CLASSES
+          code=$?
+          set -e
+          if [ "$code" -eq 75 ]; then
+            echo "maintenance=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::The Neople API went into maintenance; nothing was refreshed and the site keeps its data."
+          elif [ "$code" -ne 0 ]; then
+            exit "$code"
+          fi
 
       # Saved even when the run was cut short, so the next run continues from here.
       - name: Save character data
@@ -105,18 +133,18 @@ jobs:
 
       # A re-export with nothing cached yet (the very first push) has nothing to rebuild.
       - name: Statistics
-        if: env.REEXPORT != 'true' || steps.have.outputs.cached == 'true'
+        if: (env.REEXPORT != 'true' || steps.have.outputs.cached == 'true') && steps.jobs.outputs.maintenance != 'true' && steps.refresh.outputs.maintenance != 'true'
         run: $COLLECTOR analyze-every > /dev/null
 
       - name: Website data
-        if: env.REEXPORT != 'true' || steps.have.outputs.cached == 'true'
+        if: (env.REEXPORT != 'true' || steps.have.outputs.cached == 'true') && steps.jobs.outputs.maintenance != 'true' && steps.refresh.outputs.maintenance != 'true'
         run: $COLLECTOR export-site
 
       # Only complete data is published: not a run that pulled too little (first runs, cut off early) and never a test run limited to some
       # classes. A re-export reads the same verdict from the summary the last pull saved in the cache.
       - name: Check coverage
         id: gate
-        if: env.REEXPORT != 'true' || steps.have.outputs.cached == 'true'
+        if: (env.REEXPORT != 'true' || steps.have.outputs.cached == 'true') && steps.jobs.outputs.maintenance != 'true' && steps.refresh.outputs.maintenance != 'true'
         env:
           MIN: ${{ inputs.min_coverage }}
         run: |

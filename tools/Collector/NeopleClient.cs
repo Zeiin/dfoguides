@@ -4,6 +4,9 @@ namespace Collector;
 
 record RawResult(int Status, long ElapsedMs, string RateHeaders);
 
+// The Neople API answers 503 with code DNF980 (SYSTEM_INSPECT) while the game servers are in maintenance; retrying within seconds is pointless.
+class ApiMaintenanceException(string message) : HttpRequestException(message);
+
 class NeopleClient
 {
     const string BaseUrl = "https://api.dfoneople.com/df";
@@ -60,6 +63,9 @@ class NeopleClient
                 if (RateLimitHits == 1)
                     Console.WriteLine($"  FIRST 429 after {RequestCount} requests ({RequestCount / (DateTime.UtcNow - _created).TotalSeconds:F1} req/s average)");
             }
+
+            if ((int)response.StatusCode == 503 && body.Contains("DNF980"))
+                throw new ApiMaintenanceException($"503 on {path}: the Neople API is in maintenance ({body})");
 
             var retryable = response.StatusCode == HttpStatusCode.TooManyRequests || (int)response.StatusCode >= 500;
             if (!retryable || attempt >= 4)
