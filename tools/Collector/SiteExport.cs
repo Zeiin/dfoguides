@@ -119,6 +119,9 @@ static class SiteExport
         // Sets and oath sets are drawn with the set's emblem (fetch-set-icons), not a piece of its gear.
         SetEmblems.Apply(icons, names, Path.Combine(siteDir, "img", "items"), SetEmblems.ReadFamilies(Path.Combine(ctx.ReferenceDir, "setfamilies.json")));
 
+        // Leaderboards and character pages: the top characters of each class.
+        await CharacterCards.ExportAsync(ctx, siteDir, classes.Select(c => c.Key), icons);
+
         // Skill trees from the committed skill lists (reference/).
         var skillTree = new Dictionary<string, List<SiteSkill>>();
         var jobIds = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(ctx.RawDir, "jobs.json"))).RootElement.GetProperty("rows").EnumerateArray()

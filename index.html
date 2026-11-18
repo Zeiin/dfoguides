@@ -117,6 +117,7 @@
     border-bottom: 1px solid rgba(201, 161, 90, 0.28);
   }
   .entry .guide-link { display: flex; justify-content: space-between; width: 100%; }
+  .entry .guide-link + .guide-link { margin-top: 10px; }
   .guide-link svg { width: 18px; height: 18px; flex: none; color: var(--gold); }
   .menu-tab {
     position: fixed;
@@ -215,6 +216,10 @@
             <span>Class Statistics</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 20V11M12 20V4M19 20v-6"/></svg>
           </a>
+          <a class="guide-link" href="stats/#/characters">
+            <span>Leaderboard</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3"/></svg>
+          </a>
         </section>
       </div>
     </div>
@@ -231,6 +236,7 @@
     <section>
       <h2 class="entry-label">Statistics</h2>
       <a href="stats/">Class Statistics</a>
+      <a href="stats/#/characters">Leaderboard</a>
     </section>
   </nav>
   <footer>dfoguides.com &middot; not affiliated with Neople or Nexon</footer>

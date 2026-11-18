@@ -136,6 +136,13 @@ static partial class CharacterReader
             items.FirstOrDefault(i => i.SlotId == "WEAPON")?.ItemRarity);
     }
 
+    // The name as the statistics show it: a Platinum title or creature carries its level ("Name Platinum [80]").
+    internal static string ShownName(string name)
+    {
+        var (shown, level) = ParseTitle(name);
+        return level is { } l ? $"{shown} [{l}]" : shown;
+    }
+
     // -> level, or null for any other weapon avatar.
     internal static int? RareCloneLevel(string avatarName)
     {

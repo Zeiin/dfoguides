@@ -431,7 +431,8 @@
         h('div', { class: 'portrait' }, info.portrait ? h('img', { src: `img/classes/${info.portrait}`, alt: `${info.display} portrait` }) : null),
         h('div', { class: 'titles' },
           h('h1', {}, info.display),
-          h('div', { class: 'chips' }, h('span', { class: 'chip' }, info.baseClass), h('span', { class: 'chip gold' }, info.role === 'Support' ? 'Buffer' : 'DPS'))),
+          h('div', { class: 'chips' }, h('span', { class: 'chip' }, info.baseClass), h('span', { class: 'chip gold' }, info.role === 'Support' ? 'Buffer' : 'DPS'),
+            h('a', { class: 'chip gold', href: `#/characters/${key}` }, 'Top characters'))),
         h('div', { class: 'hero-figure' }, h('div', { class: 'value' }, num(s.sample)),
           h('div', { class: 'label' }, filtered ? `of ${num(base.sample)} characters` : `characters \u00B7 ${pct(info.share)} of all`))),
       tabs(`/class/${key}`, tabList, active, filterQuery(filter)),
@@ -626,6 +627,13 @@
     app.replaceChildren(h('h1', {}, 'Not found'), h('a', { class: 'chip gold', href: '#/' }, 'Back to all classes'));
   }
 
+  // What characters.js (the leaderboard and character pages) borrows from this file.
+  const ui = {
+    h, num, pct, app, D, classByKey, tabs, skillIcon, layoutTree, drawTreeLinks, sectionTitle, renderNotFound, hideTip, moveTip, tip,
+    emblemColors: EMBLEM_COLORS,
+    baseIndex: (base) => { const i = BASE_ORDER.indexOf(base); return i < 0 ? 99 : i; },
+  };
+
   // ---------- routing ----------
 
   // The part after "?" is the filter; changing only that keeps the scroll position.
@@ -638,6 +646,7 @@
     if (parts.length === 0) renderHome();
     else if (parts[0] === 'group') renderGroup(parts[1], parts[2], query);
     else if (parts[0] === 'class') renderClass(parts[1], parts[2], query);
+    else if (parts[0] === 'characters' || parts[0] === 'character') window.DFO_CHARACTERS.render(ui, parts);
     else renderNotFound();
     if (path !== lastPath) window.scrollTo(0, 0);
     lastPath = path;

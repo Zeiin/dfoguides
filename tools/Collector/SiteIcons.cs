@@ -66,6 +66,33 @@ static class SiteIcons
     // Item ids that no image source has; remembered so the daily run does not ask again.
     const string UnavailableFile = "unavailable.txt";
 
+    // The character pages' own list of ids the image server lacks (kept apart so it cannot stop the title and creature fallbacks above).
+    const string CardUnavailableFile = "cards-unavailable.txt";
+
+    // Downloads the icon of every item id that has none yet and returns the ids that have a file. Ids the server lacks are remembered.
+    public static async Task<HashSet<string>> EnsureItemIconsAsync(string iconDir, IEnumerable<string> ids)
+    {
+        Directory.CreateDirectory(iconDir);
+        using var http = new HttpClient();
+        http.DefaultRequestHeaders.UserAgent.ParseAdd("dfoguides-tools/0.1 (personal hobby project)");
+
+        var failedPath = Path.Combine(iconDir, CardUnavailableFile);
+        var failed = File.Exists(failedPath) ? File.ReadAllLines(failedPath).ToHashSet() : new HashSet<string>();
+        var have = new HashSet<string>();
+        var downloaded = 0;
+        foreach (var id in ids)
+        {
+            if (File.Exists(Path.Combine(iconDir, $"{id}.png"))) { have.Add(id); continue; }
+            if (failed.Contains(id)) continue;
+            if (await TryDownloadAsync(http, $"https://img-api.dfoneople.com/df/items/{id}", Path.Combine(iconDir, $"{id}.png"), PauseMs)) { have.Add(id); downloaded++; }
+            else failed.Add(id);
+            if (downloaded > 0 && downloaded % 500 == 0) Console.WriteLine($"  {downloaded} character icons downloaded");
+        }
+        await File.WriteAllLinesAsync(failedPath, failed.Order());
+        Console.WriteLine($"Character icons: {downloaded} downloaded, {have.Count} of the needed ids have one.");
+        return have;
+    }
+
     static async Task<bool> TryDownloadAsync(HttpClient http, string url, string path, int pauseMs)
     {
         using var response = await http.GetAsync(url);
