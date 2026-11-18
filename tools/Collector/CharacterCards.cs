@@ -21,6 +21,36 @@ record CharacterCard(string Id, string Class, string Name, string Server, int Fa
 // A character as read from the saved raw files, before the icons are known.
 sealed record LoadedCharacter(RosterEntry Entry, string Class, EquipmentResponse Equipment, OathResponse? Oath, AvatarResponse? Avatar, CreatureResponse? Creature, SkillResponse Skills);
 
+// Hand-made oath item icons (reference/oathicons): the image server has none for oath items.
+// File "<item name>.png", or "<item name> [<Rarity>].png" for an item that exists in several rarities with different colours (Eternal Mist Oath).
+static class OathIcons
+{
+    // Copies the icons into the site's icon folder as oath-<slug>.png and returns the file names (without .png) that exist.
+    public static HashSet<string> Install(string referenceDir, string iconDir)
+    {
+        var dir = Path.Combine(referenceDir, "oathicons");
+        var names = new HashSet<string>();
+        if (!Directory.Exists(dir)) return names;
+        Directory.CreateDirectory(iconDir);
+        foreach (var file in Directory.GetFiles(dir, "*.png"))
+        {
+            var name = Path.GetFileNameWithoutExtension(file);
+            File.Copy(file, Path.Combine(iconDir, FileName(name)), overwrite: true);
+            names.Add(name);
+        }
+        return names;
+    }
+
+    static string FileName(string name) => $"oath-{SetEmblems.Slug(name)}.png";
+
+    // The rarity-specific icon wins over the plain one; null when there is neither.
+    internal static string? Lookup(IReadOnlySet<string> names, string itemName, string? rarity)
+    {
+        if (rarity != null && names.Contains($"{itemName} [{rarity}]")) return FileName($"{itemName} [{rarity}]");
+        return names.Contains(itemName) ? FileName(itemName) : null;
+    }
+}
+
 // The top characters by fame of each class (and of all classes): the data behind the leaderboard and character pages.
 static class CharacterCards
 {
@@ -70,8 +100,9 @@ static class CharacterCards
         return ids.Where(id => !string.IsNullOrEmpty(id))!;
     }
 
-    // have = item ids with an icon file; icons = the named icons of the statistics (a title or creature the image server lacks still has one).
-    internal static CharacterCard Build(LoadedCharacter c, IReadOnlySet<string> have, IReadOnlyDictionary<string, Dictionary<string, string>> icons)
+    // have = item ids with an icon file; icons = the named icons of the statistics (a title or creature the image server lacks still has one);
+    // oathIcons = the hand-made oath item icons (see OathIcons).
+    internal static CharacterCard Build(LoadedCharacter c, IReadOnlySet<string> have, IReadOnlyDictionary<string, Dictionary<string, string>> icons, IReadOnlySet<string> oathIcons)
     {
         string? Icon(string? id) => id != null && have.Contains(id) ? $"{id}.png" : null;
         string? Named(string category, string name) => icons.GetValueOrDefault(category)?.GetValueOrDefault(name);
@@ -99,8 +130,9 @@ static class CharacterCards
             c.Equipment.Equipment!.Select(Gear).ToArray(),
             oath?.SetInfo == null && oath?.Info == null ? null : new CardOath(
                 oath.SetInfo?.SetName, oath.SetInfo?.SetOptionName, oath.SetInfo?.SetRarityName,
-                // The image server has no icon for the oath item itself; the statistics show the set by its crystal, so does this.
-                oath.Info?.ItemName is { } oathName ? new CardItem(oathName, Icon(oath.Info.ItemId) ?? Named("oath", oath.SetInfo?.SetName ?? ""), oath.Info.ItemRarity) : null,
+                // The image server has no icon for the oath item itself: a hand-made one, else the set's crystal icon the statistics use.
+                oath.Info?.ItemName is { } oathName ? new CardItem(oathName,
+                    Icon(oath.Info.ItemId) ?? OathIcons.Lookup(oathIcons, oathName, oath.Info.ItemRarity) ?? Named("oath", oath.SetInfo?.SetName ?? ""), oath.Info.ItemRarity) : null,
                 (oath.Crystal ?? []).Where(x => x.ItemName != null).Select(x => new CardItem(x.ItemName!, Icon(x.ItemId), x.ItemRarity, Tune: x.Tune?.Level)).ToArray()),
             creature?.ItemName == null ? null : new CardCreature(
                 new CardItem(creature.ItemName, Icon(creature.ItemId) ?? Named("creatures", CharacterReader.ShownName(creature.ItemName)), creature.ItemRarity,
@@ -132,12 +164,14 @@ static class CharacterCards
         var ids = loaded.Values.SelectMany(l => l).SelectMany(IconIds).ToHashSet();
         var have = await SiteIcons.EnsureItemIconsAsync(Path.Combine(siteDir, "img", "items"), ids);
 
+        var oathIcons = OathIcons.Install(ctx.ReferenceDir, Path.Combine(siteDir, "img", "items"));
+
         var dir = Path.Combine(siteDir, "data", "characters");
         Directory.CreateDirectory(dir);
         var all = new List<CharacterCard>();
         foreach (var (key, list) in loaded)
         {
-            var cards = list.Select(c => Build(c, have, icons)).ToList();
+            var cards = list.Select(c => Build(c, have, icons, oathIcons)).ToList();
             all.AddRange(cards);
             await WriteAsync(dir, key, cards);
         }

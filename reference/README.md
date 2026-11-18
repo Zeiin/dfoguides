@@ -1,4 +1,4 @@
-# reference
+﻿# reference
 
 Inputs the website export needs that no scheduled job generates. They are committed so a fresh clone (or the workflow) can run `export-site`.
 
@@ -14,3 +14,5 @@ Class portraits and item icons are committed under `stats/img/`.
 
 
 `titleicons/<title>.png`: icons made by hand for titles that no image source has (drop a PNG named after the title, without its Platinum level; characters a file name cannot hold become `-`). `export-site` copies them into `stats/img/items` and uses them for every level of that title.
+
+`oathicons/<oath item name>.png`: hand-made icons of the oath items (the image server has none), cropped from in-game screenshots (46x46, frame removed). A file named `<item name> [<Rarity>].png` is used for that rarity only (`Eternal Mist Oath` exists in several rarities with different colours); `<item name>.png` serves every rarity. `export-site` copies them into `stats/img/items` as `oath-<slug>.png`. Drop a new PNG here to cover a new oath.
