@@ -146,20 +146,29 @@
   const F = window.DFO_FILTER;
   const familyOf = (setName) => D.setFamilies[setName] || setName;
 
-  // The filter lives in the URL so a view can be shared: #/class/<key>/<tab>?set=A~B&oath=C&min=100000&max=125000
+  // The three exalted pieces (mirrors CharacterReader.ExaltedItems): URL key, in-game slot name, item name.
+  const EXALTED_PIECES = [
+    { key: 'sub', slot: 'Sub Equipment', name: 'Disease Origin Plague Heart' },
+    { key: 'stone', slot: 'Magic Stone', name: 'Perfume of Graceful Elegance' },
+    { key: 'ear', slot: 'Earrings', name: 'Brilliant Weather Cube' },
+  ];
+
+  // The filter lives in the URL so a view can be shared: #/class/<key>/<tab>?set=A~B&oath=C&hide=sub~ear&min=100000&max=125000
   function parseFilter(query) {
     const q = new URLSearchParams(query);
     const list = (name) => new Set((q.get(name) || '').split('~').filter(Boolean));
     const limit = (name) => (q.get(name) ? Number(q.get(name)) : null);
-    return { sets: list('set'), oaths: list('oath'), min: limit('min'), max: limit('max') };
+    const hidden = list('hide');
+    return { sets: list('set'), oaths: list('oath'), hide: new Set(EXALTED_PIECES.filter((p) => hidden.has(p.key)).map((p) => p.name)), min: limit('min'), max: limit('max') };
   }
 
-  const filterActive = (f) => f.sets.size > 0 || f.oaths.size > 0 || f.min != null || f.max != null;
+  const filterActive = (f) => f.sets.size > 0 || f.oaths.size > 0 || f.hide.size > 0 || f.min != null || f.max != null;
 
   function filterQuery(f) {
     const q = new URLSearchParams();
     if (f.sets.size) q.set('set', [...f.sets].join('~'));
     if (f.oaths.size) q.set('oath', [...f.oaths].join('~'));
+    if (f.hide.size) q.set('hide', EXALTED_PIECES.filter((p) => f.hide.has(p.name)).map((p) => p.key).join('~'));
     if (f.min != null) q.set('min', String(f.min));
     if (f.max != null) q.set('max', String(f.max));
     const text = q.toString();
@@ -205,18 +214,28 @@
     const oathChips = Object.keys(D.icons.oath || {}).sort((a, b) => oathRank(a) - oathRank(b))
       .map((name) => chip(name.replace(/ Oath$/, ''), D.icons.oath[name], filter.oaths.has(name), () => go({ ...filter, oaths: toggled(filter.oaths, name) })));
 
+    // One button per exalted piece; pressed = characters wearing it are left out. A piece with no icon yet is a text button.
+    const hideChips = EXALTED_PIECES.map((p) => {
+      const active = filter.hide.has(p.name);
+      const next = () => go({ ...filter, hide: toggled(filter.hide, p.name) });
+      const file = (D.icons.exalted || {})[p.name];
+      if (file) return chip(`Exalted ${p.slot}`, file, active, next);
+      return h('button', { class: `fchip${active ? ' active' : ''}`, type: 'button', title: `Exalted ${p.slot}`, 'aria-pressed': String(active), onclick: next }, p.slot);
+    });
+
     const fameInput = (field, label, placeholder) => {
       const input = h('input', { class: 'fame-input', type: 'number', inputmode: 'numeric', min: '0', step: '100', placeholder: num(placeholder), 'aria-label': label, value: filter[field] ?? '' });
       input.addEventListener('change', () => go({ ...filter, [field]: input.value === '' ? null : Number(input.value) }));
       return input;
     };
     const clear = filterActive(filter)
-      ? h('button', { class: 'fchip clear', type: 'button', onclick: () => go({ sets: new Set(), oaths: new Set(), min: null, max: null }) }, 'Clear filters')
+      ? h('button', { class: 'fchip clear', type: 'button', onclick: () => go({ sets: new Set(), oaths: new Set(), hide: new Set(), min: null, max: null }) }, 'Clear filters')
       : null;
 
     return h('div', { class: 'filters' },
       h('div', { class: 'filter-row' }, h('span', { class: 'filter-label' }, 'Set'), setChips),
       h('div', { class: 'filter-row' }, h('span', { class: 'filter-label' }, 'Oath'), oathChips),
+      h('div', { class: 'filter-row' }, h('span', { class: 'filter-label' }, 'Hide'), hideChips),
       h('div', { class: 'filter-row' }, h('span', { class: 'filter-label' }, 'Fame'),
         fameInput('min', 'Lowest fame', info.fameMin), h('span', { class: 'fame-dash' }, '–'), fameInput('max', 'Highest fame', info.fameMax), clear));
   }

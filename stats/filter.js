@@ -141,12 +141,14 @@
     };
   }
 
-  // filter = { sets: Set of set families, oaths: Set of oath set names, min, max } (an empty Set or a null limit means "any").
+  // filter = { sets: Set of set families, oaths: Set of oath set names, hide: Set of exalted item names, min, max }
+  // (an empty Set or a null limit means "any"; a character wearing any item of `hide` is left out).
   // familyOf(setName) gives the family a set name belongs to.
   function filterRows(table, rows, familyOf, filter) {
     return rows.filter((r) =>
       (filter.sets.size === 0 || filter.sets.has(familyOf(table[r[I.SET]])))
       && (filter.oaths.size === 0 || filter.oaths.has(table[r[I.OATH]]))
+      && (filter.hide.size === 0 || !r[I.EXALTED].some((id) => filter.hide.has(table[id])))
       && (filter.min == null || r[I.FAME] >= filter.min)
       && (filter.max == null || r[I.FAME] <= filter.max));
   }
