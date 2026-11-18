@@ -355,3 +355,6 @@ a.page-link:hover { color: var(--ink); border-color: var(--gold-dim); }
 /* leaderboard name search */
 .search-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 0 0 14px; }
 .search-bar .search { flex: 1 1 260px; max-width: 360px; }
+
+.hub-controls { margin-top: 20px; }
+.hub-controls .filters { margin-top: 0; }

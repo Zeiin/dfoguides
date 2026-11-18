@@ -150,6 +150,28 @@
     return text ? `?${text}` : '';
   }
 
+  // The name search box: the scope picks the server of a character name, or the explorer club (unique across servers).
+  // onSubmit(search) is called on Enter, on the Search button and when the scope changes.
+  function searchBar(ui, search, onSubmit) {
+    const { h } = ui;
+    const scope = h('select', { class: 'class-select', 'aria-label': 'Search in' }, SEARCH_SCOPES.map((s) => h('option', { value: s.id }, s.label)));
+    scope.value = search.scope;
+    const label = search.scope === 'explorer' ? 'Explorer club name' : 'Character name';
+    const input = h('input', { class: 'search', type: 'search', placeholder: label, 'aria-label': label, value: search.text });
+    const submit = () => onSubmit({ text: input.value.trim(), scope: scope.value });
+    scope.addEventListener('change', submit);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(); });
+    return h('div', { class: 'search-bar' }, scope, input, h('button', { class: 'ghost-button', type: 'button', onclick: submit }, 'Search'));
+  }
+
+  // The search and the filters of the main Leaderboard page: every change opens the all-classes list with the result.
+  function hubControls(ui) {
+    const filter = ui.parseFilter('');
+    const search = parseSearch('');
+    const go = (nextFilter, nextSearch) => { location.hash = `#/characters/all/1${queryOf(ui, nextFilter, nextSearch)}`; };
+    return ui.h('div', { class: 'hub-controls' }, searchBar(ui, search, (next) => go(filter, next)), ui.buildFilterBar({ filter, fame: null, go: (next) => go(next, search) }));
+  }
+
   // Every character in one list (index.js), highest fame first, loaded when a filter or search is first used.
   let indexRows = null;
 
@@ -200,6 +222,8 @@
 
     const filter = ui.parseFilter(query);
     const search = parseSearch(query);
+    // A name search always looks at every class: a link that carries one into a class or group list opens the all-classes list instead.
+    if (key !== 'all' && searchActive(search)) { location.replace(`#/characters/all/${page}${queryOf(ui, filter, search)}`); return; }
     const filtered = ui.filterActive(filter) || searchActive(search);
     const suffix = queryOf(ui, filter, search);
 
@@ -226,8 +250,12 @@
     }
     const pages = Math.max(1, Math.ceil(total / 20));
 
-    // Class picker, grouped by base class; the filter and search stay when the list changes.
-    const go = (nextFilter, nextSearch, list = key) => { location.hash = `#/characters/${list}/1${queryOf(ui, nextFilter, nextSearch)}`; };
+    // Class picker, grouped by base class; the filter stays when the list changes. The name search is global (all classes), so it is left
+    // when a class or group list is chosen.
+    const go = (nextFilter, nextSearch, list = key) => {
+      const kept = list === 'all' ? nextSearch : { text: '', scope: nextSearch.scope };
+      location.hash = `#/characters/${list}/1${queryOf(ui, nextFilter, kept)}`;
+    };
     const picker = h('select', { class: 'class-select', 'aria-label': 'Class' }, ...Object.entries(ui.groups).map(([id, name]) => h('option', { value: id }, name)));
     const bases = new Map();
     for (const c of D.classes) { if (!bases.has(c.baseClass)) bases.set(c.baseClass, []); bases.get(c.baseClass).push(c); }
@@ -237,15 +265,6 @@
     picker.value = key;
     picker.addEventListener('change', () => go(filter, search, picker.value));
 
-    // Name search: the scope picks the server of a character name, or the explorer club (unique across servers).
-    const scope = h('select', { class: 'class-select', 'aria-label': 'Search in' }, SEARCH_SCOPES.map((s) => h('option', { value: s.id }, s.label)));
-    scope.value = search.scope;
-    const input = h('input', { class: 'search', type: 'search', placeholder: search.scope === 'explorer' ? 'Explorer club name' : 'Character name', 'aria-label': search.scope === 'explorer' ? 'Explorer club name' : 'Character name', value: search.text });
-    const submit = () => go(filter, { text: input.value.trim(), scope: scope.value });
-    scope.addEventListener('change', submit);
-    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(); });
-    const searchBar = h('div', { class: 'search-bar' }, scope, input, h('button', { class: 'ghost-button', type: 'button', onclick: submit }, 'Search'));
-
     const rows = chars.map((c, i) => leaderRow(ui, c, first + i + 1, search.scope === 'explorer' && searchActive(search) ? c.adventure : null));
     const base = `/characters/${key}`;
     const bar = () => h('div', { class: 'pager-row' }, pager(ui, base, page, pages, suffix),
@@ -253,7 +272,7 @@
     ui.app.replaceChildren(
       h('div', { class: 'crumbs' }, h('a', { href: '#/characters' }, 'Leaderboard'), ` / ${heading}`),
       h('div', { class: 'lb-head' }, h('h1', {}, heading), picker),
-      searchBar,
+      key === 'all' ? searchBar(ui, search, (next) => go(filter, next)) : null,
       ui.buildFilterBar({ filter, fame: null, go: (next) => go(next, search) }),
       bar(),
       total === 0 ? h('div', { class: 'empty' }, 'No characters match.') : h('div', { class: 'lb-list' }, rows),
@@ -373,5 +392,5 @@
     return h('div', {}, creature, avatarCard);
   }
 
-  window.DFO_CHARACTERS = { render };
+  window.DFO_CHARACTERS = { render, hubControls };
 })();
