@@ -6,7 +6,7 @@ namespace Collector;
 // Property names match the API camelCase via Json.Options.
 
 record EquipmentResponse(List<EquippedItem>? Equipment, List<SetItemInfo>? SetItemInfo, string? JobName = null, string? JobGrowName = null, int? Fame = null,
-    string? CharacterName = null, string? ServerId = null, int? Level = null);
+    string? CharacterName = null, string? ServerId = null, int? Level = null, string? AdventureName = null);
 record EquippedItem(string SlotId, string ItemName, string? ItemRarity, string? ItemId = null, string? SetItemName = null,
     int Reinforce = 0, string? AmplificationName = null, int Refine = 0, ItemEnchant? Enchant = null);
 record ItemEnchant(List<StatEntry>? Status);

@@ -240,7 +240,7 @@ img.vp-badge { filter: brightness(1.45) contrast(1.3) saturate(1.1) hue-rotate(-
 /* Filters on class pages */
 .filters { display: flex; flex-direction: column; gap: 10px; margin: 20px 0 6px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
 .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.filter-label { width: 52px; flex: none; color: var(--muted); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
+.filter-label { width: 64px; flex: none; color: var(--muted); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
 .fchip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px 4px 8px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--muted); font: inherit; font-size: 13px; cursor: pointer; }
 .fchip .item-icon { width: 20px; height: 20px; }
 .fchip.icon-only { width: 44px; height: 44px; padding: 0; justify-content: center; border-radius: 10px; }
@@ -346,3 +346,12 @@ a.page-link:hover { color: var(--ink); border-color: var(--gold-dim); }
 .page-link.off { opacity: 0.4; }
 .page-gap { color: var(--faint); padding: 0 2px; }
 .pager-count { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+
+/* exalted buttons: a second click turns a button into 'leave out everyone wearing it' (red, struck through) */
+.fchip.exclude { color: #E58F86; border-color: #B65A50; background: rgba(216, 100, 91, 0.12); }
+.fchip.icon-only.exclude { position: relative; }
+.fchip.icon-only.exclude::after { content: ''; position: absolute; left: 6px; right: 6px; top: 50%; border-top: 2px solid #E58F86; transform: rotate(-35deg); }
+
+/* leaderboard name search */
+.search-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 0 0 14px; }
+.search-bar .search { flex: 1 1 260px; max-width: 360px; }

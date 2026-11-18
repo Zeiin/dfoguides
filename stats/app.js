@@ -153,22 +153,36 @@
     { key: 'ear', slot: 'Earrings', name: 'Brilliant Weather Cube' },
   ];
 
-  // The filter lives in the URL so a view can be shared: #/class/<key>/<tab>?set=A~B&oath=C&hide=sub~ear&min=100000&max=125000
+  // The filter lives in the URL so a view can be shared: #/class/<key>/<tab>?set=A.only~B.hide&oath=C.only&exalted=sub.only~ear.hide&min=100000&max=125000
+  // Every set, oath and exalted piece has a mode: <name>.only = only characters with it, <name>.hide = nobody with it (a name without a mode, as in the
+  // older ?set=A~B links, means only; the older ?hide=sub~ear means hide).
   function parseFilter(query) {
     const q = new URLSearchParams(query);
     const list = (name) => new Set((q.get(name) || '').split('~').filter(Boolean));
     const limit = (name) => (q.get(name) ? Number(q.get(name)) : null);
-    const hidden = list('hide');
-    return { sets: list('set'), oaths: list('oath'), hide: new Set(EXALTED_PIECES.filter((p) => hidden.has(p.key)).map((p) => p.name)), min: limit('min'), max: limit('max') };
+    const modes = (name) => {
+      const map = new Map();
+      for (const part of list(name)) {
+        const dot = part.lastIndexOf('.');
+        const tail = part.slice(dot + 1);
+        if (dot > 0 && (tail === 'only' || tail === 'hide')) map.set(part.slice(0, dot), tail); else map.set(part, 'only');
+      }
+      return map;
+    };
+    const exalted = new Map();
+    for (const key of list('hide')) { const p = EXALTED_PIECES.find((x) => x.key === key); if (p) exalted.set(p.name, 'hide'); }
+    for (const [key, mode] of modes('exalted')) { const p = EXALTED_PIECES.find((x) => x.key === key); if (p) exalted.set(p.name, mode); }
+    return { sets: modes('set'), oaths: modes('oath'), exalted, min: limit('min'), max: limit('max') };
   }
 
-  const filterActive = (f) => f.sets.size > 0 || f.oaths.size > 0 || f.hide.size > 0 || f.min != null || f.max != null;
+  const filterActive = (f) => f.sets.size > 0 || f.oaths.size > 0 || f.exalted.size > 0 || f.min != null || f.max != null;
 
   function filterQuery(f) {
     const q = new URLSearchParams();
-    if (f.sets.size) q.set('set', [...f.sets].join('~'));
-    if (f.oaths.size) q.set('oath', [...f.oaths].join('~'));
-    if (f.hide.size) q.set('hide', EXALTED_PIECES.filter((p) => f.hide.has(p.name)).map((p) => p.key).join('~'));
+    const modes = (map) => [...map].map(([name, mode]) => `${name}.${mode}`).join('~');
+    if (f.sets.size) q.set('set', modes(f.sets));
+    if (f.oaths.size) q.set('oath', modes(f.oaths));
+    if (f.exalted.size) q.set('exalted', EXALTED_PIECES.filter((p) => f.exalted.has(p.name)).map((p) => `${p.key}.${f.exalted.get(p.name)}`).join('~'));
     if (f.min != null) q.set('min', String(f.min));
     if (f.max != null) q.set('max', String(f.max));
     const text = q.toString();
@@ -198,46 +212,57 @@
   const FAMILY_ORDER = ['Cleansing Darkness', 'Dragon Arena Uprising', "Hideout's Endless Gold", 'Overwhelming Nature', 'Death in the Shadows', 'Magic Domain',
     'Serendipity', 'Ethereal Orb Arts', 'Ancient Battlefield Valkyrie', 'Soul Fairy', 'Beyond Limit Energy', 'Alpha of the Pack Hunt'];
 
-  // Set and oath buttons (emblems only) and the fame range. Choosing nothing in a row means every character.
-  function filterBar(path, tab, info, base, filter) {
-    const go = (next) => { location.hash = `#${path}/${tab}${filterQuery(next)}`; };
-    const toggled = (set, value) => { const next = new Set(set); if (next.has(value)) next.delete(value); else next.add(value); return next; };
-    // Icon-only button; the name is the tooltip.
-    const chip = (label, iconFile, active, onClick) => h('button', { class: `fchip icon-only${active ? ' active' : ''}`, type: 'button', title: label, 'aria-label': label, 'aria-pressed': String(active), onclick: onClick },
-      h('img', { class: 'item-icon', src: `img/items/${iconFile}`, alt: '' }));
+  // Set, oath and exalted buttons (icons only) and, on the statistics pages, the fame range. Every button has three states by clicking:
+  // off (everyone) -> only characters with it -> only characters without it -> off. Several 'only' sets (or oaths) mean "any of them".
+  // go(next) shows the page for a changed filter; fame = { fameMin, fameMax } for the placeholders, or null for no fame row (the leaderboard).
+  function buildFilterBar({ filter, go, fame }) {
+    const NEXT_MODE = { none: 'only', only: 'hide', hide: 'none' };
+    const MODE_TEXT = { none: 'everyone', only: 'only characters with it', hide: 'only characters without it' };
+    const cycled = (map, key) => {
+      const mode = map.get(key) || 'none';
+      const next = new Map(map);
+      if (NEXT_MODE[mode] === 'none') next.delete(key); else next.set(key, NEXT_MODE[mode]);
+      return next;
+    };
+    // Icon-only button (a text button when there is no icon); the name and state are the tooltip.
+    const modeChip = (title, label, iconFile, mode, onClick) => {
+      const text = `${title}: ${MODE_TEXT[mode]}`;
+      const state = mode === 'none' ? '' : mode === 'only' ? ' active' : ' active exclude';
+      const attrs = { type: 'button', title: text, 'aria-label': text, 'aria-pressed': mode === 'none' ? 'false' : mode === 'only' ? 'true' : 'mixed', onclick: onClick };
+      if (iconFile) return h('button', { ...attrs, class: `fchip icon-only${state}` }, h('img', { class: 'item-icon', src: `img/items/${iconFile}`, alt: '' }));
+      return h('button', { ...attrs, class: `fchip${state}` }, label);
+    };
 
     // Every emblem set and its oath set, always in the same order so the two rows line up (an oath uses the emblem of its themed set).
     const setChips = FAMILY_ORDER.filter((family) => D.familyIcons[family])
-      .map((family) => chip(family, D.familyIcons[family], filter.sets.has(family), () => go({ ...filter, sets: toggled(filter.sets, family) })));
+      .map((family) => modeChip(family, family, D.familyIcons[family], filter.sets.get(family) || 'none', () => go({ ...filter, sets: cycled(filter.sets, family) })));
     const familyOfIcon = new Map(Object.entries(D.familyIcons).map(([family, file]) => [file, family]));
     const oathRank = (name) => FAMILY_ORDER.indexOf(familyOfIcon.get(D.icons.oath[name]));
     const oathChips = Object.keys(D.icons.oath || {}).sort((a, b) => oathRank(a) - oathRank(b))
-      .map((name) => chip(name.replace(/ Oath$/, ''), D.icons.oath[name], filter.oaths.has(name), () => go({ ...filter, oaths: toggled(filter.oaths, name) })));
+      .map((name) => modeChip(name.replace(/ Oath$/, ''), name, D.icons.oath[name], filter.oaths.get(name) || 'none', () => go({ ...filter, oaths: cycled(filter.oaths, name) })));
+    const exaltedChips = EXALTED_PIECES.map((p) =>
+      modeChip(`Exalted ${p.slot}`, p.slot, (D.icons.exalted || {})[p.name], filter.exalted.get(p.name) || 'none', () => go({ ...filter, exalted: cycled(filter.exalted, p.name) })));
 
-    // One button per exalted piece; pressed = characters wearing it are left out. A piece with no icon yet is a text button.
-    const hideChips = EXALTED_PIECES.map((p) => {
-      const active = filter.hide.has(p.name);
-      const next = () => go({ ...filter, hide: toggled(filter.hide, p.name) });
-      const file = (D.icons.exalted || {})[p.name];
-      if (file) return chip(`Exalted ${p.slot}`, file, active, next);
-      return h('button', { class: `fchip${active ? ' active' : ''}`, type: 'button', title: `Exalted ${p.slot}`, 'aria-pressed': String(active), onclick: next }, p.slot);
-    });
-
+    const clear = filterActive(filter)
+      ? h('button', { class: 'fchip clear', type: 'button', onclick: () => go({ sets: new Map(), oaths: new Map(), exalted: new Map(), min: null, max: null }) }, 'Clear filters')
+      : null;
     const fameInput = (field, label, placeholder) => {
       const input = h('input', { class: 'fame-input', type: 'number', inputmode: 'numeric', min: '0', step: '100', placeholder: num(placeholder), 'aria-label': label, value: filter[field] ?? '' });
       input.addEventListener('change', () => go({ ...filter, [field]: input.value === '' ? null : Number(input.value) }));
       return input;
     };
-    const clear = filterActive(filter)
-      ? h('button', { class: 'fchip clear', type: 'button', onclick: () => go({ sets: new Set(), oaths: new Set(), hide: new Set(), min: null, max: null }) }, 'Clear filters')
-      : null;
 
     return h('div', { class: 'filters' },
       h('div', { class: 'filter-row' }, h('span', { class: 'filter-label' }, 'Set'), setChips),
       h('div', { class: 'filter-row' }, h('span', { class: 'filter-label' }, 'Oath'), oathChips),
-      h('div', { class: 'filter-row' }, h('span', { class: 'filter-label' }, 'Hide'), hideChips),
-      h('div', { class: 'filter-row' }, h('span', { class: 'filter-label' }, 'Fame'),
-        fameInput('min', 'Lowest fame', info.fameMin), h('span', { class: 'fame-dash' }, '–'), fameInput('max', 'Highest fame', info.fameMax), clear));
+      h('div', { class: 'filter-row' }, h('span', { class: 'filter-label' }, 'Exalted'), exaltedChips, fame ? null : clear),
+      fame ? h('div', { class: 'filter-row' }, h('span', { class: 'filter-label' }, 'Fame'),
+        fameInput('min', 'Lowest fame', fame.fameMin), h('span', { class: 'fame-dash' }, '–'), fameInput('max', 'Highest fame', fame.fameMax), clear) : null);
+  }
+
+  // The filter bar of the statistics pages: each change shows the same page with the new filter in the URL.
+  function filterBar(path, tab, info, base, filter) {
+    return buildFilterBar({ filter, fame: info, go: (next) => { location.hash = `#${path}/${tab}${filterQuery(next)}`; } });
   }
 
   // A filter that keeps very few of the characters says little about the class: warn below this share.
@@ -649,7 +674,7 @@
 
   // What characters.js (the leaderboard and character pages) borrows from this file.
   const ui = {
-    h, num, pct, app, D, classByKey, groups: GROUPS, tabs, skillIcon, layoutTree, drawTreeLinks, sectionTitle, renderNotFound, hideTip, moveTip, tip,
+    h, num, pct, app, D, classByKey, groups: GROUPS, tabs, parseFilter, filterQuery, filterActive, buildFilterBar, familyOf, filterMatch: (filter, ch) => F.matchesCharacter(filter, ch, familyOf), exaltedPieces: EXALTED_PIECES, skillIcon, layoutTree, drawTreeLinks, sectionTitle, renderNotFound, hideTip, moveTip, tip,
     emblemColors: EMBLEM_COLORS,
     baseIndex: (base) => { const i = BASE_ORDER.indexOf(base); return i < 0 ? 99 : i; },
   };
@@ -667,7 +692,7 @@
     else if (parts[0] === 'group') renderGroup(parts[1], parts[2], query);
     else if (parts[0] === 'class') renderClass(parts[1], parts[2], query);
     else if (parts[0] === 'characters' && !parts[1]) renderHome(true);
-    else if (parts[0] === 'characters' || parts[0] === 'character') window.DFO_CHARACTERS.render(ui, parts);
+    else if (parts[0] === 'characters' || parts[0] === 'character') window.DFO_CHARACTERS.render(ui, parts, query);
     else renderNotFound();
     if (path !== lastPath) window.scrollTo(0, 0);
     lastPath = path;

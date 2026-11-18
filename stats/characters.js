@@ -45,12 +45,12 @@
   const cap = (text) => (text ? text[0].toUpperCase() + text.slice(1) : '');
   const byOrder = (order, key) => { const i = order.indexOf(key); return i < 0 ? 99 : i; };
 
-  function render(ui, parts) {
+  function render(ui, parts, query) {
     const here = location.hash;
     const show = (promise) => promise.catch((e) => {
       if (location.hash === here) ui.app.replaceChildren(ui.h('div', { class: 'empty' }, e.message));
     });
-    if (parts[0] === 'characters') show(renderLeaderboard(ui, parts[1] || 'all', Math.max(1, parseInt(parts[2], 10) || 1), here));
+    if (parts[0] === 'characters') show(renderLeaderboard(ui, parts[1] || 'all', Math.max(1, parseInt(parts[2], 10) || 1), query, here));
     else show(renderCharacter(ui, parts[1], parts[2], parts[3], here));
   }
 
@@ -110,9 +110,9 @@
   }
 
   // Previous / numbered pages / next, around the current page (the first and last page are always there).
-  function pager(ui, base, page, pages) {
+  function pager(ui, base, page, pages, query = '') {
     const { h } = ui;
-    const link = (n, label, cls = '') => h('a', { class: `page-link ${cls}`.trim(), href: `#${base}/${n}` }, label ?? String(n));
+    const link = (n, label, cls = '') => h('a', { class: `page-link ${cls}`.trim(), href: `#${base}/${n}${query}` }, label ?? String(n));
     const items = [page > 1 ? link(page - 1, '‹ Prev', 'step') : h('span', { class: 'page-link step off' }, '‹ Prev')];
     let last = 0;
     for (let n = 1; n <= pages; n++) {
@@ -130,7 +130,67 @@
 
   // ---------- leaderboard ----------
 
-  async function renderLeaderboard(ui, key, page, here) {
+  const SEARCH_SCOPES = [{ id: 'cain', label: 'Cain' }, { id: 'siroco', label: 'Sirocco' }, { id: 'explorer', label: 'Explorer club' }];
+  const MIN_SEARCH = 2;
+
+  // ?q=<text>&in=cain|siroco|explorer next to the filter parameters. A character name belongs to one server (the same name can exist on both),
+  // an explorer club name is unique across the servers.
+  function parseSearch(query) {
+    const q = new URLSearchParams(query);
+    return { text: (q.get('q') || '').trim(), scope: SEARCH_SCOPES.some((s) => s.id === q.get('in')) ? q.get('in') : 'cain' };
+  }
+
+  const searchActive = (search) => search.text.length >= MIN_SEARCH;
+
+  function queryOf(ui, filter, search) {
+    const params = new URLSearchParams(ui.filterQuery(filter).replace(/^\?/, ''));
+    if (search.text || search.scope !== 'cain') params.set('in', search.scope);
+    if (search.text) params.set('q', search.text);
+    const text = params.toString();
+    return text ? `?${text}` : '';
+  }
+
+  // Every character in one list (index.js), highest fame first, loaded when a filter or search is first used.
+  let indexRows = null;
+
+  async function loadIndex(ui) {
+    if (indexRows) return indexRows;
+    const { classes, rows } = (await load('index')).data;
+    const pieces = ui.exaltedPieces;
+    const exaltedNames = [...Array(1 << pieces.length).keys()].map((mask) => pieces.filter((p, bit) => mask & (1 << bit)).map((p) => p.name));
+    indexRows = {
+      classes,
+      rows: rows.map(([c, r, fame, name, server, adventure, set, oath, mask]) => ({ c, r, fame, name, nameLower: name.toLowerCase(), server, adventure, adventureLower: adventure.toLowerCase(), set, oath, exalted: exaltedNames[mask] }))
+        .sort((a, b) => b.fame - a.fame || a.c - b.c || a.r - b.r),
+    };
+    return indexRows;
+  }
+
+  // The characters of list `key` (all, dps, support or a class) that match the filter and the search, as index rows.
+  function matching(ui, index, key, filter, search) {
+    const role = { dps: 'DPS', support: 'Support' }[key];
+    const allowed = index.classes.map((classKey) => (key === 'all' ? true : role ? ui.classByKey.get(classKey).role === role : classKey === key));
+    const text = search.text.toLowerCase();
+    const found = (row) => (!searchActive(search) ? true : search.scope === 'explorer'
+      ? row.adventureLower.includes(text)
+      : row.server === search.scope && row.nameLower.includes(text));
+    return index.rows.filter((row) => allowed[row.c] && found(row) && ui.filterMatch(filter, { set: row.set, oath: row.oath, exalted: row.exalted }));
+  }
+
+  // One leaderboard row (rank, character, fame, icon grid).
+  function leaderRow(ui, c, rank, extra) {
+    const { h, num } = ui;
+    const cls = classOf(ui, c);
+    return h('a', { class: 'lb-row', href: `#/character/${c.class}/${c.id}` },
+      h('div', { class: 'lb-rank' }, String(rank)),
+      h('div', { class: 'lb-who' },
+        cls && cls.portrait ? h('img', { class: 'lb-class', src: `img/classes/${cls.portrait}`, alt: '', loading: 'lazy' }) : null,
+        h('div', {}, h('div', { class: 'lb-name' }, c.name), h('div', { class: 'lb-sub' }, [cap(c.server), c.level ? `Lv. ${c.level}` : null, cls ? cls.display : null, extra].filter(Boolean).join(' · ')))),
+      h('div', { class: 'lb-fame' }, num(c.fame)),
+      h('div', { class: 'lb-items' }, itemGrid(ui, c)));
+  }
+
+  async function renderLeaderboard(ui, key, page, query, here) {
     const { h, num, D } = ui;
     const group = ui.groups[key];
     const info = group ? null : ui.classByKey.get(key);
@@ -138,14 +198,36 @@
     const heading = group || info.display;
     document.title = `Leaderboard · ${heading} · DFO Class Statistics`;
 
-    if (!cache.has(`${key}/${page - 1}`)) ui.app.replaceChildren(h('div', { class: 'empty' }, 'Loading…'));
-    const file = await load(`${key}/${page - 1}`);
-    if (location.hash !== here) return;
-    const chars = file.data;
-    const pages = Math.ceil(file.total / file.size);
-    const first = (page - 1) * file.size;
+    const filter = ui.parseFilter(query);
+    const search = parseSearch(query);
+    const filtered = ui.filterActive(filter) || searchActive(search);
+    const suffix = queryOf(ui, filter, search);
 
-    // Class picker, grouped by base class.
+    // The rows of this page: precomputed pages when nothing is filtered, else the matches of the index, their rows read from the class pages.
+    let chars;
+    let total;
+    const first = (page - 1) * 20;
+    if (!filtered) {
+      if (!cache.has(`${key}/${page - 1}`)) ui.app.replaceChildren(h('div', { class: 'empty' }, 'Loading…'));
+      const file = await load(`${key}/${page - 1}`);
+      if (location.hash !== here) return;
+      chars = file.data;
+      total = file.total;
+    } else {
+      if (!indexRows) ui.app.replaceChildren(h('div', { class: 'empty' }, 'Loading…'));
+      const index = await loadIndex(ui);
+      if (location.hash !== here) return;
+      const found = matching(ui, index, key, filter, search);
+      total = found.length;
+      const slice = found.slice(first, first + 20);
+      const files = await Promise.all(slice.map((row) => load(`${index.classes[row.c]}/${Math.floor(row.r / 20)}`)));
+      if (location.hash !== here) return;
+      chars = slice.map((row, i) => ({ ...files[i].data[row.r % 20], adventure: row.adventure }));
+    }
+    const pages = Math.max(1, Math.ceil(total / 20));
+
+    // Class picker, grouped by base class; the filter and search stay when the list changes.
+    const go = (nextFilter, nextSearch, list = key) => { location.hash = `#/characters/${list}/1${queryOf(ui, nextFilter, nextSearch)}`; };
     const picker = h('select', { class: 'class-select', 'aria-label': 'Class' }, ...Object.entries(ui.groups).map(([id, name]) => h('option', { value: id }, name)));
     const bases = new Map();
     for (const c of D.classes) { if (!bases.has(c.baseClass)) bases.set(c.baseClass, []); bases.get(c.baseClass).push(c); }
@@ -153,27 +235,29 @@
       picker.append(h('optgroup', { label: base }, bases.get(base).sort((a, b) => a.display.localeCompare(b.display)).map((c) => h('option', { value: c.key }, c.display))));
     });
     picker.value = key;
-    picker.addEventListener('change', () => { location.hash = `#/characters/${picker.value}`; });
+    picker.addEventListener('change', () => go(filter, search, picker.value));
 
-    const rows = chars.map((c, i) => {
-      const cls = classOf(ui, c);
-      return h('a', { class: 'lb-row', href: `#/character/${c.class}/${c.id}` },
-        h('div', { class: 'lb-rank' }, String(first + i + 1)),
-        h('div', { class: 'lb-who' },
-          cls && cls.portrait ? h('img', { class: 'lb-class', src: `img/classes/${cls.portrait}`, alt: '', loading: 'lazy' }) : null,
-          h('div', {}, h('div', { class: 'lb-name' }, c.name), h('div', { class: 'lb-sub' }, [cap(c.server), c.level ? `Lv. ${c.level}` : null, cls ? cls.display : null].filter(Boolean).join(' · ')))),
-        h('div', { class: 'lb-fame' }, num(c.fame)),
-        h('div', { class: 'lb-items' }, itemGrid(ui, c)));
-    });
+    // Name search: the scope picks the server of a character name, or the explorer club (unique across servers).
+    const scope = h('select', { class: 'class-select', 'aria-label': 'Search in' }, SEARCH_SCOPES.map((s) => h('option', { value: s.id }, s.label)));
+    scope.value = search.scope;
+    const input = h('input', { class: 'search', type: 'search', placeholder: search.scope === 'explorer' ? 'Explorer club name' : 'Character name', 'aria-label': search.scope === 'explorer' ? 'Explorer club name' : 'Character name', value: search.text });
+    const submit = () => go(filter, { text: input.value.trim(), scope: scope.value });
+    scope.addEventListener('change', submit);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(); });
+    const searchBar = h('div', { class: 'search-bar' }, scope, input, h('button', { class: 'ghost-button', type: 'button', onclick: submit }, 'Search'));
 
+    const rows = chars.map((c, i) => leaderRow(ui, c, first + i + 1, search.scope === 'explorer' && searchActive(search) ? c.adventure : null));
     const base = `/characters/${key}`;
-    const bar = () => h('div', { class: 'pager-row' }, pager(ui, base, page, pages), h('div', { class: 'pager-count' }, `${num(first + 1)}–${num(first + chars.length)} of ${num(file.total)}`));
+    const bar = () => h('div', { class: 'pager-row' }, pager(ui, base, page, pages, suffix),
+      h('div', { class: 'pager-count' }, total === 0 ? '0 characters' : `${num(first + 1)}–${num(first + chars.length)} of ${num(total)}`));
     ui.app.replaceChildren(
       h('div', { class: 'crumbs' }, h('a', { href: '#/characters' }, 'Leaderboard'), ` / ${heading}`),
       h('div', { class: 'lb-head' }, h('h1', {}, heading), picker),
+      searchBar,
+      ui.buildFilterBar({ filter, fame: null, go: (next) => go(next, search) }),
       bar(),
-      h('div', { class: 'lb-list' }, rows),
-      bar());
+      total === 0 ? h('div', { class: 'empty' }, 'No characters match.') : h('div', { class: 'lb-list' }, rows),
+      total === 0 ? null : bar());
   }
 
   // ---------- character page ----------
@@ -203,6 +287,7 @@
         h('div', { class: 'titles' },
           h('h1', {}, c.name),
           h('div', { class: 'chips' }, h('span', { class: 'chip' }, cap(c.server)), c.level ? h('span', { class: 'chip' }, `Lv. ${c.level}`) : null,
+            c.adventure ? h('a', { class: 'chip', href: `#/characters/all/1?in=explorer&q=${encodeURIComponent(c.adventure)}`, title: 'Characters of this explorer club' }, c.adventure) : null,
             h('a', { class: 'chip gold', href: `#/class/${key}` }, info.display))),
         h('div', { class: 'hero-figure' }, h('div', { class: 'value' }, num(c.fame)), h('div', { class: 'label' }, 'fame'))),
       ui.tabs(`/character/${key}/${id}`, TABS, active),

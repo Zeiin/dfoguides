@@ -141,17 +141,36 @@
     };
   }
 
-  // filter = { sets: Set of set families, oaths: Set of oath set names, hide: Set of exalted item names, min, max }
-  // (an empty Set or a null limit means "any"; a character wearing any item of `hide` is left out).
-  // familyOf(setName) gives the family a set name belongs to.
+  // A character owns exactly one value (its set family, its oath set). map: value -> 'only' | 'hide'.
+  // With 'only' values the character must have one of them; it must never have a 'hide' value. An empty map means "any".
+  function matchValue(map, value) {
+    let hasOnly = false;
+    let isOnly = false;
+    for (const [name, mode] of map) {
+      if (mode === 'only') { hasOnly = true; if (name === value) isOnly = true; } else if (name === value) return false;
+    }
+    return !hasOnly || isOnly;
+  }
+
+  // A character can wear several exalted pieces: it must wear every 'only' piece and none of the 'hide' pieces.
+  function matchExalted(map, wornNames) {
+    for (const [name, mode] of map) if (wornNames.includes(name) !== (mode === 'only')) return false;
+    return true;
+  }
+
+  // filter = { sets: Map of set family -> mode, oaths: Map of oath set name -> mode, exalted: Map of exalted item name -> mode, min, max }
+  // (mode is 'only' or 'hide'; an empty Map or a null limit means "any"). familyOf(setName) gives the family a set name belongs to.
+  // ch = { set, oath, exalted: [item names worn] }; the fame limits are checked by the caller that has the fame.
+  function matchesCharacter(filter, ch, familyOf) {
+    return matchValue(filter.sets, familyOf(ch.set)) && matchValue(filter.oaths, ch.oath) && matchExalted(filter.exalted, ch.exalted);
+  }
+
   function filterRows(table, rows, familyOf, filter) {
     return rows.filter((r) =>
-      (filter.sets.size === 0 || filter.sets.has(familyOf(table[r[I.SET]])))
-      && (filter.oaths.size === 0 || filter.oaths.has(table[r[I.OATH]]))
-      && (filter.hide.size === 0 || !r[I.EXALTED].some((id) => filter.hide.has(table[id])))
+      matchesCharacter(filter, { set: table[r[I.SET]], oath: table[r[I.OATH]], exalted: r[I.EXALTED].map((id) => table[id]) }, familyOf)
       && (filter.min == null || r[I.FAME] >= filter.min)
       && (filter.max == null || r[I.FAME] <= filter.max));
   }
 
-  window.DFO_FILTER = { I, computeClassStats, computeGroupStats, filterRows };
+  window.DFO_FILTER = { I, computeClassStats, computeGroupStats, filterRows, matchesCharacter };
 })();

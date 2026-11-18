@@ -18,7 +18,7 @@ record CardCreature(CardItem Item, CardItem? Twin, CardItem[] Artifacts);   // T
 // Skill id -> level / VP type / enhancement type; ids match the class skill tree in data.js.
 record CardSkills(Dictionary<string, int> Levels, Dictionary<string, int> Vp, Dictionary<string, int> Enhancement);
 record CharacterCard(string Id, string Class, string Name, string Server, int Fame, int? Level, CardItem[] Gear, CardOath? Oath,
-    CardCreature? Creature, CardAvatar[] Avatar, CardSkills Skills);
+    CardCreature? Creature, CardAvatar[] Avatar, CardSkills Skills, string? Adventure = null);   // Adventure = the explorer club name
 
 // One leaderboard row: the character's identity plus the icons the row draws. Cells are positional (see CharacterCards.Cells);
 // a cell is [name, icon, rarity, reinforce, amp, tune, level] with trailing nulls cut off, or null for an empty slot.
@@ -204,7 +204,8 @@ static class CharacterCards
             new CardSkills(
                 (style.Active ?? []).Concat(style.Passive ?? []).Where(s => s.Level > 0).ToDictionary(s => s.SkillId, s => s.Level),
                 (style.Evolution ?? []).ToDictionary(e => e.SkillId, e => e.Type),
-                (style.Enhancement ?? []).ToDictionary(e => e.SkillId, e => e.Type)));
+                (style.Enhancement ?? []).ToDictionary(e => e.SkillId, e => e.Type)),
+            string.IsNullOrEmpty(c.Equipment.AdventureName) ? null : c.Equipment.AdventureName);
     }
 
     static readonly string[] GridGear = ["WEAPON", "JACKET", "SHOULDER", "PANTS", "SHOES", "WAIST", "AMULET", "WRIST", "RING", "SUPPORT", "MAGIC_STON", "EARRING"];
@@ -239,6 +240,21 @@ static class CharacterCards
     }
 
     internal static CardRow Row(CharacterCard c) => new(c.Id, c.Class, c.Name, c.Server, c.Level, c.Fame, Cells(c));
+
+    // The exalted slots in the order of the bits of an index row's mask (Sub Equipment = 1, Magic Stone = 2, Earrings = 4).
+    static readonly string[] ExaltedSlots = ["SUPPORT", "MAGIC_STON", "EARRING"];
+
+    // One row of index.js, the list the leaderboard filters and searches (every character, so a filter or a name search needs only this one file):
+    // [class index, rank in the class, fame, name, server, explorer club, set, oath set, exalted mask]. Strings are packed with JsonPack.
+    internal static object[] IndexRow(LoadedCharacter c, int classIndex, int rank)
+    {
+        var items = c.Equipment.Equipment!;
+        var mask = 0;
+        for (var bit = 0; bit < ExaltedSlots.Length; bit++)
+            if (items.Any(i => i.SlotId == ExaltedSlots[bit] && i.ItemName == CharacterReader.ExaltedItems[ExaltedSlots[bit]])) mask |= 1 << bit;
+        return [classIndex, rank, c.Entry.Fame, c.Equipment.CharacterName ?? "", c.Equipment.ServerId ?? c.Entry.ServerId, c.Equipment.AdventureName ?? "",
+            SetNames.Of(c.Equipment), c.Oath?.Oath?.SetInfo?.SetName ?? "(none)", mask];
+    }
 
     // Writes <fileKey>.js: window.DFO_CHARS[fileKey] = { size, total?, s: strings, d: packed tree }.
     static async Task WriteFileAsync(string dir, string fileKey, object tree, int? total = null)
@@ -287,12 +303,17 @@ static class CharacterCards
 
         // Pass 2: the class lists and character chunks; the rows are kept for the lists across classes.
         var allRows = new List<(CardRow Row, string Role)>();
+        var indexClasses = new List<string>();
+        var indexRows = new List<object[]>();
         var characters = 0;
         foreach (var key in keys)
         {
-            var cards = (await LoadAllAsync(ctx, key)).Select(c => Build(c, have, icons, oathIcons)).ToList();
+            var loaded = await LoadAllAsync(ctx, key);
+            var cards = loaded.Select(c => Build(c, have, icons, oathIcons)).ToList();
             if (cards.Count == 0) continue;
             characters += cards.Count;
+            indexClasses.Add(key);
+            indexRows.AddRange(loaded.Select((c, rank) => IndexRow(c, indexClasses.Count - 1, rank)));
 
             var rows = cards.Select(Row).ToList();
             await WritePagesAsync(dir, key, rows);
@@ -308,6 +329,7 @@ static class CharacterCards
         await WritePagesAsync(dir, "all", ByFame(_ => true));
         await WritePagesAsync(dir, "dps", ByFame(role => role == "DPS"));
         await WritePagesAsync(dir, "support", ByFame(role => role == "Support"));
+        await WriteFileAsync(dir, "index", new { classes = indexClasses, rows = indexRows });
         Console.WriteLine($"Character pages: {characters} characters of {keys.Count} classes written to {dir}");
     }
 }
