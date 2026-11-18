@@ -22,13 +22,14 @@ partial class FetchSkillLayoutCommand : ICommand
 
     record GridSkill(string Id, string Type, int X, int Y, string ImagePath);
 
-    // dfmax's base class names -> ours. Its Imperial Knight (제국기사) page and any other Korean-only class are skipped.
+    // dfmax's base class names -> ours. Any Korean-only class is skipped.
     static readonly Dictionary<string, string> BaseClasses = new()
     {
         ["귀검사(남)"] = "Slayer (M)", ["귀검사(여)"] = "Slayer (F)", ["격투가(남)"] = "Fighter (M)", ["격투가(여)"] = "Fighter (F)",
         ["거너(남)"] = "Gunner (M)", ["거너(여)"] = "Gunner (F)", ["마법사(남)"] = "Mage (M)", ["마법사(여)"] = "Mage (F)",
         ["프리스트(남)"] = "Priest (M)", ["프리스트(여)"] = "Priest (F)", ["도적"] = "Thief", ["나이트"] = "Knight", ["마창사"] = "Demonic Lancer",
         ["총검사"] = "Agent", ["아처"] = "Archer", ["크리에이터"] = "Creator", ["다크나이트"] = "Dark Knight",
+        ["제국기사"] = "Imperial Guard",
     };
 
     [GeneratedRegex("href=\"(/jobs/[^\"]+/summary)\"")]

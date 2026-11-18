@@ -12,7 +12,7 @@
 
   // Base class display order; unlisted ones follow.
   const BASE_ORDER = ['Slayer (M)', 'Slayer (F)', 'Fighter (M)', 'Fighter (F)', 'Gunner (M)', 'Gunner (F)', 'Mage (M)', 'Mage (F)',
-    'Priest (M)', 'Priest (F)', 'Thief', 'Knight', 'Demonic Lancer', 'Agent', 'Archer', 'Dark Knight', 'Creator'];
+    'Priest (M)', 'Priest (F)', 'Thief', 'Knight', 'Demonic Lancer', 'Agent', 'Archer', 'Dark Knight', 'Creator', 'Imperial Guard'];
 
   const GROUPS = { all: 'All Classes', dps: 'DPS', support: 'Buffers' };
 
