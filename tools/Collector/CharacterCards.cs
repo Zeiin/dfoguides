@@ -5,9 +5,10 @@ using Collector.Commands;
 namespace Collector;
 
 // One item of a character page (gear, oath piece, creature, avatar...). Icon is a file in stats/img/items, null when none exists.
-// Reinforce holds the amplification level when Amp is set; Tune is an oath crystal's tune level.
+// Reinforce holds the amplification level when Amp is set; Tune is an oath crystal's tune level; Level is the level a Platinum title,
+// Platinum creature or Rare Clone weapon avatar stands for (null for any other item).
 record CardItem(string Name, string? Icon, string? Rarity = null, string? Slot = null, int? Reinforce = null, string? Amp = null,
-    int? Refine = null, string? Set = null, string[]? Enchant = null, int? Tune = null);
+    int? Refine = null, string? Set = null, string[]? Enchant = null, int? Tune = null, int? Level = null);
 record CardEmblem(string Color, string Name, string? Icon);
 record CardAvatar(string Slot, CardItem Item, CardEmblem[] Emblems);
 record CardOath(string? Set, string? Option, string? SetRarity, CardItem? Item, CardItem[] Crystals);
@@ -81,7 +82,8 @@ static class CharacterCards
             if (icon == null && i.SlotId == "TITLE") icon = Named("titles", CharacterReader.ShownName(i.ItemName));
             return new CardItem(i.ItemName, icon, i.ItemRarity, i.SlotId,
                 i.Reinforce > 0 ? i.Reinforce : null, i.AmplificationName, i.Refine > 0 ? i.Refine : null, i.SetItemName,
-                i.Enchant?.Status?.Select(s => $"{s.Name} +{s.Value}").ToArray());
+                i.Enchant?.Status?.Select(s => $"{s.Name} +{s.Value}").ToArray(),
+                Level: i.SlotId == "TITLE" ? CharacterReader.ParseTitle(i.ItemName).Level : null);
         }
 
         var oath = c.Oath?.Oath;
@@ -101,12 +103,13 @@ static class CharacterCards
                 oath.Info?.ItemName is { } oathName ? new CardItem(oathName, Icon(oath.Info.ItemId) ?? Named("oath", oath.SetInfo?.SetName ?? ""), oath.Info.ItemRarity) : null,
                 (oath.Crystal ?? []).Where(x => x.ItemName != null).Select(x => new CardItem(x.ItemName!, Icon(x.ItemId), x.ItemRarity, Tune: x.Tune?.Level)).ToArray()),
             creature?.ItemName == null ? null : new CardCreature(
-                new CardItem(creature.ItemName, Icon(creature.ItemId) ?? Named("creatures", CharacterReader.ShownName(creature.ItemName)), creature.ItemRarity),
+                new CardItem(creature.ItemName, Icon(creature.ItemId) ?? Named("creatures", CharacterReader.ShownName(creature.ItemName)), creature.ItemRarity,
+                    Level: CharacterReader.ParseTitle(creature.ItemName).Level),
                 creature.CloneInfo?.ItemName is { } cloneName ? new CardItem(cloneName, Icon(creature.CloneInfo.ItemId)) : null,
                 (creature.Artifact ?? []).Where(a => a.ItemName != null).Select(a => new CardItem(a.ItemName!, Icon(a.ItemId), a.ItemRarity)).ToArray()),
             (c.Avatar?.Avatar ?? []).Where(s => !string.IsNullOrEmpty(s.ItemName)).Select(s => new CardAvatar(
                 s.SlotId,
-                new CardItem(s.ItemName!, Icon(s.ItemId)),
+                new CardItem(s.ItemName!, Icon(s.ItemId), Level: s.SlotId == "WEAPON" ? CharacterReader.RareCloneLevel(s.ItemName!) : null),
                 (s.Emblems ?? []).Where(e => !string.IsNullOrEmpty(e.ItemName)).Select(e => new CardEmblem(e.SlotColor ?? "", e.ItemName!, Icon(e.ItemId))).ToArray())).ToArray(),
             new CardSkills(
                 (style.Active ?? []).Concat(style.Passive ?? []).Where(s => s.Level > 0).ToDictionary(s => s.SkillId, s => s.Level),
@@ -118,11 +121,12 @@ static class CharacterCards
     internal static List<CharacterCard> TopOverall(IEnumerable<CharacterCard> cards) =>
         cards.OrderByDescending(c => c.Fame).ThenBy(c => c.Id, StringComparer.Ordinal).Take(Size).ToList();
 
-    // Writes stats/data/characters/<key>.js for every class and all.js for the overall top.
-    public static async Task ExportAsync(CommandContext ctx, string siteDir, IEnumerable<string> classKeys, IReadOnlyDictionary<string, Dictionary<string, string>> icons)
+    // Writes stats/data/characters/<key>.js for every class, and all.js, dps.js and support.js for the overall tops.
+    // roleByClass: class key -> "DPS" or "Support".
+    public static async Task ExportAsync(CommandContext ctx, string siteDir, IReadOnlyDictionary<string, string> roleByClass, IReadOnlyDictionary<string, Dictionary<string, string>> icons)
     {
         var loaded = new Dictionary<string, List<LoadedCharacter>>();
-        foreach (var key in classKeys)
+        foreach (var key in roleByClass.Keys)
             if (File.Exists(ctx.RosterPath(key)) && Directory.Exists(ctx.CharsDir(key))) loaded[key] = await LoadTopAsync(ctx, key);
 
         var ids = loaded.Values.SelectMany(l => l).SelectMany(IconIds).ToHashSet();
@@ -138,6 +142,8 @@ static class CharacterCards
             await WriteAsync(dir, key, cards);
         }
         await WriteAsync(dir, "all", TopOverall(all));
+        await WriteAsync(dir, "dps", TopOverall(all.Where(c => roleByClass[c.Class] == "DPS")));
+        await WriteAsync(dir, "support", TopOverall(all.Where(c => roleByClass[c.Class] == "Support")));
         Console.WriteLine($"Character pages: top {Size} of {loaded.Count} classes written to {dir}");
     }
 

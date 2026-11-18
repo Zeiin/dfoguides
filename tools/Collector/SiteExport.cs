@@ -120,7 +120,7 @@ static class SiteExport
         SetEmblems.Apply(icons, names, Path.Combine(siteDir, "img", "items"), SetEmblems.ReadFamilies(Path.Combine(ctx.ReferenceDir, "setfamilies.json")));
 
         // Leaderboards and character pages: the top characters of each class.
-        await CharacterCards.ExportAsync(ctx, siteDir, classes.Select(c => c.Key), icons);
+        await CharacterCards.ExportAsync(ctx, siteDir, classes.ToDictionary(c => c.Key, c => c.Role), icons);
 
         // Skill trees from the committed skill lists (reference/).
         var skillTree = new Dictionary<string, List<SiteSkill>>();

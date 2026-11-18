@@ -264,10 +264,11 @@
 
   // ---------- pages ----------
 
-  function renderHome() {
-    document.title = 'DFO Class Statistics';
+  // The same page serves the statistics and the leaderboard; only the links and the heading differ.
+  function renderHome(leaderboard = false) {
+    document.title = leaderboard ? 'Leaderboard � DFO Class Statistics' : 'DFO Class Statistics';
     const stats = D.stats;
-    const groupTile = (id) => h('a', { class: 'group-tile', href: `#/group/${id}` },
+    const groupTile = (id) => h('a', { class: 'group-tile', href: leaderboard ? `#/characters/${id}` : `#/group/${id}` },
       h('div', { class: 'name' }, GROUPS[id]),
       h('div', { class: 'count' }, num(stats[id].sample), h('small', {}, 'characters')));
 
@@ -285,7 +286,7 @@
     const maxShare = Math.max(...D.classes.map((c) => c.share));
     const sections = ordered.map((base) => {
       const cards = bases.get(base).sort((a, b) => b.sample - a.sample).map((c) =>
-        h('a', { class: 'class-card', href: `#/class/${c.key}`, 'data-name': `${c.display} ${base}`.toLowerCase() },
+        h('a', { class: 'class-card', href: leaderboard ? `#/characters/${c.key}` : `#/class/${c.key}`, 'data-name': `${c.display} ${base}`.toLowerCase() },
           h('div', { class: 'art' }, c.portrait ? h('img', { src: `img/classes/${c.portrait}`, alt: `${c.display} portrait`, loading: 'lazy' }) : null),
           h('div', { class: 'meta' },
             h('div', { class: 'cname' }, c.display),
@@ -305,7 +306,7 @@
     });
 
     app.replaceChildren(
-      h('h1', {}, 'Class Statistics'),
+      h('h1', {}, leaderboard ? 'Leaderboard' : 'Class Statistics'),
       h('div', { class: 'group-tiles' }, groupTile('all'), groupTile('dps'), groupTile('support')),
       h('div', { class: 'search-row' }, search),
       ...sections);
@@ -432,7 +433,7 @@
         h('div', { class: 'titles' },
           h('h1', {}, info.display),
           h('div', { class: 'chips' }, h('span', { class: 'chip' }, info.baseClass), h('span', { class: 'chip gold' }, info.role === 'Support' ? 'Buffer' : 'DPS'),
-            h('a', { class: 'chip gold', href: `#/characters/${key}` }, 'Top characters'))),
+            h('a', { class: 'chip gold', href: `#/characters/${key}` }, 'Leaderboard'))),
         h('div', { class: 'hero-figure' }, h('div', { class: 'value' }, num(s.sample)),
           h('div', { class: 'label' }, filtered ? `of ${num(base.sample)} characters` : `characters \u00B7 ${pct(info.share)} of all`))),
       tabs(`/class/${key}`, tabList, active, filterQuery(filter)),
@@ -629,7 +630,7 @@
 
   // What characters.js (the leaderboard and character pages) borrows from this file.
   const ui = {
-    h, num, pct, app, D, classByKey, tabs, skillIcon, layoutTree, drawTreeLinks, sectionTitle, renderNotFound, hideTip, moveTip, tip,
+    h, num, pct, app, D, classByKey, groups: GROUPS, tabs, skillIcon, layoutTree, drawTreeLinks, sectionTitle, renderNotFound, hideTip, moveTip, tip,
     emblemColors: EMBLEM_COLORS,
     baseIndex: (base) => { const i = BASE_ORDER.indexOf(base); return i < 0 ? 99 : i; },
   };
@@ -646,6 +647,7 @@
     if (parts.length === 0) renderHome();
     else if (parts[0] === 'group') renderGroup(parts[1], parts[2], query);
     else if (parts[0] === 'class') renderClass(parts[1], parts[2], query);
+    else if (parts[0] === 'characters' && !parts[1]) renderHome(true);
     else if (parts[0] === 'characters' || parts[0] === 'character') window.DFO_CHARACTERS.render(ui, parts);
     else renderNotFound();
     if (path !== lastPath) window.scrollTo(0, 0);

@@ -47,9 +47,10 @@
     const { h } = ui;
     const level = item.reinforce ? h('span', { class: `cbadge${item.amp ? ' amp' : ''}` }, `+${item.reinforce}`) : null;
     const tune = item.tune ? h('span', { class: 'cbadge' }, `T${item.tune}`) : null;
+    const stands = item.level ? h('span', { class: 'clevel' }, String(item.level)) : null;
     const box = h('span', { class: `cicon item-icon rarity-${(item.rarity || 'common').toLowerCase()} ${extra}`.trim(), tabindex: '0' },
       item.icon ? h('img', { src: `img/items/${item.icon}`, alt: item.name, loading: 'lazy' }) : h('span', { class: 'cfallback' }, item.name.slice(0, 2)),
-      level || tune);
+      level || tune, stands);
     const open = (e) => itemTip(ui, e, item);
     box.addEventListener('pointermove', open);
     box.addEventListener('focus', open);
@@ -71,6 +72,33 @@
     ui.moveTip(event);
   }
 
+  // The leaderboard's icon grid, 14 columns: weapon and the other gear slots over the oath item and its crystals (so each oath piece sits
+  // under a gear slot), then Title and Pet over the weapon avatar and Aura. A missing item leaves its cell empty.
+  const GRID_GEAR = GEAR_ORDER.filter((slot) => slot !== 'TITLE');
+
+  function itemGrid(ui, c) {
+    const cells = [];
+    const place = (item, column, row, extra = '') => {
+      if (!item) return;
+      const box = itemBox(ui, item, extra);
+      box.style.gridColumn = String(column);
+      box.style.gridRow = String(row);
+      cells.push(box);
+    };
+    const gear = new Map(c.gear.map((item) => [item.slot, item]));
+    const avatar = new Map(c.avatar.map((a) => [a.slot, a.item]));
+    GRID_GEAR.forEach((slot, i) => place(gear.get(slot), i + 1, 1));
+    place(gear.get('TITLE'), 13, 1);
+    place(c.creature && c.creature.item, 14, 1);
+    if (c.oath) {
+      place(c.oath.item, 1, 2);
+      c.oath.crystals.forEach((item, i) => place(item, i + 2, 2));
+    }
+    place(avatar.get('WEAPON'), 13, 2, 'plain');
+    place(avatar.get('AURORA'), 14, 2, 'plain');
+    return ui.h('div', { class: 'item-grid' }, cells);
+  }
+
   const gearOf = (c) => [...c.gear].sort((a, b) => byOrder(GEAR_ORDER, a.slot) - byOrder(GEAR_ORDER, b.slot));
   const classOf = (ui, c) => ui.classByKey.get(c.class);
 
@@ -78,16 +106,18 @@
 
   async function renderLeaderboard(ui, key, here) {
     const { h, num, D } = ui;
-    const info = key === 'all' ? null : ui.classByKey.get(key);
-    if (key !== 'all' && !info) return ui.renderNotFound();
-    document.title = `Top Characters${info ? ` · ${info.display}` : ''} · DFO Class Statistics`;
+    const group = ui.groups[key];
+    const info = group ? null : ui.classByKey.get(key);
+    if (!group && !info) return ui.renderNotFound();
+    const heading = group || info.display;
+    document.title = `Leaderboard · ${heading} · DFO Class Statistics`;
 
     if (!cache.has(key)) ui.app.replaceChildren(h('div', { class: 'empty' }, 'Loading…'));
     const chars = await load(key);
     if (location.hash !== here) return;
 
     // Class picker, grouped by base class.
-    const picker = h('select', { class: 'class-select', 'aria-label': 'Class' }, h('option', { value: 'all' }, 'All classes'));
+    const picker = h('select', { class: 'class-select', 'aria-label': 'Class' }, ...Object.entries(ui.groups).map(([id, name]) => h('option', { value: id }, name)));
     const bases = new Map();
     for (const c of D.classes) { if (!bases.has(c.baseClass)) bases.set(c.baseClass, []); bases.get(c.baseClass).push(c); }
     [...bases.keys()].sort((a, b) => ui.baseIndex(a) - ui.baseIndex(b)).forEach((base) => {
@@ -98,21 +128,18 @@
 
     const rows = chars.map((c, i) => {
       const cls = classOf(ui, c);
-      const oath = c.oath;
       return h('a', { class: 'lb-row', href: `#/character/${c.class}/${c.id}` },
         h('div', { class: 'lb-rank' }, String(i + 1)),
         h('div', { class: 'lb-who' },
           cls && cls.portrait ? h('img', { class: 'lb-class', src: `img/classes/${cls.portrait}`, alt: '', loading: 'lazy' }) : null,
           h('div', {}, h('div', { class: 'lb-name' }, c.name), h('div', { class: 'lb-sub' }, [cap(c.server), c.level ? `Lv. ${c.level}` : null, cls ? cls.display : null].filter(Boolean).join(' · ')))),
         h('div', { class: 'lb-fame' }, num(c.fame)),
-        h('div', { class: 'lb-items' },
-          h('div', { class: 'icon-line' }, gearOf(c).map((item) => itemBox(ui, item))),
-          oath ? h('div', { class: 'icon-line' }, oath.item ? itemBox(ui, oath.item, 'oath-main') : null, oath.crystals.map((item) => itemBox(ui, item))) : null));
+        h('div', { class: 'lb-items' }, itemGrid(ui, c)));
     });
 
     ui.app.replaceChildren(
-      h('div', { class: 'crumbs' }, h('a', { href: '#/' }, 'All classes'), ' / Top characters'),
-      h('div', { class: 'lb-head' }, h('h1', {}, info ? `${info.display} · Top Characters` : 'Top Characters'), picker),
+      h('div', { class: 'crumbs' }, h('a', { href: '#/characters' }, 'Leaderboard'), ` / ${heading}`),
+      h('div', { class: 'lb-head' }, h('h1', {}, heading), picker),
       chars.length ? h('div', { class: 'lb-list' }, rows) : h('div', { class: 'empty' }, 'No characters yet.'));
   }
 
@@ -132,7 +159,7 @@
     const content = active === 'gear' ? gearTab(ui, c) : active === 'skills' ? skillsTab(ui, c, info) : avatarTab(ui, c);
 
     ui.app.replaceChildren(
-      h('div', { class: 'crumbs' }, h('a', { href: '#/' }, 'All classes'), ' / ', h('a', { href: `#/characters/${key}` }, `${info.display} Top characters`), ' / ', c.name),
+      h('div', { class: 'crumbs' }, h('a', { href: '#/characters' }, 'Leaderboard'), ' / ', h('a', { href: `#/characters/${key}` }, info.display), ' / ', c.name),
       h('div', { class: 'page-head' },
         h('div', { class: 'portrait' }, info.portrait ? h('img', { src: `img/classes/${info.portrait}`, alt: `${info.display} portrait` }) : null),
         h('div', { class: 'titles' },
