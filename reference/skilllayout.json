@@ -335,6 +335,12 @@
       "x": 4,
       "y": 12,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Slayer_M_Neo_Soul_Bender": [
@@ -649,6 +655,12 @@
       "x": 9,
       "y": 11,
       "similarity": 0.995
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Slayer_M_Neo_Berserker": [
@@ -951,6 +963,12 @@
       "x": 4,
       "y": 8,
       "similarity": 0.998
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Slayer_M_Neo_Asura": [
@@ -1241,6 +1259,18 @@
       "x": 3,
       "y": 10,
       "similarity": 0.991
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "d4ce7979192be71bd8378b843a04a783",
+      "x": 5,
+      "y": 14,
+      "similarity": 1
     }
   ],
   "Slayer_M_Neo_Ghostblade": [
@@ -1513,6 +1543,12 @@
       "x": 6,
       "y": 1,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Slayer_F_Neo_Sword_Master": [
@@ -1803,6 +1839,18 @@
       "x": 3,
       "y": 2,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "c1e3db1e6e3b3298ab60cad7ea92e97e",
+      "x": 1,
+      "y": 4,
+      "similarity": 1
     }
   ],
   "Slayer_F_Neo_Dark_Templar": [
@@ -2057,6 +2105,24 @@
       "x": 5,
       "y": 6,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "20c1cc04f8b4f0d658a08e1678ca3ec5",
+      "x": 1,
+      "y": 3,
+      "similarity": 1
+    },
+    {
+      "id": "3d179eb29da4bc14bdee533e7c5b73b2",
+      "x": 3,
+      "y": 6,
+      "similarity": 1
     }
   ],
   "Slayer_F_Neo_Demon_Slayer": [
@@ -2299,6 +2365,12 @@
       "x": 9,
       "y": 5,
       "similarity": 0.979
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Slayer_F_Neo_Vagabond": [
@@ -2571,6 +2643,18 @@
       "x": 6,
       "y": 5,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "c67c4a0cf71a021ff44592003c0414a3",
+      "x": 1,
+      "y": 4,
+      "similarity": 1
     }
   ],
   "Slayer_F_Neo_Spectre": [
@@ -2819,6 +2903,18 @@
       "x": 3,
       "y": 11,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "e8825eaaa49b4ef8c4467be3ad75af39",
+      "x": 8,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Fighter_M_Neo_Nen_Master": [
@@ -3115,6 +3211,12 @@
       "x": 6,
       "y": 13,
       "similarity": 0.902
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Fighter_M_Neo_Striker": [
@@ -3393,6 +3495,24 @@
       "x": 8,
       "y": 13,
       "similarity": 0.975
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "d08ac3d90dd79565eda039207d9f06d2",
+      "x": 6,
+      "y": 7,
+      "similarity": 1
+    },
+    {
+      "id": "b5929c3e5bdb6e04efb06273ce64f4f4",
+      "x": 5,
+      "y": 7,
+      "similarity": 1
     }
   ],
   "Fighter_M_Neo_Brawler": [
@@ -3701,6 +3821,12 @@
       "x": 5,
       "y": 8,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Fighter_M_Neo_Grappler": [
@@ -3985,6 +4111,18 @@
       "x": 5,
       "y": 13,
       "similarity": 0.964
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "165ba87751e8112fe8e8339639be747d",
+      "x": 6,
+      "y": 13,
+      "similarity": 1
     }
   ],
   "Fighter_F_Neo_Nen_Master": [
@@ -4275,6 +4413,12 @@
       "x": 8,
       "y": 5,
       "similarity": 0.991
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Fighter_F_Neo_Striker": [
@@ -4529,6 +4673,18 @@
       "x": 7,
       "y": 13,
       "similarity": 0.979
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "b5929c3e5bdb6e04efb06273ce64f4f4",
+      "x": 4,
+      "y": 7,
+      "similarity": 1
     }
   ],
   "Fighter_F_Neo_Brawler": [
@@ -4825,6 +4981,18 @@
       "x": 3,
       "y": 5,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "4628de3de5f266d5397d90830b4dea07",
+      "x": 6,
+      "y": 14,
+      "similarity": 1
     }
   ],
   "Fighter_F_Neo_Grappler": [
@@ -5115,6 +5283,12 @@
       "x": 2,
       "y": 3,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Gunner_M_Neo_Ranger": [
@@ -5381,6 +5555,24 @@
       "x": 3,
       "y": 13,
       "similarity": 0.988
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "d0df2040774e689c0acd9f74d7ed8dcd",
+      "x": 2,
+      "y": 4,
+      "similarity": 1
+    },
+    {
+      "id": "435458d64a70bb32b25c7931fe2c536a",
+      "x": 7,
+      "y": 7,
+      "similarity": 1
     }
   ],
   "Gunner_M_Neo_Launcher": [
@@ -5665,6 +5857,12 @@
       "x": 2,
       "y": 13,
       "similarity": 0.985
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Gunner_M_Neo_Mechanic": [
@@ -5961,6 +6159,24 @@
       "x": 6,
       "y": 3,
       "similarity": 0.993
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "99a25c0c531ad7fb9915a5f23a562b75",
+      "x": 8,
+      "y": 7,
+      "similarity": 1
+    },
+    {
+      "id": "2c8497c2e64ea206813c18fabb749841",
+      "x": 9,
+      "y": 13,
+      "similarity": 1
     }
   ],
   "Gunner_M_Neo_Spitfire": [
@@ -6257,6 +6473,18 @@
       "x": 8,
       "y": 13,
       "similarity": 0.985
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "af4cf0cce74f5ec352e2d324816bac14",
+      "x": 5,
+      "y": 11,
+      "similarity": 1
     }
   ],
   "Gunner_M_Neo_Blitz": [
@@ -6541,6 +6769,12 @@
       "x": 9,
       "y": 3,
       "similarity": 0.993
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Gunner_F_Neo_Ranger": [
@@ -6819,6 +7053,18 @@
       "x": 8,
       "y": 15,
       "similarity": 0.99
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "df5b4722b5f5ab91935b6cc99704e895",
+      "x": 5,
+      "y": 9,
+      "similarity": 1
     }
   ],
   "Gunner_F_Neo_Launcher": [
@@ -7097,6 +7343,18 @@
       "x": 6,
       "y": 15,
       "similarity": 0.981
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "6a20ce4754ac00b40998fd19dfc64f87",
+      "x": 7,
+      "y": 14,
+      "similarity": 1
     }
   ],
   "Gunner_F_Neo_Mechanic": [
@@ -7393,6 +7651,18 @@
       "x": 6,
       "y": 15,
       "similarity": 0.982
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "00d437838498cad01a32b27290e63113",
+      "x": 4,
+      "y": 7,
+      "similarity": 1
     }
   ],
   "Gunner_F_Neo_Spitfire": [
@@ -7695,6 +7965,12 @@
       "x": 6,
       "y": 15,
       "similarity": 0.989
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Gunner_F_Neo_Paramedic": [
@@ -7900,6 +8176,54 @@
       "id": "4e995a5ff20512f33d684dc87ee25395",
       "x": 3,
       "y": 0,
+      "similarity": 1
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "add72fed08e3cdad4daf9feac9ac9d7d",
+      "x": 2,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "fc6b2ce05f94f3ae30f3e4da6f20916d",
+      "x": 1,
+      "y": 4,
+      "similarity": 1
+    },
+    {
+      "id": "a3573feb253df0beb7e5131a6f400c81",
+      "x": 3,
+      "y": 4,
+      "similarity": 1
+    },
+    {
+      "id": "cbe4560deb09ddeff1d1155c7c84e104",
+      "x": 4,
+      "y": 11,
+      "similarity": 1
+    },
+    {
+      "id": "e7efdbec234e0e417c74ef0686f1a8b0",
+      "x": 4,
+      "y": 13,
+      "similarity": 1
+    },
+    {
+      "id": "1176a81ee16cbcaef9947f8a9d891f3f",
+      "x": 4,
+      "y": 15,
+      "similarity": 1
+    },
+    {
+      "id": "1f1b106b195cb9b4ffd2f775fdd38d02",
+      "x": 2,
+      "y": 15,
       "similarity": 1
     }
   ],
@@ -8167,6 +8491,12 @@
       "x": 3,
       "y": 13,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 4,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Mage_M_Neo_Glacial_Master": [
@@ -8421,6 +8751,12 @@
       "x": 9,
       "y": 7,
       "similarity": 0.975
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 4,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Mage_M_Neo_Blood_Mage": [
@@ -8917,6 +9253,12 @@
       "x": 4,
       "y": 12,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Mage_M_Neo_Dimension_Walker": [
@@ -9201,6 +9543,12 @@
       "x": 2,
       "y": 11,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Mage_F_Neo_Elementalist": [
@@ -9485,6 +9833,12 @@
       "x": 6,
       "y": 15,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Mage_F_Neo_Summoner": [
@@ -9853,6 +10207,18 @@
       "x": 3,
       "y": 14,
       "similarity": 0.927
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "ff98cf71184b35090fb27620baf43dda",
+      "x": 2,
+      "y": 13,
+      "similarity": 1
     }
   ],
   "Mage_F_Neo_Battle_Mage": [
@@ -10119,6 +10485,24 @@
       "x": 2,
       "y": 14,
       "similarity": 0.981
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "a390e454945878b23d5f70a32dc1444a",
+      "x": 9,
+      "y": 4,
+      "similarity": 1
+    },
+    {
+      "id": "44447a07b5ae9fe444450221c7e20493",
+      "x": 2,
+      "y": 5,
+      "similarity": 1
     }
   ],
   "Mage_F_Neo_Witch": [
@@ -10403,6 +10787,48 @@
       "x": 5,
       "y": 4,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "57a5c60df51402784fbf7c5ed62fb49e",
+      "x": 1,
+      "y": 6,
+      "similarity": 1
+    },
+    {
+      "id": "37422178bc5d2e7edac0e1b03058e20b",
+      "x": 2,
+      "y": 7,
+      "similarity": 1
+    },
+    {
+      "id": "2bdde68873ca9d78e26c9f041fe983db",
+      "x": 1,
+      "y": 9,
+      "similarity": 1
+    },
+    {
+      "id": "374ce96953f4c424a29ee4de7a10919f",
+      "x": 2,
+      "y": 13,
+      "similarity": 1
+    },
+    {
+      "id": "17341982df4b9b899b90d97b291220bc",
+      "x": 3,
+      "y": 14,
+      "similarity": 1
+    },
+    {
+      "id": "00dabd6f816f474d9020ea3d4aeec199",
+      "x": 5,
+      "y": 14,
+      "similarity": 1
     }
   ],
   "Mage_F_Neo_Enchantress": [
@@ -10705,6 +11131,36 @@
       "x": 2,
       "y": 12,
       "similarity": 0.913
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "961de54eb8232be41a0eb8b6620930fe",
+      "x": 2,
+      "y": 6,
+      "similarity": 1
+    },
+    {
+      "id": "76a751002c16bc0e77bcddef78b7c664",
+      "x": 9,
+      "y": 6,
+      "similarity": 1
+    },
+    {
+      "id": "cdabd37a0210c24edad0d68ee0da5a36",
+      "x": 2,
+      "y": 13,
+      "similarity": 1
+    },
+    {
+      "id": "f6c8fca1863ac1ed333446e08e5dcd9d",
+      "x": 9,
+      "y": 13,
+      "similarity": 1
     }
   ],
   "Priest_M_Neo_Crusader": [
@@ -11001,6 +11457,12 @@
       "x": 1,
       "y": 5,
       "similarity": 0.971
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Priest_M_Neo_Monk": [
@@ -11285,6 +11747,12 @@
       "x": 2,
       "y": 5,
       "similarity": 0.993
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Priest_M_Neo_Exorcist": [
@@ -11533,6 +12001,24 @@
       "x": 1,
       "y": 4,
       "similarity": 0.994
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "e8825eaaa49b4ef8c4467be3ad75af39",
+      "x": 2,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "88c6358d3e64ce3c26872add29a4566c",
+      "x": 4,
+      "y": 13,
+      "similarity": 1
     }
   ],
   "Priest_M_Neo_Avenger": [
@@ -11793,6 +12279,12 @@
       "x": 2,
       "y": 9,
       "similarity": 0.992
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Priest_F_Neo_Crusader": [
@@ -12083,6 +12575,12 @@
       "x": 6,
       "y": 15,
       "similarity": 0.993
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Priest_F_Neo_Inquisitor": [
@@ -12337,6 +12835,18 @@
       "x": 8,
       "y": 15,
       "similarity": 0.992
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "1c58c4cae2d0c0b98336e224e4eb176f",
+      "x": 6,
+      "y": 11,
+      "similarity": 1
     }
   ],
   "Priest_F_Neo_Shaman": [
@@ -12573,6 +13083,12 @@
       "x": 6,
       "y": 15,
       "similarity": 0.992
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Priest_F_Neo_Mistress": [
@@ -12821,6 +13337,12 @@
       "x": 8,
       "y": 15,
       "similarity": 0.991
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Thief_Neo_Rogue": [
@@ -13111,6 +13633,24 @@
       "x": 5,
       "y": 14,
       "similarity": 0.913
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "c79c19d2de91166fb73af905d09736b7",
+      "x": 5,
+      "y": 6,
+      "similarity": 1
+    },
+    {
+      "id": "b4a2b49e373669d84da5bd172c6dd627",
+      "x": 1,
+      "y": 5,
+      "similarity": 1
     }
   ],
   "Thief_Neo_Necromancer": [
@@ -13419,6 +13959,12 @@
       "x": 5,
       "y": 8,
       "similarity": 0.968
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Thief_Neo_Kunoichi": [
@@ -13721,6 +14267,12 @@
       "x": 6,
       "y": 15,
       "similarity": 0.992
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Thief_Neo_Shadow_Dancer": [
@@ -13993,6 +14545,12 @@
       "x": 6,
       "y": 15,
       "similarity": 0.989
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Knight_Neo_Elven_Knight": [
@@ -14283,6 +14841,12 @@
       "x": 8,
       "y": 15,
       "similarity": 0.987
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Knight_Neo_Chaos": [
@@ -14627,6 +15191,12 @@
       "x": 10,
       "y": 8,
       "similarity": 0.989
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Knight_Neo_Lightbringer": [
@@ -14875,6 +15445,12 @@
       "x": 6,
       "y": 15,
       "similarity": 0.981
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Knight_Neo_Dragon_Knight": [
@@ -15141,6 +15717,12 @@
       "x": 7,
       "y": 14,
       "similarity": 0.989
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Demonic_Lancer_Neo_Vanguard": [
@@ -15371,6 +15953,12 @@
       "x": 6,
       "y": 15,
       "similarity": 0.983
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Demonic_Lancer_Neo_Skirmisher": [
@@ -15613,6 +16201,12 @@
       "x": 6,
       "y": 15,
       "similarity": 0.99
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Demonic_Lancer_Neo_Dragoon": [
@@ -15861,6 +16455,12 @@
       "x": 8,
       "y": 15,
       "similarity": 0.993
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Demonic_Lancer_Neo_Impaler": [
@@ -16109,6 +16709,18 @@
       "x": 8,
       "y": 15,
       "similarity": 0.988
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "163dcf84f0a7c7f614f4b5eae84e3225",
+      "x": 4,
+      "y": 13,
+      "similarity": 1
     }
   ],
   "Agent_Neo_Hitman": [
@@ -16345,6 +16957,18 @@
       "x": 5,
       "y": 16,
       "similarity": 0.986
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "5ccd37ecc8b3be865b241f2cfd00304c",
+      "x": 4,
+      "y": 0,
+      "similarity": 1
     }
   ],
   "Agent_Neo_Secret_Agent": [
@@ -16587,6 +17211,12 @@
       "x": 9,
       "y": 12,
       "similarity": 0.988
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Agent_Neo_Troubleshooter": [
@@ -16823,6 +17453,12 @@
       "x": 5,
       "y": 16,
       "similarity": 0.987
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Agent_Neo_Specialist": [
@@ -17059,6 +17695,18 @@
       "x": 8,
       "y": 15,
       "similarity": 0.989
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "5ccd37ecc8b3be865b241f2cfd00304c",
+      "x": 4,
+      "y": 0,
+      "similarity": 1
     }
   ],
   "Archer_Neo_Muse": [
@@ -17325,6 +17973,12 @@
       "x": 3,
       "y": 0,
       "similarity": 1
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Archer_Neo_Traveler": [
@@ -17567,6 +18221,12 @@
       "x": 6,
       "y": 10,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Archer_Neo_Hunter": [
@@ -17809,6 +18469,18 @@
       "x": 3,
       "y": 4,
       "similarity": 0.998
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "59c90bba976ff5b86d4430b5fb9e655a",
+      "x": 3,
+      "y": 11,
+      "similarity": 1
     }
   ],
   "Archer_Neo_Vigilante": [
@@ -18051,6 +18723,12 @@
       "x": 6,
       "y": 11,
       "similarity": 0.999
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
     }
   ],
   "Archer_Neo_Chimera": [
@@ -18274,6 +18952,12 @@
       "id": "4e995a5ff20512f33d684dc87ee25395",
       "x": 3,
       "y": 0,
+      "similarity": 1
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
       "similarity": 1
     }
   ],
@@ -18872,6 +19556,490 @@
       "id": "d5fd60cf863465fd9056a6d855627cb0",
       "x": 10,
       "y": 6,
+      "similarity": 1
+    }
+  ],
+  "Imperial_Guard_Neo_Tidebreaker": [
+    {
+      "id": "8ba3f005ff0f47b06011b58aeca430cc",
+      "x": 1,
+      "y": 0,
+      "similarity": 1
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "afe3e772827fcae485fd429c08b5d715",
+      "x": 2,
+      "y": 0,
+      "similarity": 1
+    },
+    {
+      "id": "f81c54e18694a146ae7acfb0bb5834e8",
+      "x": 2,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "4e995a5ff20512f33d684dc87ee25395",
+      "x": 3,
+      "y": 0,
+      "similarity": 1
+    },
+    {
+      "id": "aa128968676e79237d1e8ea2fa739117",
+      "x": 4,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "b791c07a766fb2dd08ad9726058aecec",
+      "x": 6,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "0f9b0eeaddd5c961f1d4e2ba3159b3c9",
+      "x": 6,
+      "y": 2,
+      "similarity": 1
+    },
+    {
+      "id": "747fcb0d190ff623f119a8f624f7dc31",
+      "x": 7,
+      "y": 2,
+      "similarity": 1
+    },
+    {
+      "id": "5ccd37ecc8b3be865b241f2cfd00304c",
+      "x": 4,
+      "y": 0,
+      "similarity": 1
+    },
+    {
+      "id": "a8448d351e3409d59308466ae3d86684",
+      "x": 6,
+      "y": 0,
+      "similarity": 1
+    },
+    {
+      "id": "877dc26aa76d94cff145c1dd1de6b393",
+      "x": 6,
+      "y": 3,
+      "similarity": 1
+    },
+    {
+      "id": "107165c9def0ee20eb8d246af1f689b2",
+      "x": 7,
+      "y": 3,
+      "similarity": 1
+    },
+    {
+      "id": "291fd91ecedd1b91fd8a813a9416ed43",
+      "x": 2,
+      "y": 4,
+      "similarity": 1
+    },
+    {
+      "id": "4f181307d0e1b054cefb9957bf803b09",
+      "x": 5,
+      "y": 4,
+      "similarity": 1
+    },
+    {
+      "id": "2ad7b13bcee26c698c4a7b9800960057",
+      "x": 7,
+      "y": 4,
+      "similarity": 1
+    },
+    {
+      "id": "2e0406b638445ced09f59222a7bb20cc",
+      "x": 3,
+      "y": 5,
+      "similarity": 1
+    },
+    {
+      "id": "cba1fe96a47f4f9d705cef51a798a315",
+      "x": 4,
+      "y": 5,
+      "similarity": 1
+    },
+    {
+      "id": "b4d8b11d88282487a5ad296290478377",
+      "x": 5,
+      "y": 0,
+      "similarity": 1
+    },
+    {
+      "id": "5e2a1ecf4cc4dddf84ad8933b38d4a34",
+      "x": 4,
+      "y": 6,
+      "similarity": 1
+    },
+    {
+      "id": "0c0f59987824003b488d10202b0b8f5e",
+      "x": 2,
+      "y": 7,
+      "similarity": 1
+    },
+    {
+      "id": "23560b41fc8e36d332eb3f4c79b46275",
+      "x": 6,
+      "y": 7,
+      "similarity": 1
+    },
+    {
+      "id": "c50f1a30032571521fe1b80608be9bd3",
+      "x": 7,
+      "y": 7,
+      "similarity": 1
+    },
+    {
+      "id": "c1e3db1e6e3b3298ab60cad7ea92e97e",
+      "x": 4,
+      "y": 8,
+      "similarity": 1
+    },
+    {
+      "id": "8bff5b1b84d6d03fd52facd4186000a0",
+      "x": 5,
+      "y": 8,
+      "similarity": 1
+    },
+    {
+      "id": "d0df2040774e689c0acd9f74d7ed8dcd",
+      "x": 4,
+      "y": 9,
+      "similarity": 1
+    },
+    {
+      "id": "007fc96ca0a3524cb0f89068ec89cee6",
+      "x": 4,
+      "y": 10,
+      "similarity": 1
+    },
+    {
+      "id": "b1fe3da7ba617a61384064a346c64dc3",
+      "x": 2,
+      "y": 11,
+      "similarity": 1
+    },
+    {
+      "id": "f7b37f62d05fc0a368a3ebf03a4e456c",
+      "x": 6,
+      "y": 11,
+      "similarity": 1
+    },
+    {
+      "id": "ee3de70d5ed119c176dd0d0fe12b84d9",
+      "x": 7,
+      "y": 12,
+      "similarity": 1
+    },
+    {
+      "id": "015b02d7335f4366109a26e61a4df188",
+      "x": 4,
+      "y": 13,
+      "similarity": 1
+    },
+    {
+      "id": "719344d7fc0041b25f666f1ab0aa603a",
+      "x": 2,
+      "y": 13,
+      "similarity": 1
+    },
+    {
+      "id": "f997ba4112cf69f91473b2b1cba4719a",
+      "x": 7,
+      "y": 13,
+      "similarity": 1
+    },
+    {
+      "id": "e3735b2e2ff6664e9bc6e4ecd3496e72",
+      "x": 4,
+      "y": 14,
+      "similarity": 1
+    },
+    {
+      "id": "2010ef6a3a7bf4fc047bca4aef470cfc",
+      "x": 6,
+      "y": 14,
+      "similarity": 1
+    },
+    {
+      "id": "9eba95bb954a46f8030960c53d862d59",
+      "x": 2,
+      "y": 15,
+      "similarity": 1
+    },
+    {
+      "id": "b4a2b49e373669d84da5bd172c6dd627",
+      "x": 4,
+      "y": 15,
+      "similarity": 1
+    },
+    {
+      "id": "20c1cc04f8b4f0d658a08e1678ca3ec5",
+      "x": 6,
+      "y": 16,
+      "similarity": 1
+    }
+  ],
+  "Priest_F_Neo_Monk": [
+    {
+      "id": "8ba3f005ff0f47b06011b58aeca430cc",
+      "x": 1,
+      "y": 0,
+      "similarity": 1
+    },
+    {
+      "id": "ef3240ea9f80412997744f7f3dd66c24",
+      "x": 1,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "afe3e772827fcae485fd429c08b5d715",
+      "x": 2,
+      "y": 0,
+      "similarity": 1
+    },
+    {
+      "id": "4e995a5ff20512f33d684dc87ee25395",
+      "x": 3,
+      "y": 0,
+      "similarity": 1
+    },
+    {
+      "id": "2f3a223be0d3c5ba30162531adad6795",
+      "x": 5,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "3569bedf511c3c9a802aa3e6018007e1",
+      "x": 5,
+      "y": 2,
+      "similarity": 1
+    },
+    {
+      "id": "15794fc7a0a64a5ba1294548faa58bf1",
+      "x": 6,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "98c50d8dec3116fbc6246f5870cdee16",
+      "x": 8,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "877dc26aa76d94cff145c1dd1de6b393",
+      "x": 10,
+      "y": 1,
+      "similarity": 1
+    },
+    {
+      "id": "d3c947c7abe2f8b5470dc73e0b38ff50",
+      "x": 3,
+      "y": 2,
+      "similarity": 1
+    },
+    {
+      "id": "747fcb0d190ff623f119a8f624f7dc31",
+      "x": 10,
+      "y": 3,
+      "similarity": 1
+    },
+    {
+      "id": "5ccd37ecc8b3be865b241f2cfd00304c",
+      "x": 4,
+      "y": 0,
+      "similarity": 1
+    },
+    {
+      "id": "a8448d351e3409d59308466ae3d86684",
+      "x": 6,
+      "y": 0,
+      "similarity": 1
+    },
+    {
+      "id": "d5bb05ab23657aa15789eef94c810136",
+      "x": 6,
+      "y": 3,
+      "similarity": 1
+    },
+    {
+      "id": "deac0af2cbe57fbe37fbae8a9390b205",
+      "x": 1,
+      "y": 4,
+      "similarity": 1
+    },
+    {
+      "id": "ae66afc5fe28f5292e4791be83b3e171",
+      "x": 4,
+      "y": 4,
+      "similarity": 1
+    },
+    {
+      "id": "b16917f20f6a72d23d13940b3e547ba0",
+      "x": 8,
+      "y": 4,
+      "similarity": 1
+    },
+    {
+      "id": "b4d8b11d88282487a5ad296290478377",
+      "x": 5,
+      "y": 0,
+      "similarity": 1
+    },
+    {
+      "id": "2c27250399b7e8148781333192477d1d",
+      "x": 6,
+      "y": 5,
+      "similarity": 1
+    },
+    {
+      "id": "6537206c4543faf83beae10de605574a",
+      "x": 7,
+      "y": 5,
+      "similarity": 1
+    },
+    {
+      "id": "2914665da5c1a0f768a2f8626bfc9283",
+      "x": 1,
+      "y": 6,
+      "similarity": 1
+    },
+    {
+      "id": "37aed2933c668201738933d310986403",
+      "x": 3,
+      "y": 6,
+      "similarity": 1
+    },
+    {
+      "id": "8b73201b8dde61044d3f853366a4c652",
+      "x": 5,
+      "y": 6,
+      "similarity": 1
+    },
+    {
+      "id": "0cb8500ddc370218ea8a93d4723cd97f",
+      "x": 1,
+      "y": 7,
+      "similarity": 1
+    },
+    {
+      "id": "7d4ca351fcfdb8c6c3d073a5130645e9",
+      "x": 4,
+      "y": 7,
+      "similarity": 1
+    },
+    {
+      "id": "71742c3d1746d93620f65ff7aaceaeb3",
+      "x": 6,
+      "y": 7,
+      "similarity": 1
+    },
+    {
+      "id": "0bf59383886d1c247ef326bd7a0b069e",
+      "x": 8,
+      "y": 7,
+      "similarity": 1
+    },
+    {
+      "id": "3ca896d4217525d72cf42eb69d3d94dc",
+      "x": 7,
+      "y": 8,
+      "similarity": 1
+    },
+    {
+      "id": "60d680aa4cf5eacab1f6b68083b32904",
+      "x": 3,
+      "y": 9,
+      "similarity": 1
+    },
+    {
+      "id": "e8825eaaa49b4ef8c4467be3ad75af39",
+      "x": 6,
+      "y": 9,
+      "similarity": 1
+    },
+    {
+      "id": "933fbeee5228ead25e6d337f0a746691",
+      "x": 4,
+      "y": 10,
+      "similarity": 1
+    },
+    {
+      "id": "48c5e29ea464e064bed377be928a4526",
+      "x": 2,
+      "y": 11,
+      "similarity": 1
+    },
+    {
+      "id": "f31d8eddac22384dfef287e0bceaeb0f",
+      "x": 6,
+      "y": 11,
+      "similarity": 1
+    },
+    {
+      "id": "72d38202396d5425fb310a01a8c787e4",
+      "x": 3,
+      "y": 12,
+      "similarity": 1
+    },
+    {
+      "id": "892bf8dc6e3f973d1270d7c4d3a46f3e",
+      "x": 5,
+      "y": 13,
+      "similarity": 1
+    },
+    {
+      "id": "b8539652924084bd30596bfe6c335121",
+      "x": 2,
+      "y": 13,
+      "similarity": 1
+    },
+    {
+      "id": "aedddfaf89caa4f0bcfe2c07d680a519",
+      "x": 4,
+      "y": 13,
+      "similarity": 1
+    },
+    {
+      "id": "1aa3591543bcd0b8797ff8f156674851",
+      "x": 4,
+      "y": 14,
+      "similarity": 1
+    },
+    {
+      "id": "958aa26c31782a1f2887ef1fbd64d11a",
+      "x": 6,
+      "y": 14,
+      "similarity": 1
+    },
+    {
+      "id": "3616eca4b35706a7885214d2569444f8",
+      "x": 2,
+      "y": 15,
+      "similarity": 1
+    },
+    {
+      "id": "abd85653e3de59ba78143e5c61918b8d",
+      "x": 7,
+      "y": 15,
+      "similarity": 1
+    },
+    {
+      "id": "9908181f3321eb94784d5ae0ae7e9ad2",
+      "x": 6,
+      "y": 16,
       "similarity": 1
     }
   ]

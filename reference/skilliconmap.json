@@ -501,5 +501,1216 @@
     "y": 4
    }
   }
+ },
+ "Imperial_Guard_Neo_Tidebreaker": {
+  "skills": {
+   "Basic Training": {
+    "source": "file:skillicon-sources/dfmax/p68_5a56514f35cf0270ae8d6c65f8fefd78.png",
+    "x": 1,
+    "y": 0
+   },
+   "Armor Mastery": {
+    "source": "file:skillicon-sources/dfmax/p68_892ef624d8bf3d7fc045f84825fd6104.png",
+    "x": 1,
+    "y": 1
+   },
+   "Quick Rebound": {
+    "source": "file:skillicon-sources/dfmax/p68_ce26c6b69d02a440a81b552bec94f03b.png",
+    "x": 2,
+    "y": 0
+   },
+   "Deck Breaker": {
+    "source": "file:skillicon-sources/dfmax/p68_717f1e2104fe4b796f800352fa143ecc.png",
+    "x": 2,
+    "y": 1
+   },
+   "Backstep": {
+    "source": "file:skillicon-sources/dfmax/p68_7822d6d52e10964a6755f142c666b494.png",
+    "x": 3,
+    "y": 0
+   },
+   "Wide Cleave": {
+    "source": "file:skillicon-sources/dfmax/p68_eb71e1d82d92c7e1d40500a0dcd77aa6.png",
+    "x": 4,
+    "y": 1
+   },
+   "Raise Uppercut": {
+    "source": "file:skillicon-sources/dfmax/p68_3c5604bdbb0240b8f130f59ab40509c3.png",
+    "x": 6,
+    "y": 1
+   },
+   "Point Thrust": {
+    "source": "file:skillicon-sources/dfmax/p68_9dda3f4a849dba1a288dd65e116860f2.png",
+    "x": 6,
+    "y": 2
+   },
+   "Cannon Kick": {
+    "source": "file:skillicon-sources/dfmax/p68_4655101518604f874721b3cc249aae10.png",
+    "x": 7,
+    "y": 2
+   },
+   "Backstep Upgrade": {
+    "source": "file:skillicon-sources/dfmax/p68_2b340542e776818b78f3212af184bd6b.png",
+    "x": 4,
+    "y": 0
+   },
+   "Leap": {
+    "source": "file:skillicon-sources/dfmax/p68_1fea5a626f15230237946a11a9d11582.png",
+    "x": 6,
+    "y": 0
+   },
+   "Quick Bisection": {
+    "source": "file:skillicon-sources/dfmax/p68_0969cd4054d93da07708108c0cc1c4b5.png",
+    "x": 6,
+    "y": 3
+   },
+   "Rough Boarding": {
+    "source": "file:skillicon-sources/dfmax/p68_c9664191611af31142e052dfaef84530.png",
+    "x": 7,
+    "y": 3
+   },
+   "No Quarter": {
+    "source": "file:skillicon-sources/dfmax/p68_f2fb27162beb0b87a7cb9af7900e95f2.png",
+    "x": 2,
+    "y": 4
+   },
+   "Hook Shot": {
+    "source": "file:skillicon-sources/dfmax/p68_2f5d03c7848effbc0a23f4df45d9ca46.png",
+    "x": 5,
+    "y": 4
+   },
+   "Anchor Kick": {
+    "source": "file:skillicon-sources/dfmax/p68_cfacda0647b9a0f595df2c2aad30c18d.png",
+    "x": 7,
+    "y": 4
+   },
+   "Avast": {
+    "source": "file:skillicon-sources/dfmax/p68_45442bbbe33540b4deeec29437dae70c.png",
+    "x": 3,
+    "y": 5
+   },
+   "Hull Break": {
+    "source": "file:skillicon-sources/dfmax/p68_01c3a2fb793d293a25ed8dc7a0d70c1a.png",
+    "x": 4,
+    "y": 5
+   },
+   "Focus: Critical": {
+    "source": "file:skillicon-sources/dfmax/p68_fc1262c19f3d0477ee8eda47b8db8696.png",
+    "x": 5,
+    "y": 0
+   },
+   "Sweeping Strike": {
+    "source": "file:skillicon-sources/dfmax/p68_8f73f243041c2d27739fe7696f02bf9b.png",
+    "x": 4,
+    "y": 6
+   },
+   "Melee Combat Expert": {
+    "source": "file:skillicon-sources/dfmax/p68_8c2379737c5acc935c1731f67f607655.png",
+    "x": 2,
+    "y": 7
+   },
+   "Deep Water Call": {
+    "source": "file:skillicon-sources/dfmax/p68_3829c15bf5f520c13998a3479ba0ce7b.png",
+    "x": 6,
+    "y": 7
+   },
+   "Tide Piercer": {
+    "source": "file:skillicon-sources/dfmax/p68_9cb6f9ed646fa87f9b7680a42ce83d1a.png",
+    "x": 7,
+    "y": 7
+   },
+   "Gale Slash": {
+    "source": "file:skillicon-sources/dfmax/p68_4224f9b0b8c7c903e9a1e0f9d9f6d04d.png",
+    "x": 4,
+    "y": 8
+   },
+   "Tide Bound": {
+    "source": "file:skillicon-sources/dfmax/p68_78bd107acd474518b606be1e4fd38239.png",
+    "x": 5,
+    "y": 8
+   },
+   "Riptide Combo": {
+    "source": "file:skillicon-sources/dfmax/p68_d085127b0edd719782bd618d5688f4a1.png",
+    "x": 4,
+    "y": 9
+   },
+   "Wave Breaker": {
+    "source": "file:skillicon-sources/dfmax/p68_42c82812f86ff6704ae9952a2e6093a4.png",
+    "x": 4,
+    "y": 10
+   },
+   "Pain in the Neck": {
+    "source": "file:skillicon-sources/dfmax/p68_3d8f3d438405d79f8d3ed68072674d1e.png",
+    "x": 2,
+    "y": 11
+   },
+   "Fanfare of War": {
+    "source": "file:skillicon-sources/dfmax/p68_ade01c1d6afc8a05055225045e89fe49.png",
+    "x": 6,
+    "y": 11
+   },
+   "Pierce Impact": {
+    "source": "file:skillicon-sources/dfmax/p68_ff171dc487807bb9aa28900ca9a46b41.png",
+    "x": 7,
+    "y": 12
+   },
+   "Maelstrom": {
+    "source": "file:skillicon-sources/dfmax/p68_547ab2b2bd860d3e37355a9cfbc1077c.png",
+    "x": 4,
+    "y": 13
+   },
+   "Song of Iron": {
+    "source": "file:skillicon-sources/dfmax/p68_506e7ed77d517419a6e1c437a2cedb17.png",
+    "x": 2,
+    "y": 13
+   },
+   "Dreadfall Barrage": {
+    "source": "file:skillicon-sources/dfmax/p68_a5fa08f5d509e6ff2ebc68856a470b5a.png",
+    "x": 7,
+    "y": 13
+   },
+   "Serpent Dragon Fang": {
+    "source": "file:skillicon-sources/dfmax/p68_5dc7008b12a459325b548b0715c6b73c.png",
+    "x": 4,
+    "y": 14
+   },
+   "Sea Bane": {
+    "source": "file:skillicon-sources/dfmax/p68_8ee0099656df08a0b39225f8a21d514b.png",
+    "x": 6,
+    "y": 14
+   },
+   "Riptide": {
+    "source": "file:skillicon-sources/dfmax/p68_9bff7f2559e003766fee2853dca00631.png",
+    "x": 2,
+    "y": 15
+   },
+   "Unbound Tempest": {
+    "source": "file:skillicon-sources/dfmax/p68_da6e37c1e3f0e8867f70007d89c239ff.png",
+    "x": 4,
+    "y": 15
+   },
+   "Sea God\u0027s Descent": {
+    "source": "file:skillicon-sources/dfmax/p68_a6c8f69107f8c4f5d1a0c7a57d000290.png",
+    "x": 6,
+    "y": 16
+   }
+  }
+ },
+ "Priest_F_Neo_Monk": {
+  "skills": {
+   "Basic Training": {
+    "source": "file:skillicon-sources/dfmax/p46_5a56514f35cf0270ae8d6c65f8fefd78.png",
+    "x": 1,
+    "y": 0
+   },
+   "Armor Mastery": {
+    "source": "file:skillicon-sources/dfmax/p46_892ef624d8bf3d7fc045f84825fd6104.png",
+    "x": 1,
+    "y": 1
+   },
+   "Quick Rebound": {
+    "source": "file:skillicon-sources/dfmax/p46_ce26c6b69d02a440a81b552bec94f03b.png",
+    "x": 2,
+    "y": 0
+   },
+   "Backstep": {
+    "source": "file:skillicon-sources/dfmax/p46_7822d6d52e10964a6755f142c666b494.png",
+    "x": 3,
+    "y": 0
+   },
+   "Uppercut": {
+    "source": "file:skillicon-sources/dfmax/p46_150aa05b9ee8b9c7c04a25f3e425900c.png",
+    "x": 5,
+    "y": 1
+   },
+   "Second Uppercut": {
+    "source": "file:skillicon-sources/dfmax/p46_a81e5b7defa1819263ed8e86f69fd06f.png",
+    "x": 5,
+    "y": 2
+   },
+   "One! Two!": {
+    "source": "file:skillicon-sources/dfmax/p46_030663e99462f628b4c9f813e1406c4e.png",
+    "x": 6,
+    "y": 1
+   },
+   "Weaving": {
+    "source": "file:skillicon-sources/dfmax/p46_89c505581267af77c6d58dc49b710550.png",
+    "x": 8,
+    "y": 1
+   },
+   "Healing Prayer": {
+    "source": "file:skillicon-sources/dfmax/p46_0969cd4054d93da07708108c0cc1c4b5.png",
+    "x": 10,
+    "y": 1
+   },
+   "Screw Straight": {
+    "source": "file:skillicon-sources/dfmax/p46_89a4529234904fcbb3abe289e281f2fd.png",
+    "x": 3,
+    "y": 2
+   },
+   "Cure": {
+    "source": "file:skillicon-sources/dfmax/p46_4655101518604f874721b3cc249aae10.png",
+    "x": 10,
+    "y": 3
+   },
+   "Backstep Upgrade": {
+    "source": "file:skillicon-sources/dfmax/p46_2b340542e776818b78f3212af184bd6b.png",
+    "x": 4,
+    "y": 0
+   },
+   "Leap": {
+    "source": "file:skillicon-sources/dfmax/p46_1fea5a626f15230237946a11a9d11582.png",
+    "x": 6,
+    "y": 0
+   },
+   "Grab Blow": {
+    "source": "file:skillicon-sources/dfmax/p46_515b442ffbf61a82371abb645c149a31.png",
+    "x": 6,
+    "y": 3
+   },
+   "Will of Fist": {
+    "source": "file:skillicon-sources/dfmax/p46_66a9967e677651d0def34c475795ccde.png",
+    "x": 1,
+    "y": 4
+   },
+   "Exquisite Combo": {
+    "source": "file:skillicon-sources/dfmax/p46_87a918bb22cfc959a16e0bf939bb6c24.png",
+    "x": 4,
+    "y": 4
+   },
+   "Ducking Step": {
+    "source": "file:skillicon-sources/dfmax/p46_aa51c4ddf1659092fa9ed612b9837061.png",
+    "x": 8,
+    "y": 4
+   },
+   "Focus: Critical": {
+    "source": "file:skillicon-sources/dfmax/p46_fc1262c19f3d0477ee8eda47b8db8696.png",
+    "x": 5,
+    "y": 0
+   },
+   "Body Blow": {
+    "source": "file:skillicon-sources/dfmax/p46_863295a0fc634cf5fcc01e82a735fd6b.png",
+    "x": 6,
+    "y": 5
+   },
+   "Side Knuckle": {
+    "source": "file:skillicon-sources/dfmax/p46_3153ca0e6752a6283412c59c5ec8e002.png",
+    "x": 7,
+    "y": 5
+   },
+   "Tension": {
+    "source": "file:skillicon-sources/dfmax/p46_b69d38bcddd41b3566c6d5cf78d060bb.png",
+    "x": 1,
+    "y": 6
+   },
+   "Fake Twist": {
+    "source": "file:skillicon-sources/dfmax/p46_7f9ffcd296361f1367b8b74e773d5e99.png",
+    "x": 3,
+    "y": 6
+   },
+   "Divine Crush": {
+    "source": "file:skillicon-sources/dfmax/p46_ca2536eb56df0e812c88c59cabd38be0.png",
+    "x": 5,
+    "y": 6
+   },
+   "Divine Fist Training": {
+    "source": "file:skillicon-sources/dfmax/p46_02ac8e048f7bbcfa616e74ac68988872.png",
+    "x": 1,
+    "y": 7
+   },
+   "Mass Pistol": {
+    "source": "file:skillicon-sources/dfmax/p46_481348575c1e141925c836b59c5db3ca.png",
+    "x": 4,
+    "y": 7
+   },
+   "Blow Shot": {
+    "source": "file:skillicon-sources/dfmax/p46_5f4c55fe2ebdf0623bd76d4fda872ddc.png",
+    "x": 6,
+    "y": 7
+   },
+   "Mind-Body Unity": {
+    "source": "file:skillicon-sources/dfmax/p46_c1dd8b776fb1dd24c6373c678ef1dd2e.png",
+    "x": 8,
+    "y": 7
+   },
+   "Hurricane \u0027n\u0027 Roll": {
+    "source": "file:skillicon-sources/dfmax/p46_95b58ec89893dd9e50da1281ebe57175.png",
+    "x": 7,
+    "y": 8
+   },
+   "Hollow Back": {
+    "source": "file:skillicon-sources/dfmax/p46_573723c8c0614f5b1218ca9ff992115b.png",
+    "x": 3,
+    "y": 9
+   },
+   "Heavenly Combo": {
+    "source": "file:skillicon-sources/dfmax/p46_ebff277c02cc8b54c32635cd0d25f6f3.png",
+    "x": 6,
+    "y": 9
+   },
+   "Gigantic Cannon": {
+    "source": "file:skillicon-sources/dfmax/p46_b860cbf5979b4bcc6beea725636b915e.png",
+    "x": 4,
+    "y": 10
+   },
+   "Hidden Instinct": {
+    "source": "file:skillicon-sources/dfmax/p46_37cf7b7a269058dc02bef5b5bc9de282.png",
+    "x": 2,
+    "y": 11
+   },
+   "Imperium Rage": {
+    "source": "file:skillicon-sources/dfmax/p46_97972dba4694d6c0fcd2f7e8efb3a499.png",
+    "x": 6,
+    "y": 11
+   },
+   "Storm Fist": {
+    "source": "file:skillicon-sources/dfmax/p46_595908ad107ed3f495329770e9bb9ea5.png",
+    "x": 3,
+    "y": 12
+   },
+   "Violent Crush": {
+    "source": "file:skillicon-sources/dfmax/p46_c381973d97e2e906ea53ba2add33d49c.png",
+    "x": 5,
+    "y": 13
+   },
+   "Incomplete Combustion": {
+    "source": "file:skillicon-sources/dfmax/p46_4e9e8942841b9767f683fb23c1ef1435.png",
+    "x": 2,
+    "y": 13
+   },
+   "Brutal Combo": {
+    "source": "file:skillicon-sources/dfmax/p46_ef896bbdc68660c22b6e60502044d690.png",
+    "x": 4,
+    "y": 13
+   },
+   "Fatal Impact": {
+    "source": "file:skillicon-sources/dfmax/p46_5cf8bfba8b456626deac8bee6f49195f.png",
+    "x": 4,
+    "y": 14
+   },
+   "Ardere Vehemens": {
+    "source": "file:skillicon-sources/dfmax/p46_e9a1a1cce5aeaac5414a98a625e7285c.png",
+    "x": 6,
+    "y": 14
+   },
+   "My Way": {
+    "source": "file:skillicon-sources/dfmax/p46_3b712691fcaaaa80438e5e31b6451884.png",
+    "x": 2,
+    "y": 15
+   },
+   "Accel Drive": {
+    "source": "file:skillicon-sources/dfmax/p46_f8226512ea3dbcb1fe1374baa0c6bbee.png",
+    "x": 7,
+    "y": 15
+   },
+   "Pugnus Voluntatis": {
+    "source": "file:skillicon-sources/dfmax/p46_96c8ddd388e1b08e7fc98c5041382e26.png",
+    "x": 6,
+    "y": 16
+   }
+  }
+ },
+ "Agent_Neo_Hitman": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Backstep Upgrade": {
+    "source": "file:skillicon-sources/dfmax/p59_2b340542e776818b78f3212af184bd6b.png",
+    "x": 4,
+    "y": 0
+   }
+  }
+ },
+ "Agent_Neo_Secret_Agent": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Agent_Neo_Specialist": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Backstep Upgrade": {
+    "source": "file:skillicon-sources/dfmax/p62_2b340542e776818b78f3212af184bd6b.png",
+    "x": 4,
+    "y": 0
+   }
+  }
+ },
+ "Agent_Neo_Troubleshooter": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Archer_Neo_Chimera": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Archer_Neo_Hunter": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Don\u0027t Lose Him, Falke!": {
+    "source": "file:skillicon-sources/dfmax/p65_fc458e449ee00b01dbf88d09aae65462.png",
+    "x": 3,
+    "y": 11
+   }
+  }
+ },
+ "Archer_Neo_Muse": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Archer_Neo_Traveler": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Archer_Neo_Vigilante": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Demonic_Lancer_Neo_Dragoon": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Demonic_Lancer_Neo_Impaler": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Darkness over the Abyss": {
+    "source": "file:skillicon-sources/dfmax/p58_d429147c372b549c3dadcabcba50787f.png",
+    "x": 4,
+    "y": 13
+   }
+  }
+ },
+ "Demonic_Lancer_Neo_Skirmisher": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Demonic_Lancer_Neo_Vanguard": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Fighter_F_Neo_Brawler": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Compact Explosive Poison": {
+    "source": "file:skillicon-sources/dfmax/p16_0113c8b1306ca76d208f83f2d093dd62.png",
+    "x": 6,
+    "y": 14
+   }
+  }
+ },
+ "Fighter_F_Neo_Grappler": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Fighter_F_Neo_Nen_Master": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Fighter_F_Neo_Striker": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Muscle Shift": {
+    "x": 4,
+    "y": 7
+   }
+  }
+ },
+ "Fighter_M_Neo_Brawler": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Fighter_M_Neo_Grappler": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Who\u0027s the Strongest?": {
+    "source": "file:skillicon-sources/dfmax/p13_734356e3ab223ae24904d8ce7fa6de17.png",
+    "x": 6,
+    "y": 13
+   }
+  }
+ },
+ "Fighter_M_Neo_Nen_Master": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Fighter_M_Neo_Striker": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Fatal Aim": {
+    "x": 6,
+    "y": 7
+   },
+   "Muscle Shift": {
+    "x": 5,
+    "y": 7
+   }
+  }
+ },
+ "Gunner_F_Neo_Launcher": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "FM-92 mk2 Lancer SW": {
+    "x": 7,
+    "y": 14
+   }
+  }
+ },
+ "Gunner_F_Neo_Mechanic": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Hold \u0026 Go": {
+    "source": "file:skillicon-sources/dfmax/p25_03bd172c9c50cfdcf9d7e83a3ef82842.png",
+    "x": 4,
+    "y": 7
+   }
+  }
+ },
+ "Gunner_F_Neo_Paramedic": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "apius::assault_suit () const;": {
+    "x": 2,
+    "y": 1
+   },
+   "apius::synchronize () const;": {
+    "x": 1,
+    "y": 4
+   },
+   "apius::battlefield_info ();": {
+    "x": 3,
+    "y": 4
+   },
+   "apius::response_system ();": {
+    "x": 4,
+    "y": 11
+   },
+   "apius::limit_release ();": {
+    "x": 4,
+    "y": 13
+   },
+   "apius::hard_coding ();": {
+    "x": 4,
+    "y": 15
+   },
+   "apius::assault_suit (advanced) const;": {
+    "x": 2,
+    "y": 15
+   }
+  }
+ },
+ "Gunner_F_Neo_Ranger": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Multi Headshot": {
+    "x": 5,
+    "y": 9
+   }
+  }
+ },
+ "Gunner_F_Neo_Spitfire": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Gunner_M_Neo_Blitz": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Gunner_M_Neo_Launcher": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Gunner_M_Neo_Mechanic": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Hold \u0026 Go": {
+    "source": "file:skillicon-sources/dfmax/p20_1c1a9606eb702ebe5a7bb4397f3aeae0.png",
+    "x": 8,
+    "y": 7
+   },
+   "Ex-S Viper Zero": {
+    "source": "file:skillicon-sources/dfmax/p20_e0a072e8cef2d77893aad5f68aeed56a.png",
+    "x": 9,
+    "y": 13
+   }
+  }
+ },
+ "Gunner_M_Neo_Ranger": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Revolver Upgrade": {
+    "source": "file:skillicon-sources/dfmax/p18_d085127b0edd719782bd618d5688f4a1.png",
+    "x": 2,
+    "y": 4
+   },
+   "Death by Revolver": {
+    "source": "file:skillicon-sources/dfmax/p18_bc11d28c04e01923a093d65752c55516.png",
+    "x": 7,
+    "y": 7
+   }
+  }
+ },
+ "Gunner_M_Neo_Spitfire": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Dual Flicker": {
+    "x": 5,
+    "y": 11
+   }
+  }
+ },
+ "Knight_Neo_Chaos": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Knight_Neo_Dragon_Knight": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Knight_Neo_Elven_Knight": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Knight_Neo_Lightbringer": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Mage_F_Neo_Battle_Mage": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Practical Phase Shift": {
+    "x": 9,
+    "y": 4
+   },
+   "Battle Mage\u0027s Weapon Mastery": {
+    "x": 2,
+    "y": 5
+   }
+  }
+ },
+ "Mage_F_Neo_Elementalist": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Mage_F_Neo_Enchantress": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Hot Affection": {
+    "x": 2,
+    "y": 6
+   },
+   "Harvest": {
+    "x": 9,
+    "y": 6
+   },
+   "Eternal Possession": {
+    "x": 2,
+    "y": 13
+   },
+   "Garden of Pain": {
+    "x": 9,
+    "y": 13
+   }
+  }
+ },
+ "Mage_F_Neo_Summoner": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Eclipse\u0027s Hive": {
+    "x": 2,
+    "y": 13
+   }
+  }
+ },
+ "Mage_F_Neo_Witch": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Lollipop": {
+    "x": 1,
+    "y": 6
+   },
+   "Low-temperature Pasteurization": {
+    "source": "file:skillicon-sources/dfmax/p36_b42cab9c815150aee1ef44daec1fe4c5.png",
+    "x": 2,
+    "y": 7
+   },
+   "Self-destruction": {
+    "source": "file:skillicon-sources/dfmax/p36_ce572b597666f4472b1577a02fd5e1c3.png",
+    "x": 1,
+    "y": 9
+   },
+   "Lapis Philosophorum": {
+    "x": 2,
+    "y": 13
+   },
+   "Lollipop Crush": {
+    "x": 3,
+    "y": 14
+   },
+   "Uroboros": {
+    "x": 5,
+    "y": 14
+   }
+  }
+ },
+ "Mage_M_Neo_Dimension_Walker": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Mage_M_Neo_Elemental_Bomber": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 4,
+    "y": 1
+   }
+  }
+ },
+ "Mage_M_Neo_Glacial_Master": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 4,
+    "y": 1
+   }
+  }
+ },
+ "Mage_M_Neo_Swift_Master": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Priest_F_Neo_Crusader": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Priest_F_Neo_Inquisitor": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Death by Burning": {
+    "source": "file:skillicon-sources/dfmax/p43_1fadde0eece18649caddbca7bd58cc2f.png",
+    "x": 6,
+    "y": 11
+   }
+  }
+ },
+ "Priest_F_Neo_Mistress": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Priest_F_Neo_Shaman": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Priest_M_Neo_Avenger": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Priest_M_Neo_Crusader": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Priest_M_Neo_Exorcist": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Zen": {
+    "x": 2,
+    "y": 1
+   },
+   "Shikigami of Spirit - Golden Dragon": {
+    "x": 4,
+    "y": 13
+   }
+  }
+ },
+ "Priest_M_Neo_Monk": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Slayer_F_Neo_Dark_Templar": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Shadow Snake Attack": {
+    "source": "file:skillicon-sources/dfmax/p6_a6c8f69107f8c4f5d1a0c7a57d000290.png",
+    "x": 1,
+    "y": 3
+   },
+   "Guidance": {
+    "x": 3,
+    "y": 6
+   }
+  }
+ },
+ "Slayer_F_Neo_Demon_Slayer": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Slayer_F_Neo_Spectre": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Muddle": {
+    "x": 8,
+    "y": 1
+   }
+  }
+ },
+ "Slayer_F_Neo_Sword_Master": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Weapon Training": {
+    "source": "file:skillicon-sources/dfmax/p5_4224f9b0b8c7c903e9a1e0f9d9f6d04d.png",
+    "x": 1,
+    "y": 4
+   }
+  }
+ },
+ "Slayer_F_Neo_Vagabond": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Qigong - Yang": {
+    "x": 1,
+    "y": 4
+   }
+  }
+ },
+ "Slayer_M_Neo_Asura": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Thunder God": {
+    "x": 5,
+    "y": 14
+   }
+  }
+ },
+ "Slayer_M_Neo_Berserker": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Slayer_M_Neo_Blade_Master": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Slayer_M_Neo_Ghostblade": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Slayer_M_Neo_Soul_Bender": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Thief_Neo_Kunoichi": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Thief_Neo_Necromancer": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
+ },
+ "Thief_Neo_Rogue": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   },
+   "Shining Spark": {
+    "x": 5,
+    "y": 6
+   },
+   "Rogue\u0027s Weapon Mastery": {
+    "source": "file:skillicon-sources/dfmax/p47_da6e37c1e3f0e8867f70007d89c239ff.png",
+    "x": 1,
+    "y": 5
+   }
+  }
+ },
+ "Thief_Neo_Shadow_Dancer": {
+  "merge": true,
+  "skills": {
+   "Armor Mastery": {
+    "x": 1,
+    "y": 1
+   }
+  }
  }
 }

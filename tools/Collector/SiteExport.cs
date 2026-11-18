@@ -40,7 +40,7 @@ static class SiteExport
     };
 
     // reuseIcons skips the slow rescan for item icons.
-    public static async Task ExportAsync(CommandContext ctx, int cutoffFame, bool reuseIcons = false)
+    public static async Task ExportAsync(CommandContext ctx, int cutoffFame, TimeSpan iconBudget, bool reuseIcons = false)
     {
         var siteDir = Path.Combine(RepoRoot.Find(), "stats");
         var portraitDir = Path.Combine(siteDir, "img", "classes");
@@ -120,7 +120,7 @@ static class SiteExport
         SetEmblems.Apply(icons, names, Path.Combine(siteDir, "img", "items"), SetEmblems.ReadFamilies(Path.Combine(ctx.ReferenceDir, "setfamilies.json")));
 
         // Leaderboards and character pages: the top characters of each class.
-        await CharacterCards.ExportAsync(ctx, siteDir, classes.ToDictionary(c => c.Key, c => c.Role), icons);
+        await CharacterCards.ExportAsync(ctx, siteDir, classes.ToDictionary(c => c.Key, c => c.Role), icons, iconBudget);
 
         // Skill trees from the committed skill lists (reference/).
         var skillTree = new Dictionary<string, List<SiteSkill>>();

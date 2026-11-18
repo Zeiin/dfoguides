@@ -70,7 +70,8 @@ static class SiteIcons
     const string CardUnavailableFile = "cards-unavailable.txt";
 
     // Downloads the icon of every item id that has none yet and returns the ids that have a file. Ids the server lacks are remembered.
-    public static async Task<HashSet<string>> EnsureItemIconsAsync(string iconDir, IEnumerable<string> ids)
+    // Stops starting new downloads at the deadline; the ids it did not reach are tried again next run.
+    public static async Task<HashSet<string>> EnsureItemIconsAsync(string iconDir, IEnumerable<string> ids, DateTime deadline)
     {
         Directory.CreateDirectory(iconDir);
         using var http = new HttpClient();
@@ -80,17 +81,43 @@ static class SiteIcons
         var failed = File.Exists(failedPath) ? File.ReadAllLines(failedPath).ToHashSet() : new HashSet<string>();
         var have = new HashSet<string>();
         var downloaded = 0;
+        var skipped = 0;
+        var inARow = 0;
         foreach (var id in ids)
         {
             if (File.Exists(Path.Combine(iconDir, $"{id}.png"))) { have.Add(id); continue; }
             if (failed.Contains(id)) continue;
-            if (await TryDownloadAsync(http, $"https://img-api.dfoneople.com/df/items/{id}", Path.Combine(iconDir, $"{id}.png"), PauseMs)) { have.Add(id); downloaded++; }
-            else failed.Add(id);
-            if (downloaded > 0 && downloaded % 500 == 0) Console.WriteLine($"  {downloaded} character icons downloaded");
+            if (DateTime.UtcNow >= deadline || inARow >= MaxFailuresInARow) { skipped++; continue; }
+
+            // Only a 404 means the server has no icon; any other answer (429, 5xx, a dropped connection) is tried again next run.
+            var status = await DownloadStatusAsync(http, $"https://img-api.dfoneople.com/df/items/{id}", Path.Combine(iconDir, $"{id}.png"));
+            if (status == System.Net.HttpStatusCode.OK) { have.Add(id); downloaded++; inARow = 0; }
+            else if (status == System.Net.HttpStatusCode.NotFound) { failed.Add(id); inARow = 0; }
+            else { inARow++; await Task.Delay(2000); }
+            if (downloaded > 0 && downloaded % 500 == 0 && status == System.Net.HttpStatusCode.OK) Console.WriteLine($"  {downloaded} character icons downloaded");
+            await Task.Delay(PauseMs);
         }
+        if (inARow >= MaxFailuresInARow) Console.WriteLine($"  the image server kept failing; stopped after {MaxFailuresInARow} failures in a row");
         await File.WriteAllLinesAsync(failedPath, failed.Order());
-        Console.WriteLine($"Character icons: {downloaded} downloaded, {have.Count} of the needed ids have one.");
+        Console.WriteLine($"Character icons: {downloaded} downloaded, {have.Count} of the needed ids have one{(skipped > 0 ? $", {skipped} left for the next run (time limit)" : "")}.");
         return have;
+    }
+
+    const int MaxFailuresInARow = 25;
+
+    // Saves the file on 200; returns the status, or 0 when the request itself failed (timeout, dropped connection).
+    static async Task<System.Net.HttpStatusCode> DownloadStatusAsync(HttpClient http, string url, string path)
+    {
+        try
+        {
+            using var response = await http.GetAsync(url);
+            if (response.IsSuccessStatusCode) await File.WriteAllBytesAsync(path, await response.Content.ReadAsByteArrayAsync());
+            return response.StatusCode;
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            return 0;
+        }
     }
 
     static async Task<bool> TryDownloadAsync(HttpClient http, string url, string path, int pauseMs)

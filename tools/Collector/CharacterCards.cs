@@ -1,4 +1,6 @@
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Collector.Commands;
 
@@ -17,6 +19,10 @@ record CardCreature(CardItem Item, CardItem? Twin, CardItem[] Artifacts);   // T
 record CardSkills(Dictionary<string, int> Levels, Dictionary<string, int> Vp, Dictionary<string, int> Enhancement);
 record CharacterCard(string Id, string Class, string Name, string Server, int Fame, int? Level, CardItem[] Gear, CardOath? Oath,
     CardCreature? Creature, CardAvatar[] Avatar, CardSkills Skills);
+
+// One leaderboard row: the character's identity plus the icons the row draws. Cells are positional (see CharacterCards.Cells);
+// a cell is [name, icon, rarity, reinforce, amp, tune, level] with trailing nulls cut off, or null for an empty slot.
+record CardRow(string Id, string Class, string Name, string Server, int? Level, int Fame, object?[]?[] Cells);
 
 // A character as read from the saved raw files, before the icons are known.
 sealed record LoadedCharacter(RosterEntry Entry, string Class, EquipmentResponse Equipment, OathResponse? Oath, AvatarResponse? Avatar, CreatureResponse? Creature, SkillResponse Skills);
@@ -51,10 +57,42 @@ static class OathIcons
     }
 }
 
-// The top characters by fame of each class (and of all classes): the data behind the leaderboard and character pages.
+// Makes a JSON tree smaller: every string is stored once in a table and replaced by -(index + 1). The data holds no negative numbers, so the
+// page (unpack in characters.js) can tell a reference from a value by its sign.
+static class JsonPack
+{
+    public static (JsonNode? Tree, List<string> Table) Pack(JsonNode? tree)
+    {
+        var table = new List<string>();
+        var index = new Dictionary<string, int>();
+        int Id(string text)
+        {
+            if (!index.TryGetValue(text, out var id)) { index[text] = id = table.Count; table.Add(text); }
+            return -(id + 1);
+        }
+
+        JsonNode? Walk(JsonNode? node) => node switch
+        {
+            null => null,
+            JsonValue v when v.TryGetValue<string>(out var s) => JsonValue.Create(Id(s)),
+            JsonObject o => new JsonObject(o.Select(kv => KeyValuePair.Create(kv.Key, Walk(kv.Value)))),
+            JsonArray a => new JsonArray(a.Select(Walk).ToArray()),
+            _ => node.DeepClone(),
+        };
+        return (Walk(tree), table);
+    }
+}
+
+// Every character above the fame floor, as leaderboard pages (light rows) and character pages (full cards in chunks).
+// Files under stats/data/characters/:
+//   <list>/<n>.js     rows of page n (0-based) of a list: all, dps, support or a class key
+//   <class>/d<n>.js   full cards of the class's characters n*PageSize ... (same ranking as the class list)
+//   <class>/ids.js    the class's character ids in rank order (finds a character's chunk)
 static class CharacterCards
 {
-    internal const int Size = 20;
+    internal const int PageSize = 20;
+    const int GearCells = 12;      // Weapon and the 11 other gear slots; the oath item and its 11 crystals use the same 12 columns
+    const int CellCount = 28;
 
     static readonly JsonSerializerOptions WebJson = new()
     {
@@ -62,18 +100,19 @@ static class CharacterCards
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     };
 
+    static readonly JsonSerializerOptions TextJson = new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+
     // Highest fame first; the id breaks ties so the same data always gives the same order.
     internal static List<RosterEntry> Ranked(IEnumerable<RosterEntry> roster) =>
         roster.OrderByDescending(e => e.Fame).ThenBy(e => e.CharacterId, StringComparer.Ordinal).ToList();
 
-    // The Size highest-fame characters that still belong to the class and have gear and skills on disk.
-    static async Task<List<LoadedCharacter>> LoadTopAsync(CommandContext ctx, string classKey)
+    // Every character of the class that has gear and skills on disk and still belongs to it, highest fame first.
+    static async Task<List<LoadedCharacter>> LoadAllAsync(CommandContext ctx, string classKey)
     {
         var dir = ctx.CharsDir(classKey);
-        var top = new List<LoadedCharacter>();
+        var all = new List<LoadedCharacter>();
         foreach (var entry in Ranked(await ctx.LoadRosterAsync(classKey)))
         {
-            if (top.Count >= Size) break;
             async Task<T?> Load<T>(string suffix)
             {
                 var path = Path.Combine(dir, $"{entry.CharacterId}_{suffix}.json");
@@ -83,18 +122,27 @@ static class CharacterCards
             var equipment = await Load<EquipmentResponse>("equipment");
             var skills = await Load<SkillResponse>("skill_style");
             if (equipment?.Equipment == null || skills?.Skill?.Style == null || !CharacterReader.BelongsTo(equipment, classKey)) continue;
-            top.Add(new LoadedCharacter(entry, classKey, equipment, await Load<OathResponse>("oath"), await Load<AvatarResponse>("avatar"), await Load<CreatureResponse>("creature"), skills));
+            all.Add(new LoadedCharacter(entry, classKey, equipment, await Load<OathResponse>("oath"), await Load<AvatarResponse>("avatar"), await Load<CreatureResponse>("creature"), skills));
         }
-        return top;
+        return all;
+    }
+
+    // The item ids the leaderboard row draws an icon for.
+    internal static IEnumerable<string> RowIconIds(LoadedCharacter c)
+    {
+        var ids = c.Equipment.Equipment!.Select(i => i.ItemId)
+            .Concat([c.Oath?.Oath?.Info?.ItemId])
+            .Concat((c.Oath?.Oath?.Crystal ?? []).Select(x => x.ItemId))
+            .Concat([c.Creature?.Creature?.ItemId])
+            .Concat((c.Avatar?.Avatar ?? []).Where(s => s.SlotId is "WEAPON" or "AURORA").Select(s => s.ItemId));
+        return ids.Where(id => !string.IsNullOrEmpty(id))!;
     }
 
     // Every item id a character page draws an icon for.
     internal static IEnumerable<string> IconIds(LoadedCharacter c)
     {
-        var ids = c.Equipment.Equipment!.Select(i => i.ItemId)
-            .Concat([c.Oath?.Oath?.Info?.ItemId])
-            .Concat((c.Oath?.Oath?.Crystal ?? []).Select(x => x.ItemId))
-            .Concat([c.Creature?.Creature?.ItemId, c.Creature?.Creature?.CloneInfo?.ItemId])
+        var ids = RowIconIds(c)
+            .Concat([c.Creature?.Creature?.CloneInfo?.ItemId])
             .Concat((c.Creature?.Creature?.Artifact ?? []).Select(a => a.ItemId))
             .Concat((c.Avatar?.Avatar ?? []).SelectMany(s => (s.Emblems ?? []).Select(e => e.ItemId).Prepend(s.ItemId)));
         return ids.Where(id => !string.IsNullOrEmpty(id))!;
@@ -107,10 +155,20 @@ static class CharacterCards
         string? Icon(string? id) => id != null && have.Contains(id) ? $"{id}.png" : null;
         string? Named(string category, string name) => icons.GetValueOrDefault(category)?.GetValueOrDefault(name);
 
+        // A Platinum level the statistics never listed ("Phantom City Platinum [45]") borrows the icon of another level of the same title or creature.
+        string? NamedLevel(string category, string name)
+        {
+            if (Named(category, name) is { } exact) return exact;
+            var cut = name.LastIndexOf(" [", StringComparison.Ordinal);
+            if (cut < 0) return null;
+            var family = name[..(cut + 2)];
+            return icons.GetValueOrDefault(category)?.FirstOrDefault(kv => kv.Key.StartsWith(family, StringComparison.Ordinal)).Value;
+        }
+
         CardItem Gear(EquippedItem i)
         {
             var icon = Icon(i.ItemId);
-            if (icon == null && i.SlotId == "TITLE") icon = Named("titles", CharacterReader.ShownName(i.ItemName));
+            if (icon == null && i.SlotId == "TITLE") icon = NamedLevel("titles", CharacterReader.ShownName(i.ItemName));
             return new CardItem(i.ItemName, icon, i.ItemRarity, i.SlotId,
                 i.Reinforce > 0 ? i.Reinforce : null, i.AmplificationName, i.Refine > 0 ? i.Refine : null, i.SetItemName,
                 i.Enchant?.Status?.Select(s => $"{s.Name} +{s.Value}").ToArray(),
@@ -135,7 +193,7 @@ static class CharacterCards
                     Icon(oath.Info.ItemId) ?? OathIcons.Lookup(oathIcons, oathName, oath.Info.ItemRarity) ?? Named("oath", oath.SetInfo?.SetName ?? ""), oath.Info.ItemRarity) : null,
                 (oath.Crystal ?? []).Where(x => x.ItemName != null).Select(x => new CardItem(x.ItemName!, Icon(x.ItemId), x.ItemRarity, Tune: x.Tune?.Level)).ToArray()),
             creature?.ItemName == null ? null : new CardCreature(
-                new CardItem(creature.ItemName, Icon(creature.ItemId) ?? Named("creatures", CharacterReader.ShownName(creature.ItemName)), creature.ItemRarity,
+                new CardItem(creature.ItemName, Icon(creature.ItemId) ?? NamedLevel("creatures", CharacterReader.ShownName(creature.ItemName)), creature.ItemRarity,
                     Level: CharacterReader.ParseTitle(creature.ItemName).Level),
                 creature.CloneInfo?.ItemName is { } cloneName ? new CardItem(cloneName, Icon(creature.CloneInfo.ItemId)) : null,
                 (creature.Artifact ?? []).Where(a => a.ItemName != null).Select(a => new CardItem(a.ItemName!, Icon(a.ItemId), a.ItemRarity)).ToArray()),
@@ -149,39 +207,107 @@ static class CharacterCards
                 (style.Enhancement ?? []).ToDictionary(e => e.SkillId, e => e.Type)));
     }
 
-    // The highest-fame characters across the given lists (for the all-classes leaderboard).
-    internal static List<CharacterCard> TopOverall(IEnumerable<CharacterCard> cards) =>
-        cards.OrderByDescending(c => c.Fame).ThenBy(c => c.Id, StringComparer.Ordinal).Take(Size).ToList();
+    static readonly string[] GridGear = ["WEAPON", "JACKET", "SHOULDER", "PANTS", "SHOES", "WAIST", "AMULET", "WRIST", "RING", "SUPPORT", "MAGIC_STON", "EARRING"];
 
-    // Writes stats/data/characters/<key>.js for every class, and all.js, dps.js and support.js for the overall tops.
-    // roleByClass: class key -> "DPS" or "Support".
-    public static async Task ExportAsync(CommandContext ctx, string siteDir, IReadOnlyDictionary<string, string> roleByClass, IReadOnlyDictionary<string, Dictionary<string, string>> icons)
+    // The leaderboard grid, top row first: 0-11 Weapon and the other gear slots, 12 Title, 13 Pet;
+    // 14 oath item, 15-25 its crystals, 26 weapon avatar, 27 Aura. The page lays them out in 14 columns (characters.js, itemGrid).
+    internal static object?[]?[] Cells(CharacterCard c)
     {
-        var loaded = new Dictionary<string, List<LoadedCharacter>>();
-        foreach (var key in roleByClass.Keys)
-            if (File.Exists(ctx.RosterPath(key)) && Directory.Exists(ctx.CharsDir(key))) loaded[key] = await LoadTopAsync(ctx, key);
-
-        var ids = loaded.Values.SelectMany(l => l).SelectMany(IconIds).ToHashSet();
-        var have = await SiteIcons.EnsureItemIconsAsync(Path.Combine(siteDir, "img", "items"), ids);
-
-        var oathIcons = OathIcons.Install(ctx.ReferenceDir, Path.Combine(siteDir, "img", "items"));
-
-        var dir = Path.Combine(siteDir, "data", "characters");
-        Directory.CreateDirectory(dir);
-        var all = new List<CharacterCard>();
-        foreach (var (key, list) in loaded)
-        {
-            var cards = list.Select(c => Build(c, have, icons, oathIcons)).ToList();
-            all.AddRange(cards);
-            await WriteAsync(dir, key, cards);
-        }
-        await WriteAsync(dir, "all", TopOverall(all));
-        await WriteAsync(dir, "dps", TopOverall(all.Where(c => roleByClass[c.Class] == "DPS")));
-        await WriteAsync(dir, "support", TopOverall(all.Where(c => roleByClass[c.Class] == "Support")));
-        Console.WriteLine($"Character pages: top {Size} of {loaded.Count} classes written to {dir}");
+        var cells = new object?[]?[CellCount];
+        var gear = new Dictionary<string, CardItem>();
+        foreach (var item in c.Gear) gear.TryAdd(item.Slot ?? "", item);
+        for (var i = 0; i < GearCells; i++) cells[i] = Cell(gear.GetValueOrDefault(GridGear[i]));
+        cells[12] = Cell(gear.GetValueOrDefault("TITLE"));
+        cells[13] = Cell(c.Creature?.Item);
+        cells[14] = Cell(c.Oath?.Item);
+        var crystals = c.Oath?.Crystals ?? [];
+        for (var i = 0; i < Math.Min(crystals.Length, GearCells - 1); i++) cells[15 + i] = Cell(crystals[i]);
+        var avatar = new Dictionary<string, CardItem>();
+        foreach (var a in c.Avatar) avatar.TryAdd(a.Slot, a.Item);
+        cells[26] = Cell(avatar.GetValueOrDefault("WEAPON"));
+        cells[27] = Cell(avatar.GetValueOrDefault("AURORA"));
+        return cells;
     }
 
-    static Task WriteAsync(string dir, string key, IReadOnlyList<CharacterCard> cards) =>
-        File.WriteAllTextAsync(Path.Combine(dir, $"{key}.js"),
-            $"window.DFO_CHARS=window.DFO_CHARS||{{}};window.DFO_CHARS[{JsonSerializer.Serialize(key)}]={JsonSerializer.Serialize(cards, WebJson)};");
+    static object?[]? Cell(CardItem? item)
+    {
+        if (item == null) return null;
+        object?[] cell = [item.Name, item.Icon, item.Rarity, item.Reinforce, item.Amp, item.Tune, item.Level];
+        var length = cell.Length;
+        while (length > 1 && cell[length - 1] == null) length--;
+        return cell[..length];
+    }
+
+    internal static CardRow Row(CharacterCard c) => new(c.Id, c.Class, c.Name, c.Server, c.Level, c.Fame, Cells(c));
+
+    // Writes <fileKey>.js: window.DFO_CHARS[fileKey] = { size, total?, s: strings, d: packed tree }.
+    static async Task WriteFileAsync(string dir, string fileKey, object tree, int? total = null)
+    {
+        var (packed, table) = JsonPack.Pack(JsonSerializer.SerializeToNode(tree, WebJson));
+        var file = new JsonObject { ["size"] = PageSize, ["s"] = new JsonArray(table.Select(t => (JsonNode?)JsonValue.Create(t)).ToArray()), ["d"] = packed };
+        if (total != null) file["total"] = total;
+        await WriteScriptAsync(dir, fileKey, file.ToJsonString(TextJson));
+    }
+
+    static async Task WriteScriptAsync(string dir, string fileKey, string json)
+    {
+        var path = Path.Combine(dir, fileKey + ".js");
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        await File.WriteAllTextAsync(path, $"window.DFO_CHARS=window.DFO_CHARS||{{}};window.DFO_CHARS[{JsonSerializer.Serialize(fileKey)}]={json};");
+    }
+
+    static async Task WritePagesAsync(string dir, string list, IReadOnlyList<CardRow> rows)
+    {
+        for (var page = 0; page * PageSize < rows.Count; page++)
+            await WriteFileAsync(dir, $"{list}/{page}", rows.Skip(page * PageSize).Take(PageSize).ToList(), rows.Count);
+    }
+
+    // roleByClass: class key -> "DPS" or "Support". iconBudget limits the icon downloading of one run; icons not reached show as blank
+    // tiles until a later run (the icon folder is kept between runs).
+    public static async Task ExportAsync(CommandContext ctx, string siteDir, IReadOnlyDictionary<string, string> roleByClass, IReadOnlyDictionary<string, Dictionary<string, string>> icons, TimeSpan iconBudget)
+    {
+        var dir = Path.Combine(siteDir, "data", "characters");
+        if (Directory.Exists(dir)) Directory.Delete(dir, recursive: true);
+        Directory.CreateDirectory(dir);
+        var keys = roleByClass.Keys.Where(k => File.Exists(ctx.RosterPath(k)) && Directory.Exists(ctx.CharsDir(k))).ToList();
+
+        // Pass 1: which icons are needed. The ones the leaderboard rows draw come first, so a cut-off run still has complete rows.
+        var rowIds = new HashSet<string>();
+        var detailIds = new HashSet<string>();
+        foreach (var key in keys)
+            foreach (var c in await LoadAllAsync(ctx, key))
+            {
+                rowIds.UnionWith(RowIconIds(c));
+                detailIds.UnionWith(IconIds(c));
+            }
+        detailIds.ExceptWith(rowIds);
+        Console.WriteLine($"Character icons needed: {rowIds.Count} for the rows, {detailIds.Count} more for the character pages.");
+        var have = await SiteIcons.EnsureItemIconsAsync(Path.Combine(siteDir, "img", "items"), rowIds.Concat(detailIds), DateTime.UtcNow + iconBudget);
+        var oathIcons = OathIcons.Install(ctx.ReferenceDir, Path.Combine(siteDir, "img", "items"));
+
+        // Pass 2: the class lists and character chunks; the rows are kept for the lists across classes.
+        var allRows = new List<(CardRow Row, string Role)>();
+        var characters = 0;
+        foreach (var key in keys)
+        {
+            var cards = (await LoadAllAsync(ctx, key)).Select(c => Build(c, have, icons, oathIcons)).ToList();
+            if (cards.Count == 0) continue;
+            characters += cards.Count;
+
+            var rows = cards.Select(Row).ToList();
+            await WritePagesAsync(dir, key, rows);
+            for (var chunk = 0; chunk * PageSize < cards.Count; chunk++)
+                await WriteFileAsync(dir, $"{key}/d{chunk}", cards.Skip(chunk * PageSize).Take(PageSize).ToList());
+            await WriteScriptAsync(dir, $"{key}/ids", JsonSerializer.Serialize(new { size = PageSize, ids = cards.Select(c => c.Id) }, TextJson));
+            allRows.AddRange(rows.Select(r => (r, roleByClass[key])));
+        }
+
+        // The lists across classes: the same rows, ranked by fame.
+        IReadOnlyList<CardRow> ByFame(Func<string, bool> role) =>
+            allRows.Where(r => role(r.Role)).Select(r => r.Row).OrderByDescending(r => r.Fame).ThenBy(r => r.Id, StringComparer.Ordinal).ToList();
+        await WritePagesAsync(dir, "all", ByFame(_ => true));
+        await WritePagesAsync(dir, "dps", ByFame(role => role == "DPS"));
+        await WritePagesAsync(dir, "support", ByFame(role => role == "Support"));
+        Console.WriteLine($"Character pages: {characters} characters of {keys.Count} classes written to {dir}");
+    }
 }

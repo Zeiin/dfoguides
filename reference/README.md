@@ -8,7 +8,7 @@ Inputs the website export needs that no scheduled job generates. They are commit
 | `skillprereqs.json` | Skills that must be learned before another (`<jobId>_<skillId>` to ids). | `fetch-skill-details` (API, slow) |
 | `skilllayout.json` | Each skill's column and row in the game's skill window. | `fetch-skill-layout` (dfmax.xyz), then `apply-skill-icon-map` |
 | `setfamilies.json` | Gear set page name to set family. | `fetch-set-icons` (dfmax.xyz) |
-| `skilliconmap.json`, `skillicon-sources/` | Hand-made mapping of Dark Knight and Creator skills to icons (neither the API nor dfogang has these icons). | By hand; apply with `apply-skill-icon-map` |
+| `skilliconmap.json`, `skillicon-sources/` | Hand-made mapping of skills to dfmax icons and grid positions: all of Dark Knight, Creator, Tidebreaker and Female Monk (no icon source has them), plus single skills of older classes that `fetch-skill-layout` could not match (`"merge": true` entries). Source files are named `<id>.png` (the first four) or `p<dfmax page>_<id>.png`: dfmax ids repeat across classes with different art, so a bare id must never be reused. | By hand (see StatisticsDocumentation); apply with `apply-skill-icon-map` after `fetch-skill-layout` |
 
 Class portraits and item icons are committed under `stats/img/`.
 
