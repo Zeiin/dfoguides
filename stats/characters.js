@@ -151,15 +151,15 @@
   }
 
   // The name search box: the scope picks the server of a character name, or the explorer club (unique across servers).
-  // onSubmit(search) is called on Enter, on the Search button and when the scope changes.
+  // onSubmit(search) is called on Enter and on the Search button only; changing the scope just changes what the box asks for.
   function searchBar(ui, search, onSubmit) {
     const { h } = ui;
     const scope = h('select', { class: 'class-select', 'aria-label': 'Search in' }, SEARCH_SCOPES.map((s) => h('option', { value: s.id }, s.label)));
     scope.value = search.scope;
-    const label = search.scope === 'explorer' ? 'Explorer club name' : 'Character name';
-    const input = h('input', { class: 'search', type: 'search', placeholder: label, 'aria-label': label, value: search.text });
+    const labelOf = (id) => (id === 'explorer' ? 'Explorer club name' : 'Character name');
+    const input = h('input', { class: 'search', type: 'search', placeholder: labelOf(search.scope), 'aria-label': labelOf(search.scope), value: search.text });
     const submit = () => onSubmit({ text: input.value.trim(), scope: scope.value });
-    scope.addEventListener('change', submit);
+    scope.addEventListener('change', () => { input.placeholder = labelOf(scope.value); input.setAttribute('aria-label', labelOf(scope.value)); });
     input.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(); });
     return h('div', { class: 'search-bar' }, scope, input, h('button', { class: 'ghost-button', type: 'button', onclick: submit }, 'Search'));
   }
@@ -230,6 +230,7 @@
     // The rows of this page: precomputed pages when nothing is filtered, else the matches of the index, their rows read from the class pages.
     let chars;
     let total;
+    let problem = null;
     const first = (page - 1) * 20;
     if (!filtered) {
       if (!cache.has(`${key}/${page - 1}`)) ui.app.replaceChildren(h('div', { class: 'empty' }, 'Loading…'));
@@ -239,14 +240,21 @@
       total = file.total;
     } else {
       if (!indexRows) ui.app.replaceChildren(h('div', { class: 'empty' }, 'Loading…'));
-      const index = await loadIndex(ui);
-      if (location.hash !== here) return;
-      const found = matching(ui, index, key, filter, search);
-      total = found.length;
-      const slice = found.slice(first, first + 20);
-      const files = await Promise.all(slice.map((row) => load(`${index.classes[row.c]}/${Math.floor(row.r / 20)}`)));
-      if (location.hash !== here) return;
-      chars = slice.map((row, i) => ({ ...files[i].data[row.r % 20], adventure: row.adventure }));
+      try {
+        const index = await loadIndex(ui);
+        if (location.hash !== here) return;
+        const found = matching(ui, index, key, filter, search);
+        total = found.length;
+        const slice = found.slice(first, first + 20);
+        const files = await Promise.all(slice.map((row) => load(`${index.classes[row.c]}/${Math.floor(row.r / 20)}`)));
+        if (location.hash !== here) return;
+        chars = slice.map((row, i) => ({ ...files[i].data[row.r % 20], adventure: row.adventure }));
+      } catch (e) {
+        // The search data of this update is not on the site (yet); the page stays usable so the filters can be cleared.
+        problem = 'Search and filters are not available right now: their data has not been published yet. Try again after the next data update.';
+        chars = [];
+        total = 0;
+      }
     }
     const pages = Math.max(1, Math.ceil(total / 20));
 
@@ -275,7 +283,7 @@
       key === 'all' ? searchBar(ui, search, (next) => go(filter, next)) : null,
       ui.buildFilterBar({ filter, fame: null, go: (next) => go(next, search) }),
       bar(),
-      total === 0 ? h('div', { class: 'empty' }, 'No characters match.') : h('div', { class: 'lb-list' }, rows),
+      total === 0 ? h('div', { class: 'empty' }, problem || 'No characters match.') : h('div', { class: 'lb-list' }, rows),
       total === 0 ? null : bar());
   }
 
