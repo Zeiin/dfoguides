@@ -81,7 +81,8 @@
     if (item.tune) lines.push(h('div', { class: 'td' }, `Tune ${item.tune}`));
     for (const e of item.enchant || []) lines.push(h('div', { class: 'td' }, e));
     if (item.set) lines.push(h('div', { class: 'td' }, item.set));
-    ui.tip.replaceChildren(h('div', { class: 'tn strong' }, item.name), item.rarity ? h('div', { class: 'td' }, item.rarity) : null, ...lines);
+    // replaceChildren prints "null" for an empty slot, so only real nodes are passed.
+    ui.tip.replaceChildren(h('div', { class: 'tn strong' }, item.name), ...(item.rarity ? [h('div', { class: 'td' }, item.rarity)] : []), ...lines);
     ui.tip.hidden = false;
     ui.moveTip(event);
   }
@@ -277,14 +278,15 @@
     const base = `/characters/${key}`;
     const bar = () => h('div', { class: 'pager-row' }, pager(ui, base, page, pages, suffix),
       h('div', { class: 'pager-count' }, total === 0 ? '0 characters' : `${num(first + 1)}–${num(first + chars.length)} of ${num(total)}`));
+    // replaceChildren prints "null" for an empty slot, so the optional parts are left out of the list instead.
     ui.app.replaceChildren(
       h('div', { class: 'crumbs' }, h('a', { href: '#/characters' }, 'Leaderboard'), ` / ${heading}`),
       h('div', { class: 'lb-head' }, h('h1', {}, heading), picker),
-      key === 'all' ? searchBar(ui, search, (next) => go(filter, next)) : null,
+      ...(key === 'all' ? [searchBar(ui, search, (next) => go(filter, next))] : []),
       ui.buildFilterBar({ filter, fame: null, go: (next) => go(next, search) }),
       bar(),
       total === 0 ? h('div', { class: 'empty' }, problem || 'No characters match.') : h('div', { class: 'lb-list' }, rows),
-      total === 0 ? null : bar());
+      ...(total === 0 ? [] : [bar()]));
   }
 
   // ---------- character page ----------

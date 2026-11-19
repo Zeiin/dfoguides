@@ -351,7 +351,7 @@
 
     app.replaceChildren(
       h('h1', {}, leaderboard ? 'Leaderboard' : 'Class Statistics'),
-      leaderboard ? window.DFO_CHARACTERS.hubControls(ui) : null,
+      ...(leaderboard ? [window.DFO_CHARACTERS.hubControls(ui)] : []),
       h('div', { class: 'group-tiles' }, groupTile('all'), groupTile('dps'), groupTile('support')),
       h('div', { class: 'search-row' }, search),
       ...sections);
