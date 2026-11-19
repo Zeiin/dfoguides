@@ -314,9 +314,9 @@
       h('div', { class: 'page-head' },
         h('div', { class: 'portrait' }, info.portrait ? h('img', { src: `img/classes/${info.portrait}`, alt: `${info.display} portrait` }) : null),
         h('div', { class: 'titles' },
+          c.adventure ? h('a', { class: 'explorer-title', href: `#/characters/all/1?in=explorer&q=${encodeURIComponent(c.adventure)}` }, c.adventure) : null,
           h('h1', {}, c.name),
           h('div', { class: 'chips' }, h('span', { class: 'chip' }, cap(c.server)), c.level ? h('span', { class: 'chip' }, `Lv. ${c.level}`) : null,
-            c.adventure ? h('a', { class: 'chip', href: `#/characters/all/1?in=explorer&q=${encodeURIComponent(c.adventure)}`, title: 'Characters of this explorer club' }, c.adventure) : null,
             h('a', { class: 'chip gold', href: `#/class/${key}` }, info.display))),
         h('div', { class: 'hero-figure' }, h('div', { class: 'value' }, num(c.fame)), h('div', { class: 'label' }, 'fame'))),
       ui.tabs(`/character/${key}/${id}`, TABS, active),
@@ -384,21 +384,23 @@
   function avatarTab(ui, c) {
     const { h } = ui;
     const colors = { ...ui.emblemColors, Platinum: '#CFD8E3' };
-    const emblemBox = (e) => (e.icon
-      ? h('span', { class: 'cicon emblem', title: e.name }, h('img', { src: `img/items/${e.icon}`, alt: e.name, loading: 'lazy' }))
-      : h('i', { class: 'dot', title: e.name, style: `background:${colors[e.color] || '#6D727A'}` }));
+    // One emblem per line: its icon (a colour dot when it has none) and its name written out, so nothing needs a hover.
+    const emblemRow = (e) => h('div', { class: `emblem-item${e.color === 'Platinum' ? ' platinum' : ''}` },
+      e.icon ? h('img', { class: 'emblem-icon', src: `img/items/${e.icon}`, alt: '', loading: 'lazy' }) : h('i', { class: 'dot', style: `background:${colors[e.color] || '#6D727A'}` }),
+      h('span', {}, e.name));
 
     const creature = c.creature ? h('section', { class: 'card' }, h('h3', {}, 'Creature'),
       h('div', { class: 'gear-row' }, itemBox(ui, c.creature.item), h('div', { class: 'gear-text' }, h('div', { class: 'gear-name' }, c.creature.item.name),
         c.creature.twin ? h('div', { class: 'gear-sub' }, `Clone: ${c.creature.twin.name}`) : null)),
-      c.creature.artifacts.length ? h('div', { class: 'icon-line' }, c.creature.artifacts.map((a) => itemBox(ui, a))) : null) : null;
+      c.creature.artifacts.length ? h('div', { class: 'emblem-list artifact-list' }, c.creature.artifacts.map((a) => h('div', { class: 'emblem-item' },
+        a.icon ? h('img', { class: 'emblem-icon', src: `img/items/${a.icon}`, alt: '', loading: 'lazy' }) : h('i', { class: 'dot', style: 'background:#6D727A' }), h('span', {}, a.name)))) : null) : null;
 
     const avatars = [...c.avatar].sort((a, b) => byOrder(AVATAR_ORDER, a.slot) - byOrder(AVATAR_ORDER, b.slot));
     const avatarCard = h('section', { class: 'card wide' }, h('h3', {}, 'Avatar'),
       h('div', { class: 'gear-grid' }, avatars.map((a) => h('div', { class: 'gear-row' },
         itemBox(ui, a.item, 'plain'),
         h('div', { class: 'gear-text' }, h('div', { class: 'gear-slot' }, AVATAR_LABEL[a.slot] || a.slot), h('div', { class: 'gear-name' }, a.item.name),
-          a.emblems.length ? h('div', { class: 'emblem-line' }, a.emblems.map(emblemBox)) : null)))));
+          a.emblems.length ? h('div', { class: 'emblem-list' }, a.emblems.map(emblemRow)) : null)))));
     return h('div', {}, creature, avatarCard);
   }
 
